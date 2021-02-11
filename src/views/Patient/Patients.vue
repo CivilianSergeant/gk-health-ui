@@ -49,7 +49,7 @@ export default {
 
   watch: {
     currentPage: {
-      handler: function(value) {
+      handler: function() {
         this.fetchPatients();
       }
     }

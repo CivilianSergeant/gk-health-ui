@@ -4,11 +4,13 @@
       <div class="container-fluid">
         <div class="row">
           <SideMenu/>
-          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <transition
-        name="fade"
-        mode="out-in"
-      ><router-view></router-view></transition>
+          <main class="offset-lg-2 offset-md-3 col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <transition
+              name="fade"
+              mode="out-in"
+            >
+              <router-view></router-view>
+            </transition>
           </main>
           
         </div>
