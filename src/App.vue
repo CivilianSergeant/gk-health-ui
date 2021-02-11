@@ -1,17 +1,33 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+      <AppHeader/>
+      <div class="container-fluid">
+        <div class="row">
+          <SideMenu/>
+          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <router-view></router-view>
+          </main>
+          
+        </div>
+      </div>
+      
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import AppHeader  from './components/AppHeader.vue';
+import SideMenu  from './components/SideMenu.vue';
+import Loader from '@/components/global/Loader.vue';
 
+Vue.component('Loader',Loader);
+
+import Home  from './views/Home.vue';
 @Component({
   components: {
-    HelloWorld,
+    AppHeader,
+ 
+    SideMenu
   },
 })
 export default class App extends Vue {}
@@ -19,11 +35,11 @@ export default class App extends Vue {}
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  // font-family: Avenir, Helvetica, Arial, sans-serif;
+  // -webkit-font-smoothing: antialiased;
+  // -moz-osx-font-smoothing: grayscale;
+  // text-align: center;
+  // color: #2c3e50;
+  // margin-top: 60px;
 }
 </style>

@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
+import HealthCenter from '../views/HealthCenter.vue'
+import Employees from '../views/Employees.vue'
+import Patients from '../views/Patient/Patients.vue'
+import PatientForm from '../views/Patient/PatientForm.vue'
+import ServiceCategories from '../views/ServiceCategories.vue'
+import Services from '../views/Services.vue'
 
 Vue.use(VueRouter)
 
@@ -11,13 +17,37 @@ const routes: Array<RouteConfig> = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/health-centers',
+    component: HealthCenter
+  },
+  {
+    path: '/employees',
+    component: Employees
+  },
+  {
+    path: '/patients',
+    component: Patients
+  },
+  {
+    path: '/patients/add',
+    component: PatientForm
+  },
+  {
+    path: '/service-categories',
+    component: ServiceCategories
+  },
+  {
+    path: '/services',
+    component: Services
+  },
+  // {
+  //   path: '/about',
+  //   name: 'About',
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  // }
 ]
 
 const router = new VueRouter({
