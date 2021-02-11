@@ -94,7 +94,7 @@ export default class Sidebar extends Vue {
 li a.nav-link{
   color:#4a5055 !important;
 }
-li a.router-link-exact-active{
+li a.router-link-exact-active, li a.router-link-active{
   color:#507aeef8 !important;
 }
 </style>

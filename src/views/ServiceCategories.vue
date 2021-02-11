@@ -10,7 +10,7 @@
           <span v-if="!row.item.active" class="badge badge-danger">Inactive </span>
         </template>
       </b-table>
-      <Loader/>
+      <Loader :isBusy="isBusy"/>
       <b-pagination
         v-model="currentPage"
         :total-rows="rows"
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import ContentBar from '@/components/ContentBar.vue'
+
 
 import {CategoryService} from '@/services/CategoryService'
 import {Category} from '@/entity/Category'
@@ -44,9 +44,6 @@ export default {
         perPage: 20,
         currentPage: 1,
       }
-  },
-  components: {
-    ContentBar
   },
   beforeMount(){
     this.isBusy=true;

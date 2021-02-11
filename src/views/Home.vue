@@ -139,7 +139,6 @@
 
 <script>
 // @ is an alias to /src
-import ContentBar from '@/components/ContentBar.vue'
 
 export default {
   name: 'Home',
@@ -148,8 +147,6 @@ export default {
         title: "Dashboard",
       }
   },
-  components: {
-    ContentBar
-  }
+
 }
 </script>

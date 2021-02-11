@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <ContentBar :PageTitle="title"/>
     <b-alert v-model="isError" variant="danger">{{errorMsg}}</b-alert>
     <h5>All Services</h5>
@@ -11,6 +10,7 @@
           <span v-if="!row.item.active" class="badge badge-danger">Inactive </span>
         </template>
       </b-table>
+      <Loader :isBusy="isBusy"/>
       <b-pagination
         v-model="currentPage"
         :total-rows="rows"
@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import ContentBar from '@/components/ContentBar.vue'
 import { HealthService } from '@/services/HealthService'
 
 export default {
@@ -38,7 +37,7 @@ export default {
         isBusy:false,
         errorMsg:null,
         isError:false,
-        fields:['serviceCategory.name','name','code','currentCost',
+        fields:[{key:'serviceCategory.name',label:'Service Category'},'name','code','currentCost',
           {'key':'currentGbCost','label':'GB Cost'}, 
           {'key':'currentRevisitCost','label':'Revisit Cost',
           },'description','active'],
@@ -46,21 +45,23 @@ export default {
         currentPage: 1
       }
   },
-  components: {
-    ContentBar
-  },
   beforeMount(){
-    this.isBusy=true;
-    (new HealthService()).getServices().then(result=>{this.services=result; this.isBusy=false})
-    .catch(error=> {
-      this.isError=true;
-      if(error.toString().match('Error: Network Error') !=null){
-        this.errorMsg = 'Opps! Network Error, Please try again later'
-      }else if(error.toString.length>0){
-        this.errorMsg = error;
-      }
-      
-    });
+    this.fetchServices();
+  },
+  methods:{
+    fetchServices(){
+      this.isBusy=true;
+      (new HealthService()).getServices().then(result=>{this.services=result; this.isBusy=false})
+      .catch(error=> {
+        this.isError=true;
+        this.isBusy=false;
+        if(error.toString().match('Error: Network Error') !=null){
+          this.errorMsg = 'Opps! Network Error, Please try again later'
+        }else if(error.toString.length>0){
+          this.errorMsg = error;
+        }
+      });
+    }
   }
 }
 </script>
