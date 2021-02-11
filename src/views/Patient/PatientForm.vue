@@ -105,7 +105,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <b-form-group
                         id="input-group-7"
                         label="Village"
@@ -114,7 +114,7 @@
                     >
                         <b-form-input id="village" v-model="form.village"  
                             type="text"
-                            placeholder="Mother Name"
+                            placeholder="Patient's address"
                         ></b-form-input>
                     </b-form-group>
                 </div>
@@ -132,6 +132,172 @@
                 
             </div>
             <div class="row">
+                <div class="col-md-2">
+                    <b-form-group
+                        id="input-group-9"
+                        label="Blood Group"
+                        label-for="bloodGroup"
+                        description="Patient's Blood Group"
+                    >
+                        <b-form-input id="bloodGroup" v-model="form.detail.bloodGroup"  
+                            type="text"
+                            placeholder="Blood Group"
+                        ></b-form-input>
+                    </b-form-group>
+                </div>
+                <div class="col-md-3">
+                    <b-form-group
+                        id="input-group-10"
+                        label="Nationality:"
+                        label-for="nationality"
+                        description="Nationality"
+                    >
+                        <b-form-input id="nationality" v-model="form.detail.nationality"
+                        placeholder="Nationality"
+                         ></b-form-input>
+                    </b-form-group>
+                </div>
+                <div class="col-md-3">
+                    <b-form-group
+                        id="input-group-10"
+                        label="National ID:"
+                        label-for="nationalId"
+                        description="Patient's National ID"
+                    >
+                        <b-form-input id="nationalId" v-model="form.detail.nationalId"
+                        placeholder="National ID"
+                         ></b-form-input>
+                    </b-form-group>
+                </div>
+                <div class="col-md-3">
+                    <b-form-group
+                        id="input-group-10"
+                        label="Occupation:"
+                        label-for="occupation"
+                        description="Occupation"
+                    >
+                        <b-form-input id="occupation" v-model="form.detail.occupation"
+                        placeholder="Occupation"
+                         ></b-form-input>
+                    </b-form-group>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                <b-form-checkbox
+                    id="checkbox-1"
+                    v-model="cardRegistrationAccepted"
+                    name="card-registration"
+                    :value="true"
+                    :unchecked-value="false"
+                    >
+                    <strong>Card registration ?</strong>
+                </b-form-checkbox>
+                </div>
+            </div>
+            <div class="row mt-3" v-if="cardRegistrationAccepted">
+                <div class="col-md-12"><h5>Card Members</h5></div>
+            </div>
+            <div class="row" v-if="cardRegistrationAccepted">
+                
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <b-form-group
+                                    id="input-group-1"
+                                    label="Full Name:"
+                                    label-for="input-1"
+                                    description="Patient's full name"
+                                >
+                                    <b-form-input
+                                        id="input-1"
+                                        v-model="form.fullName"
+                                        type="text"
+                                        placeholder="Full Name"
+                                        required
+                                        ></b-form-input>
+                                </b-form-group>
+                            </div>
+                            <div class="col-md-3">
+                                <b-form-group
+                                    id="input-group-10"
+                                    label="Age:"
+                                    label-for="age"
+                                    description="Age"
+                                >
+                                    <b-form-input id="age" v-model="form.detail.nationality"
+                                    placeholder="Age"
+                                    ></b-form-input>
+                                </b-form-group>
+                            </div>
+                            <div class="col-md-3">
+                                <b-form-group
+                                    id="input-group-4"
+                                    label="Gender:"
+                                    label-for="gender"
+                                    description="Patient's Gender"
+                                >
+                                    <b-form-select id="gender" v-model="form.gender" 
+                                    :options="genderOptions"></b-form-select>
+                                </b-form-group>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                        <div class="col-md-2">
+                            <b-form-group
+                                id="input-group-9"
+                                label="Blood Group"
+                                label-for="bloodGroup"
+                                description="Patient's Blood Group"
+                            >
+                                <b-form-input id="bloodGroup" v-model="form.detail.bloodGroup"  
+                                    type="text"
+                                    placeholder="Blood Group"
+                                ></b-form-input>
+                            </b-form-group>
+                        </div>
+                        <div class="col-md-3">
+                            <b-form-group
+                                id="input-group-10"
+                                label="Nationality:"
+                                label-for="nationality"
+                                description="Nationality"
+                            >
+                                <b-form-input id="nationality" v-model="form.detail.nationality"
+                                placeholder="Nationality"
+                                ></b-form-input>
+                            </b-form-group>
+                        </div>
+                        <div class="col-md-3">
+                            <b-form-group
+                                id="input-group-10"
+                                label="National ID:"
+                                label-for="nationalId"
+                                description="Patient's National ID"
+                            >
+                                <b-form-input id="nationalId" v-model="form.detail.nationalId"
+                                placeholder="National ID"
+                                ></b-form-input>
+                            </b-form-group>
+                        </div>
+                        <div class="col-md-3">
+                            <b-form-group
+                                id="input-group-10"
+                                label="Relation:"
+                                label-for="occupation"
+                                description="Relation with Patient"
+                            >
+                                <b-form-input id="occupation" v-model="form.detail.occupation"
+                                placeholder="Relation"
+                                ></b-form-input>
+                            </b-form-group>
+                        </div>
+                        </div>  
+                    </div>
+            </div>
+            <div class="row mt-2 mb-2">
                 <div class="col-md-2 d-flex justify-content-between">
                     <b-button type="submit" variant="success">Success</b-button>
                     <b-button type="reset" class="ml-4" variant="danger">Cancel</b-button>
@@ -150,6 +316,7 @@ export default {
  
   data(){
       return {
+        cardRegistrationAccepted:false,
         title: "Patients",
         isBusy: false,
         errorMsg:'',
@@ -179,6 +346,7 @@ export default {
             maritalStatus:null,
             village:'',
             mobileNumber:'',
+            detail:{bloodGroup:'',nationality:'',nationalId:''},
             cardRegistration:{
                 active:true,
                 gb:false,
