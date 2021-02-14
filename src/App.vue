@@ -30,7 +30,7 @@ Vue.component('ContentBar',ContentBar);
 Vue.component('Loader',Loader);
 
 
-import Home  from './views/Home.vue';
+// import Home  from './views/Home.vue';
 @Component({
   components: {
     AppHeader,

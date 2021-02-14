@@ -2,9 +2,9 @@
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="position-sticky pt-3">
               <ul class="nav flex-column">
-                <li  class="nav-item" v-for="(menu,i) in menus" :key="i">
+                <li  class="nav-item" v-for="(menu,i) in menus" :key="i" @click="menuClicked">
 
-                    <router-link :to="menu.link" class="nav-link active"> {{menu.name}}</router-link>
+                    <router-link :to="menu.link"   class="nav-link active"> {{menu.name}}</router-link>
                     
                 </li>  
                 
@@ -61,6 +61,10 @@ export default class Sidebar extends Vue {
     this.currentLocation = location.href
     this.menus = MenuService.getMenus()
     this.selectedMenu()
+  }
+
+  menuClicked(){
+    this.$store.commit('clearMessage');
   }
 
   selectedMenu () {

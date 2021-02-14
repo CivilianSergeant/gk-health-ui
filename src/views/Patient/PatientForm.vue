@@ -1,7 +1,7 @@
 <template>
   <div>
     <ContentBar :PageTitle="title"/>
-    <b-alert v-model="isError" variant="danger">{{errorMsg}}</b-alert>
+    <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
     <h5>Add Patient <router-link to="/patients" class=" btn btn-primary btn-sm float-right">Patient List</router-link></h5>
     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
             <div class="row">
@@ -12,8 +12,9 @@
                         label="Center:"
                         label-for="centers"
                         description="Select Center"
+                        
                     >
-                        <b-form-select :disabled="isError" id="centers" v-model="form.center.id"
+                        <b-form-select :disabled="centers.length==0 || isError" id="centers" v-model="form.center.id"
                          :options="centers"></b-form-select>
                     </b-form-group>
                 </div>
@@ -196,110 +197,140 @@
                 </div>
             </div>
             <div class="row mt-3" v-if="cardRegistrationAccepted">
-                <div class="col-md-12"><h5>Card Members</h5></div>
-            </div>
-            <div class="row" v-if="cardRegistrationAccepted">
-                
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <b-form-group
-                                    id="input-group-1"
-                                    label="Full Name:"
-                                    label-for="input-1"
-                                    description="Patient's full name"
-                                >
-                                    <b-form-input
-                                        id="input-1"
-                                        v-model="form.fullName"
-                                        type="text"
-                                        placeholder="Full Name"
-                                        required
-                                        ></b-form-input>
-                                </b-form-group>
+                <b-card class="col-md-12">
+                    <div class="row">
+                        
+
+                        <div class="col-md-5">
+                        <b-form-checkbox
+                             id="input-is-gb"
+                                    v-model="form.cardRegistration.gb"
+                                    name="card-registration-gb"
+                                    :value="true"
+                                    :unchecked-value="false"
+                                   
+                            >
+                            <strong>IS GB ?</strong> (Is the patient from Grameen Bank?)
+                        </b-form-checkbox>
+                        </div>
+                    </div>
+
+                <div class="col-md-12 mt-3"><h6>Card Members <b-button @click="addMember" class="float-right mb-2" size="sm" variant="info">Add Member</b-button></h6></div>
+            
+                <b-card class="clearBoth" v-for="(member,i) in form.cardRegistration.members" :key="i">
+                    <b-card-body >
+                        <div class="row ">
+                            <div class="col-md-6 float-left">
+                                <h6>Member #{{(i+1)}}</h6>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
+                            <b-button @click="delMember(i)" class="float-right" size="sm" variant="danger"><b-icon-trash  ></b-icon-trash></b-button>
+                            </div>
+                        </div>
+                     
+                        <div class="col-md-12 ">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <b-form-group
+                                        id="input-group-r-fullname"
+                                        label="Full Name:"
+                                        label-for="input-r-fullname"
+                                        description="full name"
+                                    >
+                                        <b-form-input
+                                            id="input-r-fullname"
+                                            v-model="member.fullName"
+                                            type="text"
+                                            placeholder="Full Name"
+                                            required
+                                            ></b-form-input>
+                                    </b-form-group>
+                                </div>
+                                <div class="col-md-3">
+                                    <b-form-group
+                                        id="input-group-r-age"
+                                        label="Age:"
+                                        label-for="r-age"
+                                        description="Age"
+                                    >
+                                        <b-form-input id="r-age" v-model="member.age"
+                                        placeholder="Age"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                </div>
+                                <div class="col-md-3">
+                                    <b-form-group
+                                        id="input-group-r-gender"
+                                        label="Gender:"
+                                        label-for="gender"
+                                        description="Gender"
+                                    >
+                                        <b-form-select id="r-gender" v-model="member.gender" 
+                                        :options="genderOptions"></b-form-select>
+                                    </b-form-group>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                            <div class="col-md-2">
                                 <b-form-group
-                                    id="input-group-10"
-                                    label="Age:"
-                                    label-for="age"
-                                    description="Age"
+                                    id="input-group-r-blood-group"
+                                    label="Blood Group"
+                                    label-for="r-blood-group"
+                                    description="Blood Group"
                                 >
-                                    <b-form-input id="age" v-model="form.detail.nationality"
-                                    placeholder="Age"
+                                    <b-form-input id="r-blood-group" v-model="member.bloodGroup"  
+                                        type="text"
+                                        placeholder="Blood Group"
                                     ></b-form-input>
                                 </b-form-group>
                             </div>
                             <div class="col-md-3">
                                 <b-form-group
-                                    id="input-group-4"
-                                    label="Gender:"
-                                    label-for="gender"
-                                    description="Patient's Gender"
+                                    id="input-group-r-nationality"
+                                    label="Nationality:"
+                                    label-for="nationality"
+                                    description="Nationality"
                                 >
-                                    <b-form-select id="gender" v-model="form.gender" 
-                                    :options="genderOptions"></b-form-select>
+                                    <b-form-input id="r-nationality" v-model="member.nationality"
+                                    placeholder="Nationality"
+                                    ></b-form-input>
                                 </b-form-group>
                             </div>
+                            <div class="col-md-3">
+                                <b-form-group
+                                    id="input-group-r-nationalId"
+                                    label="National ID:"
+                                    label-for="nationalId"
+                                    description="National ID"
+                                >
+                                    <b-form-input id="r-nationalId" v-model="member.nationalId"
+                                    placeholder="National ID"
+                                    ></b-form-input>
+                                </b-form-group>
+                            </div>
+                            <div class="col-md-3">
+                                <b-form-group
+                                    id="input-group-relation"
+                                    label="Relation:"
+                                    label-for="relation"
+                                    description="Relation with Patient"
+                                >
+                                    <b-form-input id="relation" v-model="member.relationWithPatient"
+                                    placeholder="Relation"
+                                    ></b-form-input>
+                                </b-form-group>
+                            </div>
+                            </div>  
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="row">
-                        <div class="col-md-2">
-                            <b-form-group
-                                id="input-group-9"
-                                label="Blood Group"
-                                label-for="bloodGroup"
-                                description="Patient's Blood Group"
-                            >
-                                <b-form-input id="bloodGroup" v-model="form.detail.bloodGroup"  
-                                    type="text"
-                                    placeholder="Blood Group"
-                                ></b-form-input>
-                            </b-form-group>
-                        </div>
-                        <div class="col-md-3">
-                            <b-form-group
-                                id="input-group-10"
-                                label="Nationality:"
-                                label-for="nationality"
-                                description="Nationality"
-                            >
-                                <b-form-input id="nationality" v-model="form.detail.nationality"
-                                placeholder="Nationality"
-                                ></b-form-input>
-                            </b-form-group>
-                        </div>
-                        <div class="col-md-3">
-                            <b-form-group
-                                id="input-group-10"
-                                label="National ID:"
-                                label-for="nationalId"
-                                description="Patient's National ID"
-                            >
-                                <b-form-input id="nationalId" v-model="form.detail.nationalId"
-                                placeholder="National ID"
-                                ></b-form-input>
-                            </b-form-group>
-                        </div>
-                        <div class="col-md-3">
-                            <b-form-group
-                                id="input-group-10"
-                                label="Relation:"
-                                label-for="occupation"
-                                description="Relation with Patient"
-                            >
-                                <b-form-input id="occupation" v-model="form.detail.occupation"
-                                placeholder="Relation"
-                                ></b-form-input>
-                            </b-form-group>
-                        </div>
-                        </div>  
-                    </div>
+                    </b-card-body>
+                </b-card>
+                </b-card>
             </div>
             <div class="row mt-2 mb-2">
                 <div class="col-md-2 d-flex justify-content-between">
-                    <b-button type="submit" variant="success">Success</b-button>
+                    <b-button type="submit" variant="success">Submit</b-button>
                     <b-button type="reset" class="ml-4" variant="danger">Cancel</b-button>
                 </div>
             </div>
@@ -310,6 +341,8 @@
 <script>
 
 import { CenterService } from '@/services/CenterService'
+import axios from 'axios';
+import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
 
 export default {
   name: 'Patients',
@@ -319,8 +352,6 @@ export default {
         cardRegistrationAccepted:false,
         title: "Patients",
         isBusy: false,
-        errorMsg:'',
-        isError: false,
         centers: [],
         genderOptions: [
           { value: null, text: 'Please Select Gender' },
@@ -346,7 +377,7 @@ export default {
             maritalStatus:null,
             village:'',
             mobileNumber:'',
-            detail:{bloodGroup:'',nationality:'',nationalId:''},
+            detail:{bloodGroup:null,nationality:null,nationalId:null,occupation:null},
             cardRegistration:{
                 active:true,
                 gb:false,
@@ -356,22 +387,79 @@ export default {
                 id:1,
                 apiEmployeeId:124
             }
-        }
+        },
+        
         
       }
   },
 
- 
+  computed:{
+      
+    isError(){
+      return this.$store.state.isError;
+    },
+    isSuccess(){
+      return this.$store.state.isSuccess;
+    },
+    message(){
+      return this.$store.state.message;
+    }
+  },
   beforeMount(){
+    this.$store.commit('clearMessage');
     this.fetchCenters();
+    this.fetchPatient(this.$route.params.id);
   },
   methods:{
-    onSubmit(){
-        console.log(this.form)
+    async onSubmit(){
+        
+        const formRequest = Object.assign({},this.form);
+         console.log(this.form);
+         
+        if((this.form.detail.bloodGroup == null || this.form.detail.bloodGroup == "") 
+        && (this.form.detail.nationality == null || this.form.detail.nationality =="") && 
+            (this.form.detail.nationalId == null || this.form.detail.nationalId == "") && 
+            (this.form.detail.occupation ==null || this.form.detail.occupation =="")){
+                console.log(this.form.detail.bloodGroup,2);
+                formRequest.detail = null;
+            }
+        if(!this.cardRegistrationAccepted){
+            formRequest.cardRegistration = null;
+        }
+        console.log(formRequest);
+        formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
+        axios.defaults.headers.common = {
+        "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        };
+        const response = await axios.post(GetApiRoute(ApiRoutes.ADD_PATIENT),formRequest);
+        console.log(response)
+        if(response.status==200){
+            this.$store.commit('setSuccessMsg','New Patient profile Created');
+            this.$router.push("/patients");
+        }else{
+            console.log(response);
+        }
+        
     },
     onReset(){
         this.$router.push('/patients')
         console.log('')
+    },
+    addMember(){
+        this.form.cardRegistration.members.push({
+            fullName:'',age:'',gender:'',bloodGroup:'',nationality:'',nationalId:'',relationWithPatient:''
+            })
+    },
+    delMember(i){
+        this.form.cardRegistration.members.splice(i,1);
+    },
+    async fetchPatient(id){
+        const response = await axios.get(GetApiRoute(ApiRoutes.GET_PATIENT_BY_ID,id));
+        if(response.status==200){
+            this.form = response.data;
+        }
+        console.log(response);
     },
     fetchCenters(){
 
@@ -381,12 +469,11 @@ export default {
           result.map(center=>this.centers.push({value:center.id,text:center.name})); 
           this.isBusy=false;})
       .catch(error=>{
-        this.isError=true;
         this.isBusy=false;
         if(error.toString().match('Error: Network Error') !=null){
-          this.errorMsg = 'Opps! Network Error, Please try again later'
+          this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
         }else if(error.toString.length>0){
-          this.errorMsg = error;
+          this.$store.commit('setErrorMsg',error);
         }
       });
 
@@ -394,3 +481,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.clearBoth{
+    clear: both;
+}
+</style>

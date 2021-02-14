@@ -1,7 +1,7 @@
 <template>
     <div>
       <ContentBar :PageTitle="title"/>
-       <b-alert v-model="isError" variant="danger">{{errorMsg}}</b-alert>
+       <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
       <h5>All Centers</h5>
       <b-table id="center-table" :fields="fields" :per-page="perPage" 
       :current-page="currentPage" :items="centers"></b-table>
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { Center } from '@/entity/Center';
 import { CenterService } from '@/services/CenterService';
 
 export default {
@@ -24,36 +23,48 @@ export default {
   computed: {
     rows() {
       return this.centers.length
+    },
+    isBusy(){
+      return this.$store.state.isBusy;
+    },
+    isError(){
+      return this.$store.state.isError;
+    },
+    isSuccess(){
+      return this.$store.state.isSuccess;
+    },
+    message(){
+      return this.$store.state.message;
     }
   },
   data(){
       return {
         title: "Health Center",
         centers:[],
-        errorMsg:'',
-        isError:false,
-        isBusy:false,
         fields:['name','apiOfficeId','centerCode','address'],
         currentPage:1,
         perPage:20
       }
   },
   beforeMount(){
+    this.$store.commit('clearErrorMsg');
     this.fetchCenters();
   },
 
   methods:{
 
     fetchCenters(){
-      this.isBusy=true;
-      (new CenterService()).getCenters().then(result=> {this.centers = result; this.isBusy=false;})
+      this.$store.commit('start');
+      (new CenterService()).getCenters().then(result=> {
+        this.centers = result; 
+        this.$store.commit('finish');
+      })
       .catch(error=>{
-        this.isError=true;
-        this.isBusy=false;
+        this.$store.commit('finish');
         if(error.toString().match('Error: Network Error') !=null){
-          this.errorMsg = 'Opps! Network Error, Please try again later'
+          this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
         }else if(error.toString.length>0){
-          this.errorMsg = error;
+          this.$store.commit('setErrorMsg',error);
         }
       });  
     }

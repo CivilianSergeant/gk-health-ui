@@ -5,8 +5,38 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    isBusy:false,
+    isError:false,
+    isSuccess:false,
+    message:''
   },
   mutations: {
+    start(state){
+      state.isBusy=true;
+    },
+    finish(state){
+      state.isBusy=false;
+    },
+    setSuccessMsg(state,msg){
+      state.isSuccess=true;
+      state.isError=false;
+      state.message=msg;
+    },
+    setErrorMsg(state,msg){
+      state.isSuccess=false;
+      state.isError=true;
+      state.message=msg;
+    },
+    clearErrorMsg(state){
+      state.isError=false;
+    },
+    clearSuccessMsg(state){
+      state.isSuccess=false;
+    },
+    clearMessage(state){
+      state.isError=false;
+      state.isSuccess=false;
+    }
   },
   actions: {
   },

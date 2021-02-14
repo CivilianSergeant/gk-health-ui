@@ -5,6 +5,7 @@ import HealthCenter from '../views/HealthCenter.vue'
 import Employees from '../views/Employees.vue'
 import Patients from '../views/Patient/Patients.vue'
 import PatientForm from '../views/Patient/PatientForm.vue'
+import PatientDetail from '../views/Patient/PatientDetail.vue'
 import ServiceCategories from '../views/ServiceCategories.vue'
 import Services from '../views/Services.vue'
 
@@ -25,12 +26,16 @@ const routes: Array<RouteConfig> = [
     component: Employees
   },
   {
-    path: '/patients',
-    component: Patients
+    path: '/patients/:id',
+    component: PatientDetail
   },
   {
     path: '/patients/add',
     component: PatientForm
+  },
+  {
+    path: '/patients',
+    component: Patients
   },
   {
     path: '/service-categories',

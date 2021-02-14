@@ -1,7 +1,7 @@
 <template>
   <div >
     <ContentBar :PageTitle="title"/>
-    <b-alert v-model="isError" variant="danger">{{errorMsg}}</b-alert>
+    <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
     <h5>All Service Categories</h5>
       <b-table id="category-table" :fields="fields" :per-page="perPage" :busy.sync="isBusy"
         :current-page="currentPage" :items="categories">
@@ -24,39 +24,55 @@
 
 
 import {CategoryService} from '@/services/CategoryService'
-import {Category} from '@/entity/Category'
 
 export default {
   name: 'ServiceCategories',
   computed: {
     rows() {
       return this.categories.length
+    },
+    isBusy(){
+      return this.$store.state.isBusy;
+    },
+    isError(){
+      return this.$store.state.isError;
+    },
+    isSuccess(){
+      return this.$store.state.isSuccess;
+    },
+    message(){
+      return this.$store.state.message;
     }
   },
   data(){
       return {
         title: "Service Categories",
         categories:[],
-        isBusy:false,
-        errorMsg:null,
-        isError:false,
         fields:['name','description',{'key':'active','label':'Status'},],
         perPage: 20,
         currentPage: 1,
       }
   },
   beforeMount(){
-    this.isBusy=true;
-    (new CategoryService()).getCategories().then(result=>{this.categories=result; this.isBusy=false})
-    .catch(error=>{
-      this.isError=true;
-      this.isBusy=false;
-      if(error.toString().match('Error: Network Error') !=null){
-        this.errorMsg = 'Opps! Network Error, Please try again later'
-      }else if(error.toString.length>0){
-        this.errorMsg = error;
-      }
-    });
+    this.$store.commit('clearErrorMsg');
+    this.fetchServiceCategories();
+  },
+  methods:{
+    fetchServiceCategories(){
+      this.$store.commit('start');
+      (new CategoryService()).getCategories().then(result=>{
+          this.categories=result; 
+          this.$store.commit('finish');
+        })
+      .catch(error=>{
+        this.$store.commit('finish');
+        if(error.toString().match('Error: Network Error') !=null){
+          this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
+        }else if(error.toString.length>0){
+          this.$store.commit('setErrorMsg',error);
+        }
+      });
+    }
   }
 }
 </script>
