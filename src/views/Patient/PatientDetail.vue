@@ -2,7 +2,7 @@
   <div>
     <ContentBar :PageTitle="title"/>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
-    <h5>Patient Info <router-link to="/patients" class=" btn btn-primary btn-sm float-right">Patient List</router-link></h5>
+    <h5>Patient Info #{{form.pid}}<router-link to="/patients" class=" btn btn-primary btn-sm float-right">Patient List</router-link></h5>
     <div>
             <div class="row">
                 <div class="col-md-3">
@@ -13,7 +13,7 @@
                         label-for="centers"
                         
                     >
-                        <strong class="text-secondary">{{form.center.name}}</strong>
+                        <strong class="text-secondary">{{(form.center!=null && form.center.name)?form.center.name:'N/A'}}</strong>
                     </b-form-group>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                         label="Full Name:"
                         label-for="input-1"
                     >
-                        <strong class="text-secondary"  >{{form.fullName}}</strong>
+                        <strong class="text-secondary"  >{{(form.fullName)?form.fullName:'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 <div class="col-md-3">
@@ -33,7 +33,7 @@
                         label="Guardian Name:"
                         label-for="input-2"
                     >
-                        <strong class="text-secondary" >{{form.guardianName}}</strong>
+                        <strong class="text-secondary" >{{(form.guardianName)?form.guardianName:'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 <div class="col-md-3">
@@ -42,7 +42,7 @@
                         label="Mother Name:"
                         label-for="input-3"
                     >
-                        <strong class="text-secondary">{{form.motherName}}</strong>
+                        <strong class="text-secondary">{{(form.motherName)?form.motherName:'N/A'}}</strong>
                     </b-form-group>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                         label-for="gender"
                         description="Patient's Gender"
                     >
-                        <strong class="text-secondary">{{form.gender}}</strong>
+                        <strong class="text-secondary">{{(form.gender)?form.gender:'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 <div class="col-md-3">
@@ -64,7 +64,7 @@
                         label="Marital Status:"
                         label-for="marital-status"
                     >
-                        <strong class="text-secondary">{{form.maritalStatus}}</strong>
+                        <strong class="text-secondary">{{(form.maritalStatus)? form.maritalStatus:'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 <div class="col-md-4">
@@ -73,7 +73,7 @@
                         label="Date Of Birth:"
                         label-for="patient-datepicker"
                     >
-                        <strong class="text-secondary" >{{form.dateOfBirth}}</strong>
+                        <strong class="text-secondary" >{{(form.dateOfBirth)?form.dateOfBirth:'N/A'}}</strong>
                     </b-form-group>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                         label="Village"
                         label-for="vilage"
                     >
-                        <strong class="text-secondary" >{{form.village}}</strong>
+                        <strong class="text-secondary" >{{(form.village)?form.village:'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 <div class="col-md-3">
@@ -94,7 +94,7 @@
                         label="Mobile Number:"
                         label-for="mobileNumber"
                     >
-                        <strong class="text-secondary">{{form.mobileNumber}}</strong>
+                        <strong class="text-secondary">{{(form.mobileNumber)? form.mobileNumber:'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 
@@ -138,7 +138,7 @@
                 </div>
             </div>
             <hr/>
-            <h5>Registrations</h5>
+            <h5>Registrations <b-button class="float-right" v-if="form.registrations!=undefined && form.registrations.length==0">Registration</b-button></h5>
             <p v-if="(form.registrations != undefined && form.registrations.length==0)">This patient did not registered yet</p>
             <b-card class="col-md-4 px-0 py-0" v-for="card in form.registrations" :key="card.id">
                 <b-card-title>

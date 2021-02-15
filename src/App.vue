@@ -24,10 +24,17 @@ import { Component, Vue } from 'vue-property-decorator';
 import AppHeader  from './components/layouts/global/AppHeader.vue';
 import ContentBar  from './components/layouts/global/ContentBar.vue';
 import SideMenu  from './components/layouts/global/SideMenu.vue';
+import Status from '@/components/global/Status.vue';
 import Loader from '@/components/global/Loader.vue';
+import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap'
+
+import Autocomplete from './components/Autocomplete.vue'
 
 Vue.component('ContentBar',ContentBar);
+Vue.component('Autocomplete',Autocomplete);
+Vue.component('Status',Status);
 Vue.component('Loader',Loader);
+Vue.component('VueTypeaheadBootstrap',VueTypeaheadBootstrap);
 
 
 // import Home  from './views/Home.vue';

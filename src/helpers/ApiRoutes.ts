@@ -10,16 +10,27 @@ export enum ApiRoutes{
     ALL_SERVICES = '/service',
     ALL_PATIENTS = '/patient',
     ADD_PATIENT = '/patient/add',
-    GET_PATIENT_BY_ID = '/patient/:id'
+    GET_PATIENT_BY_ID = '/patient/:id',
+    GET_PATIENT_BY_PID = '/patient/by-pid/:id'
 }
 
 export function GetApiRoute(route: string,value=""){
-    console.log(ApiRoutes.BASE_PATH+ApiRoutes.VERSION+route);
+    
     let _route = route;
     if(_route == ApiRoutes.GET_PATIENT_BY_ID){
         if(value !=null){
             _route = route.replace(":id",value);
         }
     }
+
+    
+    if(_route == ApiRoutes.GET_PATIENT_BY_PID){
+        
+        if(value !=null){
+            _route = route.replace(":id",value);
+            console.log(_route)
+        }
+    }
+    console.log(ApiRoutes.BASE_PATH+ApiRoutes.VERSION+_route);
     return ApiRoutes.BASE_PATH+ApiRoutes.VERSION+_route;
 }

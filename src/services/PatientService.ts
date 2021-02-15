@@ -14,4 +14,12 @@ export class PatientService{
         }
         return this.response;
     }
+
+    async getPatientByPid(pid: string): Promise<Patient[]>{
+        const response = await axios.get(GetApiRoute(ApiRoutes.GET_PATIENT_BY_PID,pid));
+        if(response.status == 200){
+            this.response = response.data;
+         }
+        return this.response;
+    }
 }

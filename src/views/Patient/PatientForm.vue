@@ -408,7 +408,7 @@ export default {
   beforeMount(){
     this.$store.commit('clearMessage');
     this.fetchCenters();
-    this.fetchPatient(this.$route.params.id);
+    
   },
   methods:{
     async onSubmit(){

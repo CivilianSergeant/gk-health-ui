@@ -26,12 +26,12 @@ const routes: Array<RouteConfig> = [
     component: Employees
   },
   {
-    path: '/patients/:id',
-    component: PatientDetail
-  },
-  {
     path: '/patients/add',
     component: PatientForm
+  },
+  {
+    path: '/patients/:id',
+    component: PatientDetail
   },
   {
     path: '/patients',
