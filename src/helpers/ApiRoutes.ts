@@ -9,6 +9,7 @@ export enum ApiRoutes{
     ALL_CATEGORIES = '/service-category',
     ADD_CATEGORY = '/service-category/add',
     ALL_SERVICES = '/service',
+    ADD_SERVICE = '/service/add',
     ALL_PATIENTS = '/patient',
     ADD_PATIENT = '/patient/add',
     PATIENT_CARD_REGISTRATION = '/patient/card-registration',

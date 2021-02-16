@@ -478,7 +478,11 @@ export default {
         
     },
     onReset(){
-        this.$router.push('/patients')
+        
+        const navigationService =new NavigationService();
+        navigationService.setLocalStorageService(new LocalStorageService());
+        navigationService.redirect(this,"patients");
+        this.referrer=null;
         console.log('')
     },
     addMember(){

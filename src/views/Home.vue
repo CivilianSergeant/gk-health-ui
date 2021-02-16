@@ -26,7 +26,7 @@
           <div class="col-md-3 mt-4">
             <b-button type="submit" variant="info">Search</b-button> 
             <b-button @click="onClearSearch" class="ml-1" variant="warning">Clear</b-button> 
-            <b-button v-if="notFound" @click="gotoPatientCreateView" class="ml-2" pill variant="success"> 
+            <b-button  @click="gotoPatientCreateView" class="ml-2" pill variant="success"> 
               <b-icon-plus-circle scale="1.25" class="t-bold"></b-icon-plus-circle></b-button>
           </div>
           <div class="col-md-6 text-secondary font-weight-bold">

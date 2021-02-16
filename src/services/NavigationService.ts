@@ -13,7 +13,7 @@ export class NavigationService{
             view.$router.push({name:view.referrer,params:{pid:view.form.pid}});
             this.localStorageService.clear('referrer');
         }else{
-            view.$router.push(route);
+            view.$router.push({name:route});
         }
     }
 
