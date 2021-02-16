@@ -100,7 +100,7 @@
                         label-for="patient-datepicker"
                         description="Patient's Date of Birth"
                     >
-                        <b-form-datepicker id="patient-datepicker" v-model="form.dateOfBirth" class="mt-2"></b-form-datepicker>
+                        <b-form-datepicker :required="true" id="patient-datepicker"  v-model="form.dateOfBirth" class="mt-2"></b-form-datepicker>
                     </b-form-group>
                 </div>
             </div>
@@ -343,15 +343,18 @@
 import { CenterService } from '@/services/CenterService'
 import axios from 'axios';
 import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
+import { LocalStorageService } from '@/services/LocalStorageService';
+import { NavigationService } from '@/services/NavigationService';
 
 export default {
   name: 'Patients',
  
   data(){
       return {
+        referrer:null,
         cardRegistrationAccepted:false,
         title: "Patients",
-        isBusy: false,
+        
         centers: [],
         genderOptions: [
           { value: null, text: 'Please Select Gender' },
@@ -367,6 +370,7 @@ export default {
           
         ],
         form:{
+            pid:'',
             center:{id:null},
             apiVillageId:null,
             fullName:'',
@@ -407,8 +411,16 @@ export default {
   },
   beforeMount(){
     this.$store.commit('clearMessage');
-    this.fetchCenters();
+    this.fetchCenters(()=>{
+        this.form.center = this.centers[1];
+        console.log('here',this.centers[1])
+    });
     
+  },
+  created(){
+      
+      (new LocalStorageService()).getReferrer((r)=>this.referrer = r,this);
+
   },
   methods:{
     async onSubmit(){
@@ -426,20 +438,43 @@ export default {
         if(!this.cardRegistrationAccepted){
             formRequest.cardRegistration = null;
         }
-        console.log(formRequest);
-        formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
+        
+        
+        if(formRequest.dateOfBirth){
+            formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
+        }else{
+            formRequest.dateOfBirth = null;
+        }
+
+        if(!formRequest.dateOfBirth){
+            this.$store.commit('setErrorMsg','Date Of Birth required');
+            return;
+        }
+
         axios.defaults.headers.common = {
         "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
         'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
         };
-        const response = await axios.post(GetApiRoute(ApiRoutes.ADD_PATIENT),formRequest);
-        console.log(response)
-        if(response.status==200){
-            this.$store.commit('setSuccessMsg','New Patient profile Created');
-            this.$router.push("/patients");
-        }else{
-            console.log(response);
+
+        try{
+            const response = await axios.post(GetApiRoute(ApiRoutes.ADD_PATIENT),formRequest);
+            console.log(response)
+            if(response.status==200){
+                
+                this.$store.commit('setSuccessMsg','New Patient profile Created');
+                this.form.pid = response.data.patient.pid;
+                const navigationService =new NavigationService();
+                navigationService.setLocalStorageService(new LocalStorageService());
+                navigationService.redirect(this,"patients");
+            }else{
+                this.$store.commit('setErrorMsg',response)
+            }
+
+        }catch(e){
+            this.$store.commit('setErrorMsg',e)
         }
+
+        
         
     },
     onReset(){
@@ -461,15 +496,24 @@ export default {
         }
         console.log(response);
     },
-    fetchCenters(){
+    fetchCenters(callback){
 
-      this.isBusy=true;
+      
+      this.$store.commit('start');
       (new CenterService()).getCenters().then(result=> {
           this.centers.push({value:null,text:'Select Center'});
-          result.map(center=>this.centers.push({value:center.id,text:center.name})); 
-          this.isBusy=false;})
+          result.forEach(center=>{
+              this.centers.push({value:center.id,text:center.name,id:center.id})
+            }); 
+
+          if(callback!=null && callback!=undefined){
+            callback();
+          }
+
+          this.$store.commit('finish');
+        })
       .catch(error=>{
-        this.isBusy=false;
+        this.$store.commit('finish');
         if(error.toString().match('Error: Network Error') !=null){
           this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
         }else if(error.toString.length>0){

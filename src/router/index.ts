@@ -26,6 +26,7 @@ const routes: Array<RouteConfig> = [
     component: Employees
   },
   {
+    name:'patient-create',
     path: '/patients/add',
     component: PatientForm
   },
@@ -34,6 +35,7 @@ const routes: Array<RouteConfig> = [
     component: PatientDetail
   },
   {
+    name:'patients',
     path: '/patients',
     component: Patients
   },
