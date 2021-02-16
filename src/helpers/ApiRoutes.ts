@@ -7,6 +7,7 @@ export enum ApiRoutes{
     ALL_EMPLOYEES = '/employee',
     ADD_EMPLOYEE = '/employee/add',
     ALL_CATEGORIES = '/service-category',
+    ADD_CATEGORY = '/service-category/add',
     ALL_SERVICES = '/service',
     ALL_PATIENTS = '/patient',
     ADD_PATIENT = '/patient/add',
