@@ -209,6 +209,7 @@ export default {
       this.$store.commit('clear');
       this.showForm=!this.showForm
       if(this.showForm){
+        this.categories = [];
         this.fetchServiceCategories();
       }
     },
