@@ -8,6 +8,8 @@ export default new Vuex.Store({
     isBusy:false,
     isError:false,
     isSuccess:false,
+    user:{},
+    auth:{},
     message:''
   },
   mutations: {
@@ -36,6 +38,12 @@ export default new Vuex.Store({
     clearMessage(state){
       state.isError=false;
       state.isSuccess=false;
+    },
+    setUser(state,user){
+      state.user = user;
+    },
+    setAuth(state,keycloak){
+      state.auth = keycloak;
     }
   },
   actions: {

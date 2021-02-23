@@ -6,20 +6,41 @@
         </button>
         <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
         <ul class="navbar-nav px-3">
-          
-          <!-- <li class="nav-item text-nowrap">
+          <li class="nav-item text-nowrap">
+            <a class="nav-link text-white" :href="showAccount()">Welcome {{username}},</a>
+          </li>
+          <li class="nav-item text-nowrap ml-2">
             
-            <a class="nav-link" href="#">Sign out</a>
-          </li> -->
+            <a class="nav-link text-white" :href="onLogout()">Sign out</a>
+          </li>
         </ul>
       </header>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { ApiRoutes } from '@/helpers/ApiRoutes';
+import axios from 'axios';
 
 @Component
 export default class AppHeader extends Vue {
   @Prop() private msg!: string;
+
+  get username(){
+    return this.$store.state.user.preferred_username;
+  }
+
+  onLogout(){
+    return ApiRoutes.LOGOUT_PATH+"?redirect_uri="+encodeURI(ApiRoutes.DOMAIN);
+    // window.location.reload();
+  }
+
+  showAccount(){
+    return ApiRoutes.USER_ACCOUNT_PATH;
+  }
 }
 </script>
+<style scoped>
+.navbar-nav {flex-direction: row;}
+.text-white{ color: white !important;}
+</style>

@@ -15,27 +15,36 @@ import router from './router'
 import store from './store'
 
 import Keycloak from 'keycloak-js'
+import { UserService } from './services/UserService';
+import { ApiRoutes } from './helpers/ApiRoutes';
+// import axios from 'axios';
 
 Vue.config.productionTip = false
 
+
+
 const initOptions = {
-  url: 'http://103.26.136.30:8080/auth', 
+  url: ApiRoutes.AUTH_PATH, 
   realm: 'GK_HEALTH', 
   clientId: 'demo-vue-app',
   onLoad: 'login-required'
 }
 const keycloak: any = Keycloak(initOptions);
 
+
+
 keycloak.init({ onLoad: initOptions.onLoad }).then((auth: any) => {
   if (!auth) {
     window.location.reload();
   } else {
-    console.info("Authenticated");
-
-    // new Vue({
-    //   el: '#app',
-    //   render: h => h(App, { props: { keycloak: keycloak } })
-    // })
+    console.info("Authenticated", keycloak.token);
+    store.commit('setAuth',keycloak);
+    
+    UserService.getUserInfo(ApiRoutes.USER_INFO_PATH,keycloak.token)
+      .then(res=>{
+        console.log(res);
+        store.commit('setUser',res)
+      });
 
     new Vue({
       router,
@@ -51,9 +60,9 @@ keycloak.init({ onLoad: initOptions.onLoad }).then((auth: any) => {
       if (refreshed) {
         console.info('Token refreshed' + refreshed,);
       } else {
-        console.warn('Token not refreshed, valid for '
+        console.info('Token not refreshed, valid for '
           + Math.round(keycloak.tokenParsed.exp + keycloak.timeSkew - new Date().getTime() / 1000) + ' seconds');
-        console.log(keycloak);
+        
       }
     }).catch(() => {
       console.error('Failed to refresh token');
