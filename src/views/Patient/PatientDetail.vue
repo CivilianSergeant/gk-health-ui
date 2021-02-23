@@ -106,7 +106,7 @@
                         label="Blood Group"
                         label-for="bloodGroup"
                     >
-                        <strong class="text-secondary">{{form.detail.bloodGroup}}</strong>
+                        <strong class="text-secondary">{{(form.detail)? form.detail.bloodGroup:'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 <div class="col-md-3">
@@ -115,7 +115,7 @@
                         label="Nationality:"
                         label-for="nationality"
                     >
-                        <strong class="text-secondary">{{form.detail.nationality}}</strong>
+                        <strong class="text-secondary">{{(form.detail)? form.detail.nationality : 'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 <div class="col-md-3">
@@ -124,7 +124,7 @@
                         label="National ID:"
                         label-for="nationalId"
                     >
-                        <strong class="text-secondary">{{(form.detail.nationalId)?form.detail.nationalId:'N/A'}}</strong>
+                        <strong class="text-secondary">{{(form.detail)?form.detail.nationalId:'N/A'}}</strong>
                     </b-form-group>
                 </div>
                 <div class="col-md-3">
@@ -133,7 +133,7 @@
                         label="Occupation:"
                         label-for="occupation"
                     >
-                        <strong class="text-secondary">{{(form.detail.occupation)? form.detail.occupation:'N/A'}}</strong>
+                        <strong class="text-secondary">{{(form.detail)? form.detail.occupation:'N/A'}}</strong>
                     </b-form-group>
                 </div>
             </div>

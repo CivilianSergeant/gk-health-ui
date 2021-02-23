@@ -1,6 +1,6 @@
 export enum ApiRoutes{
-    DOMAIN = 'http://localhost',
-    BASE_PATH = 'http://localhost:8181/api/',
+    DOMAIN = 'http://103.26.136.30',
+    BASE_PATH = 'http://103.26.136.30:8181/api/',
     VERSION = 'v1',
     ALL_CENTERS = '/health-center',
     ADD_CENTER  = '/health-center/add',

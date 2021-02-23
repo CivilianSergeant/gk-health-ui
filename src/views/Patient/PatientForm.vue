@@ -254,7 +254,7 @@
                                         description="Age"
                                     >
                                         <b-form-input id="r-age" v-model="member.age"
-                                        placeholder="Age"
+                                        placeholder="Age" type="number"
                                         ></b-form-input>
                                     </b-form-group>
                                 </div>

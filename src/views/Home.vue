@@ -162,16 +162,20 @@ export default {
     this.fetchServices()
   },
   watch:{
-    patientServices: function(patientServices){
+    patientInvoice: {
+      handler(patientInvoice){
       this.totalPayable=0;
-      patientServices.map(r=>{
-        if(this.registration.gb){
-          this.totalPayable+= r.currentGbCost
-        }else{
-          this.totalPayable+= r.currentCost
-        }
-        
+      console.log(patientInvoice.patientServices,'here');
+      patientInvoice.patientServices.map(r=>{
+        // if(this.registration.gb){
+        //   this.totalPayable+= r.currentGbCost
+        // }else{
+        //   this.totalPayable+= r.currentCost
+        // }
+        this.totalPayable+= r.payableAmount;
       });
+      },
+      deep:true
     }
   },
   created(){

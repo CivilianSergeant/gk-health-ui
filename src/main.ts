@@ -14,10 +14,54 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import Keycloak from 'keycloak-js'
+
 Vue.config.productionTip = false
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+const initOptions = {
+  url: 'http://103.26.136.30:8080/auth', 
+  realm: 'GK_HEALTH', 
+  clientId: 'demo-vue-app',
+  onLoad: 'login-required'
+}
+const keycloak: any = Keycloak(initOptions);
+
+keycloak.init({ onLoad: initOptions.onLoad }).then((auth: any) => {
+  if (!auth) {
+    window.location.reload();
+  } else {
+    console.info("Authenticated");
+
+    // new Vue({
+    //   el: '#app',
+    //   render: h => h(App, { props: { keycloak: keycloak } })
+    // })
+
+    new Vue({
+      router,
+      store,
+      render: h => h(App,{ props: { keycloak: keycloak } })
+    }).$mount('#app')
+  }
+
+
+//Token Refresh
+  setInterval(() => {
+    keycloak.updateToken(70).then((refreshed: any) => {
+      if (refreshed) {
+        console.info('Token refreshed' + refreshed,);
+      } else {
+        console.warn('Token not refreshed, valid for '
+          + Math.round(keycloak.tokenParsed.exp + keycloak.timeSkew - new Date().getTime() / 1000) + ' seconds');
+        console.log(keycloak);
+      }
+    }).catch(() => {
+      console.error('Failed to refresh token');
+    });
+  }, 6000)
+
+}).catch(() => {
+  console.error("Authenticated Failed");
+});
+
+

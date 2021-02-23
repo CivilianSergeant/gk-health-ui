@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppHeader  from './components/layouts/global/AppHeader.vue';
 import ContentBar  from './components/layouts/global/ContentBar.vue';
 import SideMenu  from './components/layouts/global/SideMenu.vue';
@@ -45,7 +45,11 @@ Vue.component('VueTypeaheadBootstrap',VueTypeaheadBootstrap);
     SideMenu
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+
+  @Prop() keycloak!: any;
+
+}
 </script>
 
 <style lang="scss">
