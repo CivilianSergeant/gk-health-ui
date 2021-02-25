@@ -7,7 +7,7 @@ import Patients from '../views/Patient/Patients.vue'
 import PatientForm from '../views/Patient/PatientForm.vue'
 import PatientDetail from '../views/Patient/PatientDetail.vue'
 import ServiceCategories from '../views/ServiceCategories.vue'
-import {Services,ServiceForm, ServiceDetail }from '../views/HealthService'
+import {Services,ServiceForm, ServiceDetail, ServiceAttribute }from '../views/HealthService'
 
 Vue.use(VueRouter)
 
@@ -42,6 +42,11 @@ const routes: Array<RouteConfig> = [
   {
     path: '/service-categories',
     component: ServiceCategories
+  },
+  {
+    name:'service-attribute',
+    path: '/services/:id/attribute',
+    component: ServiceAttribute
   },
   {
     name:'service-detail',
