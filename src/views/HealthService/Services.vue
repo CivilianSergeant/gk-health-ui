@@ -3,13 +3,36 @@
     <ContentBar :PageTitle="title"/>
     <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
-    <h5>All Services
+    <h5 class="clearfix">All Services
       
       <router-link to="/services/add" class=" btn btn-primary btn-sm float-right">Add Service</router-link >
 
     </h5>
-    
-    <b-table id="service-table" v-if="!showForm" :fields="fields" :per-page="perPage" :busy.sync="isBusy" 
+    <b-form-group
+          label="Filter"
+          label-for="filter-input"
+          label-cols-sm="1"
+          label-align-sm="right"
+          label-size="sm"
+          class="my-2"
+        >
+          <b-input-group size="sm" class="col-md-3">
+            <b-form-input
+              id="filter-input"
+              v-model="filter"
+              type="search"
+              placeholder="Type to Search"
+            ></b-form-input>
+
+            <b-input-group-append>
+              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+    <b-table id="service-table" v-if="!showForm" :fields="fields" 
+        @filtered="onFiltered" :per-page="perPage" :busy.sync="isBusy" 
+        :filter="filter"
+      :filter-included-fields="filterOn"
         :current-page="currentPage" :items="services">
         <template #cell(active)="row">
           <span v-if="row.item.active" class="badge badge-success">Active </span>
@@ -54,7 +77,7 @@ export default {
       return _isCategoryPathology;
     },
     rows() {
-      return this.services.length
+      return this.totalRows //this.services.length
     },
     isBusy(){
       return this.$store.state.isBusy;
@@ -84,7 +107,10 @@ export default {
         showForm:false,
         categories:[],
         labTestGroups:[],
-        form:{name:'',active:true,serviceCategory:{id:null}}
+        form:{name:'',active:true,serviceCategory:{id:null}},
+        filter: null,
+        filterOn: [],
+        totalRows:0
       }
   },
   beforeMount(){
@@ -148,6 +174,7 @@ export default {
       this.$store.commit('start');
       (new HealthService()).getServices().then(result=>{
         this.services=result; 
+        this.totalRows=this.services.length;
         this.$store.commit('finish');
         })
       .catch(error=> {
@@ -158,7 +185,12 @@ export default {
           this.$store.commit('setErrorMsg',error);
         }
       });
-    }
+    },
+    onFiltered(filteredItems) {
+        // Trigger pagination to update the number of buttons/pages due to filtering
+        this.totalRows = filteredItems.length
+        this.currentPage = 1
+      }
   }
 }
 </script>

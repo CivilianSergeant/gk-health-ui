@@ -18,12 +18,14 @@ export enum ApiRoutes{
     ADD_SERVICE = '/service/add',
     UPDATE_SERVICE = '/service/update',
     GET_SERVICE_BY_ID = '/service/:id',
+    ADD_SERVICE_ATTRIBUTES = '/service-attribute/add',
     ALL_PATIENTS = '/patient',
     ADD_PATIENT = '/patient/add',
     PATIENT_CARD_REGISTRATION = '/patient/card-registration',
     GET_PATIENT_BY_ID = '/patient/:id',
     GET_PATIENT_BY_PID = '/patient/by-pid/:id',
-    ALL_LAB_TEST_GROUP = '/lab-test-groups'
+    ALL_LAB_TEST_GROUP = '/lab-test-groups',
+    ALL_LAB_TEST_UNIT = '/service-units'
 }
 
 export function GetApiRoute(route: string,value=""){

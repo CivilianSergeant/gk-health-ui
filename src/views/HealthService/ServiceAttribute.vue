@@ -14,36 +14,65 @@
             <table class="table">
                 <thead>
                     <tr>
-                        
-                        <th colspan="3"><button type="button" @click="addRow" class="float-right">Add</button></th>
+                        <th>Attribute List</th>
+                        <th colspan="6">
+                            <button type="button" @click="addAttributeGroup" class="btn btn-secondary btn-sm float-right ml-2">Add Attribute Group</button>
+                            <button type="button" @click="addAttribute" class="btn btn-secondary btn-sm float-right">Add Attribute</button>
+                        </th>
                         
                     </tr>
                     <tr>
                         
                         <th>Name</th>
-                        <th>Normal range</th>
+                        <th>Avg range</th>
+                        <th>Male range</th>
+                        <th>Female range</th>
+                        <th>Child range</th>
+                        <th>Unit</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(attr,i) in attributes" :key="i">
-                        <td ><input type="text" style="width:100%" v-model="attr.name"/></td>
-                        <td><input type="text" style="width:100%" v-model="attr.range"/></td>
-                        <td ><button type="button" @click="deleteRow(i)">Del</button></td>
+                    <tr v-for="(attr,i) in form.labTestAttributes" :key="i">
+                        <td class="p-0" colspan="6" v-if="attr.group">
+                            <input type="text" v-model="attr.attributeName" :ref="('name-'+i)" @keyup="handleKeyUp(this,i,'name')" style="width:100%" placeholder="Attribute Group Name" />
+                        </td>
+                        <td v-if="attr.group" class="p-0 text-center"><button class="btn btn-danger btn-sm" type="button" @click="deleteRow(i)"><b-icon-trash></b-icon-trash></button></td>
+                        
+                        <td v-if="!attr.group"  class="p-0"><input v-model="attr.attributeName" :ref="('name-'+i)" @keyup="handleKeyUp(this,i,'name')" type="text" placeholder="Attribute Name, Ex. HB%" style="width:100%" /></td>
+                        <td v-if="!attr.group" class="p-0"><input v-model="attr.averageRange" :ref="('arange-'+i)"  @keyup="handleKeyUp(this,i,'arange')" placeholder="Ex. 14.0-18.0" type="text" style="width:100%" /></td>
+                        <td v-if="!attr.group" class="p-0"><input v-model="attr.maleRange" :ref="('frange-'+i)"  @keyup="handleKeyUp(this,i,'frange')" placeholder="Ex. Male:14.0-18.0" type="text" style="width:100%" /></td>
+                        <td v-if="!attr.group" class="p-0"><input v-model="attr.femaleRange" :ref="('mrange-'+i)"  @keyup="handleKeyUp(this,i,'mrange')" placeholder="Ex. Female:12.0-16.0" type="text" style="width:100%" /></td>
+                        <td v-if="!attr.group" class="p-0"><input v-model="attr.childRange" :ref="('crange-'+i)"  @keyup="handleKeyUp(this,i,'crange')" placeholder="Ex. Child:14.0-18.0" type="text" style="width:100%" /></td>
+                        <td v-if="!attr.group" class="p-0">
+                                <select style="width:100%;padding:2px;" v-model="attr.labTestUnit.id">
+                                    <option :value="null">Select Unit</option>
+                                    <option v-for="(unit,u) in units" :key="u" :value="unit.id">{{unit.name}}</option>
+                                </select>
+
+                        </td>
+                        <td v-if="!attr.group" class="p-0 text-center"><button class="btn btn-danger btn-sm" type="button" @click="deleteRow(i)"><b-icon-trash></b-icon-trash></button></td>
                     </tr>
                 </tbody>
             </table>
+            <div class="row mt-2 mb-2">
+                <div class="col-md-2 d-flex justify-content-between">
+                    <b-button type="submit" :disabled="buttonDisabled" variant="success">Update</b-button>
+                    <b-button type="reset"  :disabled="buttonDisabled" class="ml-4" variant="danger">Cancel</b-button>
+                </div>
+            </div>
         </b-form>
     </div>
 </template>
 <script>
-import {CategoryService,HealthService, LabTestGroupService,NavigationService} from '@/services'
+import {HealthService} from '@/services'
 import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
 import axios from 'axios';
 
 export default {
   name: 'Services',
   computed: {
+    
     isCategoryPathology(){
       let _isCategoryPathology=false;
       this.categories.forEach(c=>{
@@ -55,7 +84,10 @@ export default {
       return _isCategoryPathology;
     },
     rows() {
-      return this.services.length
+      return (this.form.labTestAttributes)?this.form.labTestAttributes.length:0;
+    },
+    buttonDisabled(){
+        return this.rows==0;
     },
     isBusy(){
       return this.$store.state.isBusy;
@@ -73,41 +105,106 @@ export default {
   data(){
       return {
         title: "Services",
-       
-        attributes:[],
+        units:[],
         perPage: 20,
         currentPage: 1,
         showForm:false,
         categories:[],
         labTestGroups:[],
-        form:{name:'',description:'N/A',currentCost:0,currentGbCost:0,labTest:false,active:true,serviceCategory:{id:null},labTestGroup:{id:null}}
+        form:{serviceId:null,labTestAttributes:[]}
       }
   },
   beforeMount(){
     this.$store.commit('clearMessage');
     this.fetchServiceById(this.$route.params.id);
+    this.fetchLabTestUnits();
   },
   methods:{
-    addRow(){
+    handleKeyUp(e,rowIndex,key){
+        const event = e || window.event;
+        switch(event.keyCode){
+            case 40:
+                ++rowIndex;
+                if(this.$refs[`${key}-${rowIndex}`] != undefined){
+                    this.$refs[`${key}-${rowIndex}`][0].focus();
+                }
+                break;
+            case 38:
+                --rowIndex;
+                if(this.$refs[`${key}-${rowIndex}`] != undefined){
+                    this.$refs[`${key}-${rowIndex}`][0].focus();
+                }
+        }
+    },
+    addAttribute(){
         console.log('here')
-        this.attributes.push({});
+        this.form.labTestAttributes.push({
+            group:false,
+            labTestUnit:{id:null},
+            attributeName:'',
+            averageRange:'',
+            maleRange:'',
+            femaleRange:'',
+            childRange:'',
+            displayOrder: (this.rows>0)? this.rows:0
+            });
+    },
+    addAttributeGroup(){
+        console.log('here')
+        this.form.labTestAttributes.push({
+            group:true,
+            labTestUnit:{id:null},
+            attributeName:'',
+            averageRange:'',
+            maleRange:'',
+            femaleRange:'',
+            childRange:'',
+            displayOrder: (this.rows>0)? this.rows:0
+            });
     },
     deleteRow(i){
         console.log(i)
-        this.attributes.splice(i,1);
+        this.form.labTestAttributes.splice(i,1);
     },
     fetchServiceById(id){
         this.$store.commit('start');
         (new HealthService()).findServicesById(id).then(result=>{
             this.form=result;
+            this.$store.commit('finish');
         });
     },
+    fetchLabTestUnits(){
+        this.$store.commit('start');
+        (new HealthService()).getServiceUnits().then(result=>{
+            this.units = result;
+            this.$store.commit('finish')
+        })
+    },
     onSubmit(){
-        console.log('')
+        let valid=true;
+        this.form.labTestAttributes.map(attr=>{
+            if(attr.group){
+                attr.labTestUnit=null;
+            }else{
+                if(attr.labTestUnit.id==null){
+                    this.$store.commit('setErrorMsg','Please Select Unit')
+                    valid=false;
+                    return;
+                }
+            }
+            return attr;
+        })
+        console.log(this.form);
+        if(valid){
+            (new HealthService()).addServiceAttributes(this.form)
+        }
     },
     onReset(){
-console.log('')
+        console.log('')
     }
   }
 }
 </script>
+<style scoped>
+.table .btn-sm, .btn-group-sm > .btn{ padding: 0.05rem 0.5rem;}
+</style>

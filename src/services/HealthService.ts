@@ -1,6 +1,8 @@
 import { Service } from '@/entity/Service';
 import axios from 'axios';
 import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
+import { LabTestUnit } from '@/entity/LabTestUnit';
+import store from '@/store';
 
 export class HealthService{
 
@@ -19,6 +21,27 @@ export class HealthService{
         let service!: Service;
         if(response.status == 200){
             service=response.data;
+        }
+        return service;
+    }
+
+    async getServiceUnits(): Promise<LabTestUnit[]>{
+        const response = await axios.get(GetApiRoute(ApiRoutes.ALL_LAB_TEST_UNIT));
+        let units!: LabTestUnit[];
+        if(response.status == 200){
+            units=response.data;
+        }
+        return units;
+    }
+
+    async addServiceAttributes(payload: Record<string, any>): Promise<Service>{
+        const response = await axios.post(GetApiRoute(ApiRoutes.ADD_SERVICE_ATTRIBUTES),payload);
+        let service!: Service;
+        if(response.status == 200){
+            service = response.data.service;
+            store.commit('setSuccessMsg','Attributes updated');
+        }else{
+            store.commit('setErrorMessage',response.data.message);
         }
         return service;
     }
