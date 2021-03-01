@@ -22,7 +22,12 @@ import { ApiRoutes } from './helpers/ApiRoutes';
 
 Vue.config.productionTip = false
 
+enum ENV_MODE {
+  DEV_MODE,
+  PROD_MODE
+}
 
+const ENV = ENV_MODE.PROD_MODE;
 
 const initOptions = {
   url: ApiRoutes.AUTH_PATH, 
@@ -78,20 +83,30 @@ function initKeycloak (){
   });
 }
 
-fetch("http://localhost:8080/auth/realms/GK_HEALTH",{
-  method:"GET",
-}).then(r=>{return r.json(); }).then(result=>{
-  console.log(result)
-  authServerStatus=true; 
-  initKeycloak();
-})
-.catch((e)=>{
-  console.log(e)
-  authServerStatus=false;
+if(ENV==ENV_MODE.DEV_MODE){
   new Vue({
-    render: h => h(Error)
-    }).$mount('#app')
-});
+    router,
+    store,
+    render: h => h(App,{ props: { keycloak: null } })
+  }).$mount('#app')
+}else{
+  
+
+  fetch("http://localhost:8080/auth/realms/GK_HEALTH",{
+    method:"GET",
+  }).then(r=>{return r.json(); }).then(result=>{
+    console.log(result)
+    authServerStatus=true; 
+    initKeycloak();
+  })
+  .catch((e)=>{
+    console.log(e)
+    authServerStatus=false;
+    new Vue({
+      render: h => h(Error)
+      }).$mount('#app')
+  });
+}
 
 // if(authServerStatus){
   

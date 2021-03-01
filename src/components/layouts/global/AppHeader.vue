@@ -5,9 +5,9 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
-        <ul class="navbar-nav px-3">
+        <ul class="navbar-nav px-3" v-if="isLive">
           <li class="nav-item text-nowrap">
-            <a class="nav-link text-white" :href="showAccount()">Welcome {{username}},</a>
+            <a class="nav-link text-white" :href="showAccount()"> {{'Welcome '+username}},</a>
           </li>
           <li class="nav-item text-nowrap ml-2">
             
@@ -25,6 +25,10 @@ import axios from 'axios';
 @Component
 export default class AppHeader extends Vue {
   @Prop() private msg!: string;
+
+  get isLive(){
+    return (this.$store.state.keycloak)? true :false
+  }
 
   get username(){
     return this.$store.state.user.preferred_username;
