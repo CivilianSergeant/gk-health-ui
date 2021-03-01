@@ -19,6 +19,7 @@ export enum ApiRoutes{
     UPDATE_SERVICE = '/service/update',
     GET_SERVICE_BY_ID = '/service/:id',
     ADD_SERVICE_ATTRIBUTES = '/service-attribute/add',
+    SERVICE_ATTRIBUTE_BY_ID = '/service-attribute/:id',
     ALL_PATIENTS = '/patient',
     ADD_PATIENT = '/patient/add',
     PATIENT_CARD_REGISTRATION = '/patient/card-registration',
@@ -49,6 +50,12 @@ export function GetApiRoute(route: string,value=""){
         if(value !=null){
             _route = route.replace(":id",value);
             console.log(_route)
+        }
+    }
+    
+    if(_route.match(':id')){
+        if(value != null){
+            _route = route.replace(":id",value);
         }
     }
     console.log(ApiRoutes.BASE_PATH+ApiRoutes.VERSION+_route);

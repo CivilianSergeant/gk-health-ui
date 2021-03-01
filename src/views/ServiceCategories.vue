@@ -116,11 +116,12 @@ export default {
       });
     },
     onReset(){
-      this.$store.commit('clear');
+      this.$store.commit('clearMessage');
       this.toggleView();
     },
     toggleView(){
-      this.$store.commit('clear');
+      this.form={name:'',description:'',active:true}
+      this.$store.commit('clearMessage');
       this.showForm=!this.showForm
     },
     fetchServiceCategories(){

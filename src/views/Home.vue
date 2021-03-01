@@ -34,16 +34,11 @@
             <b-card v-if="patient!=null">
             <b-card-title>Patient Info #{{patient.pid}}</b-card-title>
             <p> Patient Name: {{patient.fullName}} </p>
-            <p> IS GB?: <Status :data="isGb(patient.registrations)"/> <b-form-checkbox
-            id="input-is-gb"
-            v-model="registration.gb"
-            name="card-registration-gb"
-            v-if="!registration.id"
-            :value="true"
-            :unchecked-value="false"
-            ></b-form-checkbox></p>
-            <p> Card Registered?:  <Status :data="registration.id"/> </p>
-            <p v-if="!registration.id"><b-button @click="register" variant="info" size="sm">Register For Card</b-button></p>
+            <p> IS GB?: <Status :data="form.cardRegistration.gb"/> </p>
+            <p> Card Registered?:  <Status :data="form.cardRegistration.id"/> </p>
+            <p v-if="!hasActiveCard">
+                <b-button v-b-modal.modal-1 variant="info" size="sm">Register For Card</b-button>
+            </p>
             <p v-if="registration.id"> Registration Date: {{getDate(registration.startDate)}} </p>
             <p v-if="registration.id"> Expire Date: {{getDate(registration.expiredDate)}}  </p>
             </b-card>
@@ -77,6 +72,7 @@
           <tr>
               <th>Sl</th>
               <th>Service Name</th>
+              <th>Room No</th>
               <th>Amount</th>
               <th>Discount</th>
               <th>Payable</th>
@@ -88,6 +84,7 @@
           <tr v-for="(ps,i) in patientInvoice.patientServices" :key="i">
               <td>{{(i+1)}}</td>
               <td>({{ps.service.code}}) {{ps.service.name}}</td>
+              <td><input type="text" v-model="ps.service.roomNumber"/></td>
               <td>{{ps.serviceAmount}}</td>
               <td>{{ps.discountAmount}}</td>
               <td>{{ps.payableAmount}}</td>
@@ -101,7 +98,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="4"></td>
+                <td colspan="5"></td>
                 
                 <td>{{totalPayable}}</td>
                 <td></td>
@@ -114,7 +111,149 @@
               <b-button type="reset" class="ml-4" variant="danger">Cancel</b-button>
           </div>
       </div>
+       <b-modal id="modal-1" size="lg" button-size="sm" bvModalEvent.trigger = 'ok' title="Card Register">
+          <div class="col-md-4 d-flex flex-row"> IS GB?: &nbsp; <b-form-checkbox
+              id="input-is-gb"
+              class="ml-2"
+              v-model="form.cardRegistration.gb"
+              name="card-registration-gb"
+              v-if="!form.cardRegistration.id"
+              :value="true"
+              :unchecked-value="false"
+              ></b-form-checkbox> </div>
+
+          <div class="col-md-4">
+                          <b-form-group
+                              id="input-group-validity"
+                              label="Validity :"
+                              label-for="validity"
+                              description="Validity"
+                          >
+                              <b-form-select id="r-validity" v-model="form.cardRegistration.validityDuration" 
+                              :options="validityDurations"></b-form-select>
+                          </b-form-group>
+                      </div>
+         <div class="col-md-12 mt-3"><h6 class="clearfix">Members <b-button @click="addMember" class="float-right mb-2" size="sm" variant="info">Add Member</b-button></h6></div>
             
+         <b-card class="clearBoth" v-for="(member,i) in form.cardRegistration.members" :key="i">
+            <b-card-body >
+              <div class="row ">
+                  <div class="col-md-6 float-left">
+                      <h6>Member #{{(i+1)}}</h6>
+                  </div>
+                  <div class="col-md-6">
+                  <b-button @click="delMember(i)" class="float-right" size="sm" variant="danger"><b-icon-trash  ></b-icon-trash></b-button>
+                  </div>
+              </div>
+              <div class="col-md-12 ">
+                  <div class="row">
+                      <div class="col-md-5">
+                          <b-form-group
+                              id="input-group-r-fullname"
+                              label="Full Name:"
+                              label-for="input-r-fullname"
+                              description="full name"
+                          >
+                              <b-form-input
+                                  id="input-r-fullname"
+                                  v-model="member.fullName"
+                                  type="text"
+                                  placeholder="Full Name"
+                                  required
+                                  ></b-form-input>
+                          </b-form-group>
+                      </div>
+                      <div class="col-md-2">
+                          <b-form-group
+                              id="input-group-r-age"
+                              label="Age:"
+                              label-for="r-age"
+                              description="Age"
+                          >
+                              <b-form-input id="r-age" v-model="member.age"
+                              placeholder="Age" type="number"
+                              ></b-form-input>
+                          </b-form-group>
+                      </div>
+                      <div class="col-md-4">
+                          <b-form-group
+                              id="input-group-r-gender"
+                              label="Gender:"
+                              label-for="gender"
+                              description="Gender"
+                          >
+                              <b-form-select id="r-gender" v-model="member.gender" 
+                              :options="genderOptions"></b-form-select>
+                          </b-form-group>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-2">
+                        <b-form-group
+                            id="input-group-r-blood-group"
+                            label="Blood Group"
+                            label-for="r-blood-group"
+                            description="Blood Group"
+                        >
+                        <b-form-select id="r-blood-group" v-model="member.bloodGroup" 
+                              :options="bloodGroups"></b-form-select>
+                            
+                        </b-form-group>
+                    </div>
+                    <div class="col-md-3">
+                        <b-form-group
+                            id="input-group-r-nationality"
+                            label="Nationality:"
+                            label-for="nationality"
+                            description="Nationality"
+                        >
+                            <b-form-input id="r-nationality" v-model="member.nationality"
+                            placeholder="Nationality"
+                            ></b-form-input>
+                        </b-form-group>
+                    </div>
+                    <div class="col-md-3">
+                        <b-form-group
+                            id="input-group-r-nationalId"
+                            label="National ID:"
+                            label-for="nationalId"
+                            description="National ID"
+                        >
+                            <b-form-input id="r-nationalId" v-model="member.nationalId"
+                            placeholder="National ID"
+                            ></b-form-input>
+                        </b-form-group>
+                    </div>
+                    <div class="col-md-3">
+                        <b-form-group
+                            id="input-group-relation"
+                            label="Relation:"
+                            label-for="relation"
+                            description="Relation with Patient"
+                        >
+                            <b-form-input id="relation" v-model="member.relationWithPatient"
+                            placeholder="Relation"
+                            ></b-form-input>
+                        </b-form-group>
+                    </div>
+                </div>  
+            </div>
+            </b-card-body>
+         </b-card>
+         <template #modal-footer="{ ok, cancel }">
+          
+          <!-- Emulate built in modal footer ok and cancel button actions -->
+          <b-button size="sm" variant="success" @click="handleOk">
+            OK
+          </b-button>
+          <b-button size="sm" variant="danger" @click="cancel()">
+            Cancel
+          </b-button>
+          
+        </template>
+        </b-modal>     
     </div>
 </template>
 
@@ -137,6 +276,38 @@ export default {
         patientInvoice:{
           patientServices:[]
         },
+        form:{
+          
+          cardRegistration:{members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0}
+        },
+        bloodGroups:[
+            {value:null, text:'Select'},
+            {value:'O(ve)', text:'O(ve)'},
+            {value:'O(-ve)', text:'O(-ve)'},
+            {value:'A(ve)', text:'A(ve)'},
+            {value:'A(-ve)', text:'A(-ve)'},
+            {value:'B(ve)', text:'B(ve)'},
+            {value:'B(-ve)', text:'B(-ve)'},
+            {value:'AB(ve)', text:'AB(ve)'},
+            {value:'AB(-ve)', text:'AB(-ve)'}
+        ],
+        genderOptions: [
+          { value: null, text: 'Please Select Gender' },
+          { value: 'Male', text: 'Male' },
+          { value: 'Female', text: 'Female' }
+        ],
+        maritalStatusOptions: [
+          { value: null, text: 'Please Select Marital Status' },
+          { value: 'Single', text: 'Single' },
+          { value: 'Married', text: 'Married' },
+          { value: 'Divorced', text: 'Married' },
+          { value: 'Widow', text: 'Widow' },
+          
+        ],
+        validityDurations:[
+          {value:6,text:'6 Months'},
+          {value:12,text:'12 Months'}
+        ],
         autocomplete:{},
         totalPayable:0
       }
@@ -155,6 +326,18 @@ export default {
     },
     message(){
       return this.$store.state.message;
+    },
+    hasActiveCard(){
+      
+      let status=false;
+      
+      this.patient.registrations.map(r=>{
+        if(r.active){
+          status = true;
+        }
+      });
+      
+      return status;
     }
   },
   beforeMount(){
@@ -165,7 +348,7 @@ export default {
     patientInvoice: {
       handler(patientInvoice){
       this.totalPayable=0;
-      console.log(patientInvoice.patientServices,'here');
+      
       patientInvoice.patientServices.map(r=>{
         // if(this.registration.gb){
         //   this.totalPayable+= r.currentGbCost
@@ -186,6 +369,35 @@ export default {
     }
   },
   methods:{
+    handleOk(){
+      
+      let service = {};
+      this.services.map(s=>{
+        if(s.code.match('card registration')){
+          service = s;
+        }
+      });
+      const serviceAmount = service.currentCost;
+      const discountAmount = (this.registration.gb)? (service.currentCost-service.currentGbCost) : 0;
+      this.patientInvoice.patientServices.push({
+        service,
+        serviceAmount:serviceAmount,
+        discountAmount:discountAmount,
+        payableAmount:(serviceAmount-discountAmount),
+      });
+      this.registration = this.form.cardRegistration;
+      this.patient.registrations.push(this.form.cardRegistration)
+      this.$bvModal.hide('modal-1')
+      console.log('hiiere')
+    },
+    addMember(){
+        this.form.cardRegistration.members.push({
+            fullName:'',age:'',gender:null,bloodGroup:null,nationality:'',nationalId:'',relationWithPatient:''
+            })
+    },
+    delMember(i){
+        this.form.cardRegistration.members.splice(i,1);
+    },
     gotoPatientCreateView(){
       this.$router.push({name:'patient-create',params:{referrer:"Home"}});
       (new LocalStorageService()).set('referrer','Home');
@@ -260,9 +472,9 @@ export default {
           if(this.patient.registrations.length==0){
             this.registration = {gb:false,patient:{id:null}};
           }
-          if(this.patient.patientInvoices.length>0){
-            this.patientInvoice = this.patient.patientInvoices[this.patient.patientInvoices.length-1];
-          }
+          // if(this.patient.patientInvoices.length>0){
+            this.patientInvoice = {patientServices:[]}//this.patient.patientInvoices[this.patient.patientInvoices.length-1];
+          // }
           this.notFound = false;
         }else{
           this.$store.commit('setErrorMsg',result.message)

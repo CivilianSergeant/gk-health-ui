@@ -65,7 +65,7 @@
     </div>
 </template>
 <script>
-import {HealthService} from '@/services'
+import {HealthService, NavigationService} from '@/services'
 import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
 import axios from 'axios';
 
@@ -163,7 +163,18 @@ export default {
             });
     },
     deleteRow(i){
-        console.log(i)
+        this.$store.commit('clearMessage')
+        const attr = this.form.labTestAttributes[i];
+        console.log(attr)
+        if(attr!=undefined && attr.id != undefined && attr.id > 0){
+            axios.delete(GetApiRoute(ApiRoutes.SERVICE_ATTRIBUTE_BY_ID,attr.id)).then(
+                res=> {
+                    if(res.status==200){
+                        this.$store.commit('setSuccessMsg',res.data.message);
+                    }
+                }
+            )
+        }
         this.form.labTestAttributes.splice(i,1);
     },
     fetchServiceById(id){
@@ -181,6 +192,7 @@ export default {
         })
     },
     onSubmit(){
+        this.$store.commit('clearMessage')
         let valid=true;
         this.form.labTestAttributes.map(attr=>{
             if(attr.group){
@@ -194,13 +206,16 @@ export default {
             }
             return attr;
         })
-        console.log(this.form);
+        
         if(valid){
-            (new HealthService()).addServiceAttributes(this.form)
+            (new HealthService()).addServiceAttributes(this.form).then(res=>{
+                 this.fetchServiceById(this.form.serviceId);
+            })
         }
     },
     onReset(){
-        console.log('')
+        this.$store.commit('clearMessage');
+        (new NavigationService()).redirect(this,'services')
     }
   }
 }

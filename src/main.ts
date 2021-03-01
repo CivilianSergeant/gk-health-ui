@@ -27,7 +27,7 @@ enum ENV_MODE {
   PROD_MODE
 }
 
-const ENV = ENV_MODE.PROD_MODE;
+const ENV = ENV_MODE.DEV_MODE;
 
 const initOptions = {
   url: ApiRoutes.AUTH_PATH, 

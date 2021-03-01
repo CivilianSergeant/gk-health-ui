@@ -273,55 +273,55 @@
                         </div>
                         <div class="col-md-12">
                             <div class="row">
-                            <div class="col-md-2">
-                                <b-form-group
-                                    id="input-group-r-blood-group"
-                                    label="Blood Group"
-                                    label-for="r-blood-group"
-                                    description="Blood Group"
-                                >
-                                    <b-form-input id="r-blood-group" v-model="member.bloodGroup"  
-                                        type="text"
-                                        placeholder="Blood Group"
-                                    ></b-form-input>
-                                </b-form-group>
-                            </div>
-                            <div class="col-md-3">
-                                <b-form-group
-                                    id="input-group-r-nationality"
-                                    label="Nationality:"
-                                    label-for="nationality"
-                                    description="Nationality"
-                                >
-                                    <b-form-input id="r-nationality" v-model="member.nationality"
-                                    placeholder="Nationality"
-                                    ></b-form-input>
-                                </b-form-group>
-                            </div>
-                            <div class="col-md-3">
-                                <b-form-group
-                                    id="input-group-r-nationalId"
-                                    label="National ID:"
-                                    label-for="nationalId"
-                                    description="National ID"
-                                >
-                                    <b-form-input id="r-nationalId" v-model="member.nationalId"
-                                    placeholder="National ID"
-                                    ></b-form-input>
-                                </b-form-group>
-                            </div>
-                            <div class="col-md-3">
-                                <b-form-group
-                                    id="input-group-relation"
-                                    label="Relation:"
-                                    label-for="relation"
-                                    description="Relation with Patient"
-                                >
-                                    <b-form-input id="relation" v-model="member.relationWithPatient"
-                                    placeholder="Relation"
-                                    ></b-form-input>
-                                </b-form-group>
-                            </div>
+                                <div class="col-md-2">
+                                    <b-form-group
+                                        id="input-group-r-blood-group"
+                                        label="Blood Group"
+                                        label-for="r-blood-group"
+                                        description="Blood Group"
+                                    >
+                                        <b-form-input id="r-blood-group" v-model="member.bloodGroup"  
+                                            type="text"
+                                            placeholder="Blood Group"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                </div>
+                                <div class="col-md-3">
+                                    <b-form-group
+                                        id="input-group-r-nationality"
+                                        label="Nationality:"
+                                        label-for="nationality"
+                                        description="Nationality"
+                                    >
+                                        <b-form-input id="r-nationality" v-model="member.nationality"
+                                        placeholder="Nationality"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                </div>
+                                <div class="col-md-3">
+                                    <b-form-group
+                                        id="input-group-r-nationalId"
+                                        label="National ID:"
+                                        label-for="nationalId"
+                                        description="National ID"
+                                    >
+                                        <b-form-input id="r-nationalId" v-model="member.nationalId"
+                                        placeholder="National ID"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                </div>
+                                <div class="col-md-3">
+                                    <b-form-group
+                                        id="input-group-relation"
+                                        label="Relation:"
+                                        label-for="relation"
+                                        description="Relation with Patient"
+                                    >
+                                        <b-form-input id="relation" v-model="member.relationWithPatient"
+                                        placeholder="Relation"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                </div>
                             </div>  
                         </div>
                     </b-card-body>
@@ -356,6 +356,16 @@ export default {
         title: "Patients",
         
         centers: [],
+        bloodGroups:[
+            {value:'O(ve)', text:'O(ve)'},
+            {value:'O(-ve)', text:'O(-ve)'},
+            {value:'A(ve)', text:'A(ve)'},
+            {value:'A(-ve)', text:'A(-ve)'},
+            {value:'B(ve)', text:'B(ve)'},
+            {value:'B(-ve)', text:'B(-ve)'},
+            {value:'AB(ve)', text:'AB(ve)'},
+            {value:'AB(-ve)', text:'AB(-ve)'}
+        ],
         genderOptions: [
           { value: null, text: 'Please Select Gender' },
           { value: 'Male', text: 'Male' },
