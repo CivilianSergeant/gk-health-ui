@@ -23,16 +23,17 @@ import { ApiRoutes } from './helpers/ApiRoutes';
 Vue.config.productionTip = false
 
 enum ENV_MODE {
-  DEV_MODE,
-  PROD_MODE
+  DEV_MODE = 'dev',
+  PROD_MODE = 'prod'
 }
 
 const ENV = ENV_MODE.DEV_MODE;
+const clientId = (ENV == ENV_MODE.PROD_MODE)? 'demo-vue-app' : 'sandbox-health-ui';
 
 const initOptions = {
   url: ApiRoutes.AUTH_PATH, 
   realm: 'GK_HEALTH', 
-  clientId: 'demo-vue-app',
+  clientId: clientId,
   onLoad: 'login-required'
 }
 const keycloak: any = Keycloak(initOptions);
@@ -74,6 +75,7 @@ function initKeycloak (){
           
         }
       }).catch(() => {
+        store.commit('setErrorMsg','Network connection failed');
         console.error('Failed to refresh token');
       });
     }, 6000)
@@ -83,16 +85,16 @@ function initKeycloak (){
   });
 }
 
-if(ENV==ENV_MODE.DEV_MODE){
-  new Vue({
-    router,
-    store,
-    render: h => h(App,{ props: { keycloak: null } })
-  }).$mount('#app')
-}else{
+// if(ENV==ENV_MODE.DEV_MODE){
+//   new Vue({
+//     router,
+//     store,
+//     render: h => h(App,{ props: { keycloak: null } })
+//   }).$mount('#app')
+// }else{
   
 
-  fetch("http://localhost:8080/auth/realms/GK_HEALTH",{
+  fetch(ApiRoutes.REALM_PATH,{
     method:"GET",
   }).then(r=>{return r.json(); }).then(result=>{
     console.log(result)
@@ -106,7 +108,7 @@ if(ENV==ENV_MODE.DEV_MODE){
       render: h => h(Error)
       }).$mount('#app')
   });
-}
+// }
 
 // if(authServerStatus){
   

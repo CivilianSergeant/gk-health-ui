@@ -5,6 +5,7 @@ import {HealthService} from './HealthService'
 import {PatientService} from './PatientService'
 import {NavigationService} from './NavigationService'
 import {LabTestGroupService} from './LabTestGroupService'
+import {PatientInvoiceService} from './PatientInvoiceService'
 
 export {
         CategoryService,
@@ -13,5 +14,6 @@ export {
         HealthService,
         PatientService,
         LabTestGroupService,
-        NavigationService
+        NavigationService,
+        PatientInvoiceService
     }

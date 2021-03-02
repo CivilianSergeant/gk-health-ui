@@ -107,7 +107,7 @@
       </table>
       <div class="row mt-2 mb-2" v-if="patientInvoice.patientServices.length>0">
           <div class="col-md-2 d-flex justify-content-between">
-              <b-button type="submit" variant="success">Submit</b-button>
+              <b-button type="button" @click="onSubmit" variant="success">Submit</b-button>
               <b-button type="reset" class="ml-4" variant="danger">Cancel</b-button>
           </div>
       </div>
@@ -129,7 +129,7 @@
                               label-for="validity"
                               description="Validity"
                           >
-                              <b-form-select id="r-validity" v-model="form.cardRegistration.validityDuration" 
+                              <b-form-select id="r-validity" required v-model="form.cardRegistration.validityDuration" 
                               :options="validityDurations"></b-form-select>
                           </b-form-group>
                       </div>
@@ -261,6 +261,7 @@
 import {PatientService} from '@/services/PatientService'
 import {LocalStorageService} from '@/services/LocalStorageService'
 import {HealthService} from '@/services/HealthService'
+import { PatientInvoiceService } from '@/services';
 
 export default {
   name: 'Home',
@@ -370,6 +371,7 @@ export default {
   },
   methods:{
     handleOk(){
+      this.$store.commit('clearMessage');
       
       let service = {};
       this.services.map(s=>{
@@ -377,8 +379,14 @@ export default {
           service = s;
         }
       });
+
+      if(!this.isServiceAdded(service)){
+        return;
+      }
+
       const serviceAmount = service.currentCost;
       const discountAmount = (this.registration.gb)? (service.currentCost-service.currentGbCost) : 0;
+      
       this.patientInvoice.patientServices.push({
         service,
         serviceAmount:serviceAmount,
@@ -389,6 +397,25 @@ export default {
       this.patient.registrations.push(this.form.cardRegistration)
       this.$bvModal.hide('modal-1')
       console.log('hiiere')
+    },
+    isServiceAdded(service,showMessage){
+      let valid =true;
+      this.patientInvoice.patientServices.map(ps=>{
+        if(ps.service.code == service.code){
+          valid = false;
+        }
+        return ps;
+      })
+      
+      if(!valid){
+        if(showMessage){
+          this.$store.commit('setErrorMsg','Service ['+service.name+'] already added to the list');
+        }
+      
+        this.$bvModal.hide('modal-1')
+        return valid;
+      }
+      return valid;
     },
     addMember(){
         this.form.cardRegistration.members.push({
@@ -406,6 +433,10 @@ export default {
       return (new Date(dateStr)).toLocaleDateString()
     },
     addPatientService(){
+      if(!this.isServiceAdded(this.service)){
+        return;
+      }
+      this.$store.commit('clearMessage');
       const serviceAmount = this.service.currentCost;
       const discountAmount = (this.registration.gb)? (this.service.currentCost-this.service.currentGbCost) : 0;
       this.patientInvoice.patientServices.push({
@@ -504,6 +535,13 @@ export default {
           this.$store.commit('setErrorMsg',error);
         }
       });
+    },
+
+    onSubmit(){
+        this.patient.patientInvoices.push(this.patientInvoice);
+        (new PatientInvoiceService()).saveInvoice(this.patient).then(result=>{
+            console.log(result);
+        });
     }
   }
 
