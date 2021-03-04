@@ -33,14 +33,24 @@
             <Loader :isBusy="isBusy" />
             <b-card v-if="patient!=null">
             <b-card-title>Patient Info #{{patient.pid}}</b-card-title>
-            <p> Patient Name: {{patient.fullName}} </p>
-            <p> IS GB?: <Status :data="form.cardRegistration.gb"/> </p>
-            <p> Card Registered?:  <Status :data="form.cardRegistration.id"/> </p>
-            <p v-if="!hasActiveCard">
+            <div v-if="patient.id>0"> <span>Patient Name: {{patient.fullName}}</span>
+            <span v-if="patient.gender">, Sex: {{patient.gender}} </span></div>
+            <div> IS GB?: <Status :data="form.cardRegistration.gb"/> </div>
+            <div> Card Registered?:  <Status :data="form.cardRegistration.id"/> 
+            
+            </div>
+            <span v-if="form.cardRegistration.id">Card Number: {{form.cardRegistration.cardNumber}}</span>
+            <div v-if="form.cardRegistration.members.length>0">
+              Family Members
+            <ul>
+              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}}</li>
+            </ul>
+            </div>
+            <p v-if="form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
+             - {{getDate(form.cardRegistration.expiredDate)}}  </p>
+             <p v-if="!hasActiveCard" class="mt-2">
                 <b-button v-b-modal.modal-1 variant="info" size="sm">Register For Card</b-button>
             </p>
-            <p v-if="registration.id"> Registration Date: {{getDate(registration.startDate)}} </p>
-            <p v-if="registration.id"> Expire Date: {{getDate(registration.expiredDate)}}  </p>
             </b-card>
           </div>
         </div>
@@ -67,6 +77,7 @@
          
         </div>
       </b-form>
+      
       <table class="table table-bordered">
         <thead class="thead-light">
           <tr>
@@ -81,7 +92,7 @@
         </thead>
 
         <tbody>
-          <tr v-for="(ps,i) in patientInvoice.patientServices" :key="i">
+          <tr v-for="(ps,i) in patientInvoice.patientServiceDetails" :key="i">
               <td>{{(i+1)}}</td>
               <td>({{ps.service.code}}) {{ps.service.name}}</td>
               <td><input type="text" v-model="ps.service.roomNumber"/></td>
@@ -105,12 +116,51 @@
             </tr>
         </tfoot>
       </table>
-      <div class="row mt-2 mb-2" v-if="patientInvoice.patientServices.length>0">
+      <div class="row mt-2 mb-2" v-if="patientInvoice.patientServiceDetails.length>0">
           <div class="col-md-2 d-flex justify-content-between">
               <b-button type="button" @click="onSubmit" variant="success">Submit</b-button>
               <b-button type="reset" class="ml-4" variant="danger">Cancel</b-button>
           </div>
-      </div>
+      </div>  
+          
+
+      <h4>Service History</h4> 
+      <b-card v-if="patient">
+          <b-card-body v-for="(ps,i) in patient.patientInvoices" :key="i">
+            <h5>Invoice {{ps.invoiceNumber}} </h5>
+            <h6>Date: {{getDate(ps.createdAt)}}</h6>
+            <table class="table table-bordered">
+              <thead class="thead-light">
+                <tr>
+                    <th>Sl</th>
+                    <th>Service Name</th>
+                    <th>Room No</th>
+                    <th>Amount</th>
+                    <th>Discount</th>
+                    <th>Payable</th>
+                    
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(ps,i) in ps.patientServiceDetails" :key="i">
+                    <td>{{(i+1)}}</td>
+                    <td>({{ps.service.code}}) {{ps.service.name}}</td>
+                    <td>{{ps.service.roomNumber}}</td>
+                    <td>{{ps.serviceAmount}}</td>
+                    <td>{{ps.discountAmount}}</td>
+                    <td>{{ps.payableAmount}}</td>
+                    
+                </tr>
+              </tbody>
+            </table>
+          </b-card-body>
+          
+          
+      </b-card>
+        
+      
+      
        <b-modal id="modal-1" size="lg" button-size="sm" bvModalEvent.trigger = 'ok' title="Card Register">
           <div class="col-md-4 d-flex flex-row"> IS GB?: &nbsp; <b-form-checkbox
               id="input-is-gb"
@@ -122,17 +172,18 @@
               :unchecked-value="false"
               ></b-form-checkbox> </div>
 
-          <div class="col-md-4">
+          <div class="col-md-4 mt-2">
                           <b-form-group
                               id="input-group-validity"
                               label="Validity :"
                               label-for="validity"
                               description="Validity"
                           >
-                              <b-form-select id="r-validity" required v-model="form.cardRegistration.validityDuration" 
+                              <b-form-select id="r-validity" @change="showDate" required v-model="form.cardRegistration.validityDuration" 
                               :options="validityDurations"></b-form-select>
                           </b-form-group>
                       </div>
+                      
          <div class="col-md-12 mt-3"><h6 class="clearfix">Members <b-button @click="addMember" class="float-right mb-2" size="sm" variant="info">Add Member</b-button></h6></div>
             
          <b-card class="clearBoth" v-for="(member,i) in form.cardRegistration.members" :key="i">
@@ -275,7 +326,12 @@ export default {
         notFound:false,
         registration:null,
         patientInvoice:{
-          patientServices:[]
+          id:null,
+          serviceAmount:0,
+          payableAmount:0,
+          discountAmount:0,
+          paidAmount:0,
+          patientServiceDetails:[]
         },
         form:{
           
@@ -348,16 +404,19 @@ export default {
   watch:{
     patientInvoice: {
       handler(patientInvoice){
-      this.totalPayable=0;
+        this.totalPayable=0;
       
-      patientInvoice.patientServices.map(r=>{
-        // if(this.registration.gb){
-        //   this.totalPayable+= r.currentGbCost
-        // }else{
-        //   this.totalPayable+= r.currentCost
-        // }
-        this.totalPayable+= r.payableAmount;
-      });
+        patientInvoice.patientServiceDetails.map(r=>{
+          // if(this.registration.gb){
+          //   this.totalPayable+= r.currentGbCost
+          // }else{
+          //   this.totalPayable+= r.currentCost
+          // }
+          
+          
+          this.totalPayable+= r.payableAmount;
+        });
+        
       },
       deep:true
     }
@@ -370,6 +429,22 @@ export default {
     }
   },
   methods:{
+    showDate(){
+      const dateObj = new Date();
+      const toDayDateObj = new Date();
+      const expiredDate = new Date(dateObj.setMonth(dateObj.getMonth()+this.form.cardRegistration.validityDuration));
+      this.form.cardRegistration.startDate = toDayDateObj.toISOString();
+      this.form.cardRegistration.expiredDate = expiredDate.toISOString();
+    },
+    _updateInvoice(patientService){
+          const serviceAmount = patientService.serviceAmount;
+          const discountAmount = patientService.discountAmount;
+          const payableAmount =  patientService.payableAmount;
+
+          this.patientInvoice.serviceAmount += serviceAmount;
+          this.patientInvoice.discountAmount += discountAmount;
+          this.patientInvoice.payableAmount += payableAmount;
+    },
     handleOk(){
       this.$store.commit('clearMessage');
       
@@ -385,22 +460,27 @@ export default {
       }
 
       const serviceAmount = service.currentCost;
-      const discountAmount = (this.registration.gb)? (service.currentCost-service.currentGbCost) : 0;
-      
-      this.patientInvoice.patientServices.push({
+      const discountAmount = (this.form.cardRegistration.gb)? (service.currentCost-service.currentGbCost) : 0;
+      const payableAmount = (serviceAmount-discountAmount);
+
+      const patientService = {
         service,
         serviceAmount:serviceAmount,
         discountAmount:discountAmount,
-        payableAmount:(serviceAmount-discountAmount),
-      });
-      this.registration = this.form.cardRegistration;
+        payableAmount:payableAmount,
+      };
+
+      this.patientInvoice.patientServiceDetails.push(patientService);
+      this._updateInvoice(patientService);
+      
+      
       this.patient.registrations.push(this.form.cardRegistration)
       this.$bvModal.hide('modal-1')
-      console.log('hiiere')
+ 
     },
     isServiceAdded(service,showMessage){
       let valid =true;
-      this.patientInvoice.patientServices.map(ps=>{
+      this.patientInvoice.patientServiceDetails.map(ps=>{
         if(ps.service.code == service.code){
           valid = false;
         }
@@ -436,15 +516,21 @@ export default {
       if(!this.isServiceAdded(this.service)){
         return;
       }
+
       this.$store.commit('clearMessage');
       const serviceAmount = this.service.currentCost;
-      const discountAmount = (this.registration.gb)? (this.service.currentCost-this.service.currentGbCost) : 0;
-      this.patientInvoice.patientServices.push({
-        serviceAmount:serviceAmount,
-        discountAmount:discountAmount,
-        payableAmount:(serviceAmount-discountAmount),
+      const discountAmount = (this.form.cardRegistration.gb)? (this.service.currentCost-this.service.currentGbCost) : 0;
+      const payableAmount = (serviceAmount-discountAmount);
+      const patientService = {
+        serviceAmount,
+        discountAmount,
+        payableAmount,
         service:this.service
-      });
+      };
+
+      this.patientInvoice.patientServiceDetails.push(patientService);
+      this._updateInvoice(patientService);
+
       this.service = null;
       this.autocomplete.setInputValue('')
     },
@@ -455,7 +541,7 @@ export default {
     },
     onClearSearch(){
         this.patient=null;
-        this.patientInvoice.patientServices=[];
+        this.patientInvoice.patientServiceDetails=[];
         this.registration=null;
         this.service=null;
         if(this.autocomplete.setInputValue!=undefined){
@@ -472,12 +558,12 @@ export default {
           this.$store.commit('setErrorMsg',result.message);
         }
       });
-      console.log(this.registration);
+      
     },
     onSearch(){
       this.patient=null;
       this.registration=null;
-      this.patientServices =[];
+      this.patientServiceDetails =[];
       this.$store.commit('clearMessage')
       this.$store.commit('start');
       this.findPatient()
@@ -486,26 +572,29 @@ export default {
       if(registrations!=null && registrations.length>0){
         registrations.map(r=>{
           if(r.active){
-            this.registration = r;
+            this.form.cardRegistration = r;
           }
         })
         
-        return (this.registration.gb)? true:false
+        return (this.form.cardRegistration.gb)? true:false
       }
       return false
     },
     findPatient(){
-      console.log(this.pid);
+      
       (new PatientService()).getPatientByPid(this.pid).then(result=>{
         this.$store.commit('finish');
         if(result!=null && result.status==200){
           this.patient = result.patient;
           if(this.patient.registrations.length==0){
-            this.registration = {gb:false,patient:{id:null}};
+            this.form.cardRegistration = {members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0};
+          }else{
+            this.form.cardRegistration = this.patient.registrations.filter(r=>r.active==true)[0];
           }
-          // if(this.patient.patientInvoices.length>0){
-            this.patientInvoice = {patientServices:[]}//this.patient.patientInvoices[this.patient.patientInvoices.length-1];
-          // }
+          
+            this.patientInvoice = {id:null,discountAmount:0,payableAmount:0,paidAmount:0,serviceAmount:0,
+              patientServiceDetails:[]}//this.patient.patientInvoices[this.patient.patientInvoices.length-1];
+          
           this.notFound = false;
         }else{
           this.$store.commit('setErrorMsg',result.message)
@@ -539,6 +628,7 @@ export default {
 
     onSubmit(){
         this.patient.patientInvoices.push(this.patientInvoice);
+        console.log(this.patient);
         (new PatientInvoiceService()).saveInvoice(this.patient).then(result=>{
             console.log(result);
         });

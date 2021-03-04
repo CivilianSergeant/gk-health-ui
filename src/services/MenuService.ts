@@ -7,6 +7,7 @@ export class MenuService {
       new Menu('Heath Center', '/health-centers', false, true, 'fas fa-cog', null),
       new Menu('Employees', '/employees', false, true, 'fas fa-laptop-house', null),
       new Menu('Patients', '/patients', false, true, 'fas fa-users', null),
+      new Menu('Prescription', '/prescription', false, true, 'fas fa-users', null),
       new Menu('Service Categories', '/service-categories', false, true, 'fas fa-users', null),
       new Menu('Services', '/services', false, true, 'fas fa-users', null),
       new Menu('Service Packages', '/services-packages', false, true, 'fas fa-users', null),

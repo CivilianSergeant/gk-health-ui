@@ -6,7 +6,7 @@ export class PatientInvoiceService{
     private response: any;
 
     async saveInvoice(payload: Record<string, any>): Promise<Patient>{
-        const response = await axios.post(GetApiRoute(ApiRoutes.PATIENT_CARD_REGISTRATION),payload);
+        const response = await axios.post(GetApiRoute(ApiRoutes.PATIENT_INVOICE_CREATE),payload);
         if(response.status == 200){
             this.response = response.data;
          }
