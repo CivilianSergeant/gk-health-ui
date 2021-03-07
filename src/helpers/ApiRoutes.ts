@@ -24,9 +24,14 @@ export enum ApiRoutes{
     ALL_PATIENTS = '/patient',
     ADD_PATIENT = '/patient/add',
     PATIENT_CARD_REGISTRATION = '/patient/card-registration',
-    PATIENT_INVOICE_CREATE = '/patient/invoice/create',
+    
+    PATIENT_INVOICE_CREATE = '/invoice/create',
+    PATIENT_INVOICE_NUMBERS_BY_KEYWORD = '/invoice/invoice-numbers/:id',
+    PATIENT_INVOICE_BY_ID = '/invoice/by-id/:id',
+
     GET_PATIENT_BY_ID = '/patient/:id',
     GET_PATIENT_BY_PID = '/patient/by-pid/:id',
+
     ALL_LAB_TEST_GROUP = '/lab-test-groups',
     ALL_LAB_TEST_UNIT = '/service-units'
 }

@@ -6,7 +6,7 @@
             @keydown.40="moveDown" @keydown.38="moveUp" v-model="inputValue" type="text"></textarea>
 		<div v-else class="input-group">
             <input  :id="id" class="form-control autocomplete-input input-sm" 
-            :disabled="(items.length==0) || (disabled!=undefined && disabled)" :placeholder="placeholder" @blur="hideResult" 
+            :disabled="(!ajax && items.length==0) || (disabled!=undefined && disabled)" :placeholder="placeholder" @blur="hideResult" 
             @focus="displayResult"  @keydown.13="chooseItem" @keydown.tab="chooseItem" 
             @keydown.40="moveDown" @keydown.38="moveUp" @input="typing" v-model="inputValue" 
             type="text" :required="required" autocomplete="off"  />
@@ -34,7 +34,9 @@ export default class Autocomplete extends Vue {
 
     @Prop() items!: any;
 
-    @Prop()rowIndex!: number;
+	@Prop()rowIndex!: number;
+	
+	@Prop() ajax!: boolean;
 
     @Prop()compairingIndex!: number; 
     @Prop()item!: any;
@@ -52,7 +54,7 @@ export default class Autocomplete extends Vue {
     private id: string = 'input-' + Math.random() * 1000;
     private inputValue= "";
     private searchMatch: any;
-    private standardItems: any;
+    private standardItems: any = [];
     private selectedIndex= 0;
     private wordIndex=0;
     private showResult=false;
@@ -64,6 +66,7 @@ export default class Autocomplete extends Vue {
 			} else {
 				return this.standardItems;
 			}
+			
         }
         
 	get	currentWord() {
@@ -96,6 +99,9 @@ export default class Autocomplete extends Vue {
 				this.showResult=true;
 			}
 
+			if(this.ajax==true){
+				this.$emit('ajax-call',this.inputValue)
+			}
 			
 		}
 		highlightWord(word: any) {

@@ -59,7 +59,7 @@ export default {
         currentPage: 1,
         fields: [
           {key:'pid',label:'Patient ID'},
-          {key:'center.name',label:'Center Name'},
+          {key:'center',label:'Center Name'},
           'fullName','guardianName','gender','maritalStatus','action'
         ],
 

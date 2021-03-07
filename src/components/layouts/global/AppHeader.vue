@@ -26,8 +26,8 @@ import axios from 'axios';
 export default class AppHeader extends Vue {
   @Prop() private msg!: string;
 
-  get isLive(){
-    return (this.$store.state.keycloak)? true :false
+  isLive(){
+    return (this.$store.state.keycloak != null)? true :false
   }
 
   get username(){
@@ -42,6 +42,8 @@ export default class AppHeader extends Vue {
   showAccount(){
     return ApiRoutes.USER_ACCOUNT_PATH;
   }
+  
+  
 }
 </script>
 <style scoped>

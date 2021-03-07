@@ -7,6 +7,7 @@ import Patients from '../views/Patient/Patients.vue'
 import PatientForm from '../views/Patient/PatientForm.vue'
 import PatientDetail from '../views/Patient/PatientDetail.vue'
 import ServiceCategories from '../views/ServiceCategories.vue'
+import Prescription from '../views/Prescription/Prescription.vue'
 import {Services,ServiceForm, ServiceDetail, ServiceAttribute }from '../views/HealthService'
 
 Vue.use(VueRouter)
@@ -62,6 +63,11 @@ const routes: Array<RouteConfig> = [
     name:'services',
     path: '/services',
     component: Services
+  },
+  {
+    name:'prescription',
+    path: '/prescription',
+    component: Prescription
   },
   // {
   //   path: '/about',

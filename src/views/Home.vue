@@ -36,17 +36,17 @@
             <div v-if="patient.id>0"> <span>Patient Name: {{patient.fullName}}</span>
             <span v-if="patient.gender">, Sex: {{patient.gender}} </span></div>
             <div> IS GB?: <Status :data="form.cardRegistration.gb"/> </div>
-            <div> Card Registered?:  <Status :data="form.cardRegistration.id"/> 
+            <div> Card Registered?:  <Status :data="patient.registration && patient.registration.id"/> 
             
             </div>
-            <span v-if="form.cardRegistration.id">Card Number: {{form.cardRegistration.cardNumber}}</span>
-            <div v-if="form.cardRegistration.members.length>0">
+            <span v-if="form.cardRegistration && form.cardRegistration.id">Card Number: {{form.cardRegistration.cardNumber}}</span>
+            <div v-if="form.cardRegistration && form.cardRegistration.members.length>0">
               Family Members
             <ul>
               <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}}</li>
             </ul>
             </div>
-            <p v-if="form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
+            <p v-if="form.cardRegistration && form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
              - {{getDate(form.cardRegistration.expiredDate)}}  </p>
              <p v-if="!hasActiveCard" class="mt-2">
                 <b-button v-b-modal.modal-1 variant="info" size="sm">Register For Card</b-button>
@@ -95,7 +95,7 @@
           <tr v-for="(ps,i) in patientInvoice.patientServiceDetails" :key="i">
               <td>{{(i+1)}}</td>
               <td>({{ps.service.code}}) {{ps.service.name}}</td>
-              <td><input type="text" v-model="ps.service.roomNumber"/></td>
+              <td><input type="text" v-model="ps.roomNumber"/></td>
               <td>{{ps.serviceAmount}}</td>
               <td>{{ps.discountAmount}}</td>
               <td>{{ps.payableAmount}}</td>
@@ -110,7 +110,6 @@
         <tfoot>
             <tr>
                 <td colspan="5"></td>
-                
                 <td>{{totalPayable}}</td>
                 <td></td>
             </tr>
@@ -127,7 +126,7 @@
       <h4>Service History</h4> 
       <b-card v-if="patient">
           <b-card-body v-for="(ps,i) in patient.patientInvoices" :key="i">
-            <h5>Invoice {{ps.invoiceNumber}} </h5>
+            <h5>Invoice No # {{ps.invoiceNumber}} </h5>
             <h6>Date: {{getDate(ps.createdAt)}}</h6>
             <table class="table table-bordered">
               <thead class="thead-light">
@@ -146,7 +145,7 @@
                 <tr v-for="(ps,i) in ps.patientServiceDetails" :key="i">
                     <td>{{(i+1)}}</td>
                     <td>({{ps.service.code}}) {{ps.service.name}}</td>
-                    <td>{{ps.service.roomNumber}}</td>
+                    <td>{{ps.roomNumber}}</td>
                     <td>{{ps.serviceAmount}}</td>
                     <td>{{ps.discountAmount}}</td>
                     <td>{{ps.payableAmount}}</td>
@@ -167,7 +166,7 @@
               class="ml-2"
               v-model="form.cardRegistration.gb"
               name="card-registration-gb"
-              v-if="!form.cardRegistration.id"
+              v-if="form.cardRegistration && !form.cardRegistration.id"
               :value="true"
               :unchecked-value="false"
               ></b-form-checkbox> </div>
@@ -386,15 +385,16 @@ export default {
     },
     hasActiveCard(){
       
-      let status=false;
+      // let status=false;
       
-      this.patient.registrations.map(r=>{
-        if(r.active){
-          status = true;
-        }
-      });
+      return (this.patient.registration)? this.patient.registration.active : false;
+      // this.patient.registrations.map(r=>{
+      //   if(r.active){
+      //     status = true;
+      //   }
+      // });
       
-      return status;
+      // return status;
     }
   },
   beforeMount(){
@@ -473,8 +473,8 @@ export default {
       this.patientInvoice.patientServiceDetails.push(patientService);
       this._updateInvoice(patientService);
       
-      
-      this.patient.registrations.push(this.form.cardRegistration)
+      this.patient.registration = this.form.cardRegistration;
+      // this.patient.registrations.push(this.form.cardRegistration)
       this.$bvModal.hide('modal-1')
  
     },
@@ -513,11 +513,16 @@ export default {
       return (new Date(dateStr)).toLocaleDateString()
     },
     addPatientService(){
+      this.$store.commit('clearMessage');
+
       if(!this.isServiceAdded(this.service)){
+        this.$store.commit('setErrorMsg','Service Already added');
+        this.service = null;
+        this.autocomplete.setInputValue('')
         return;
       }
 
-      this.$store.commit('clearMessage');
+      
       const serviceAmount = this.service.currentCost;
       const discountAmount = (this.form.cardRegistration.gb)? (this.service.currentCost-this.service.currentGbCost) : 0;
       const payableAmount = (serviceAmount-discountAmount);
@@ -525,7 +530,8 @@ export default {
         serviceAmount,
         discountAmount,
         payableAmount,
-        service:this.service
+        service:this.service,
+        roomNumber:0
       };
 
       this.patientInvoice.patientServiceDetails.push(patientService);
@@ -568,28 +574,33 @@ export default {
       this.$store.commit('start');
       this.findPatient()
     },
-    isGb(registrations){
-      if(registrations!=null && registrations.length>0){
-        registrations.map(r=>{
-          if(r.active){
-            this.form.cardRegistration = r;
-          }
-        })
+    // isGb(registrations){
+    //   // if(registrations!=null && registrations.length>0){
+    //   //   registrations.map(r=>{
+    //   //     if(r.active){
+    //   //       this.form.cardRegistration = r;
+    //   //     }
+    //   //   })
         
-        return (this.form.cardRegistration.gb)? true:false
-      }
-      return false
-    },
+    //   //   return (this.form.cardRegistration.gb)? true:false
+    //   // }
+
+    //   if(this.patient.registration != null){
+    //     this.form.cardRegistration = this.patient.registration;
+    //     return (this.form.cardRegistration.gb)? true:false
+    //   }
+    //   return false
+    // },
     findPatient(){
       
       (new PatientService()).getPatientByPid(this.pid).then(result=>{
         this.$store.commit('finish');
         if(result!=null && result.status==200){
           this.patient = result.patient;
-          if(this.patient.registrations.length==0){
+          if((this.patient.registration == null) || (this.patient.registration && this.patient.registration.active == false)){
             this.form.cardRegistration = {members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0};
           }else{
-            this.form.cardRegistration = this.patient.registrations.filter(r=>r.active==true)[0];
+            this.form.cardRegistration = this.patient.registration;
           }
           
             this.patientInvoice = {id:null,discountAmount:0,payableAmount:0,paidAmount:0,serviceAmount:0,
@@ -630,7 +641,16 @@ export default {
         this.patient.patientInvoices.push(this.patientInvoice);
         console.log(this.patient);
         (new PatientInvoiceService()).saveInvoice(this.patient).then(result=>{
-            console.log(result);
+            if(result.status == 200){
+              this.patient = result.object;
+            }
+        }).catch(error=>{
+          this.$store.commit('finish');
+          if(error.toString().match('Error: Network Error') !=null){
+            this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
+          }else if(error.toString.length>0){
+            this.$store.commit('setErrorMsg',error);
+          }
         });
     }
   }
