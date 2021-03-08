@@ -28,48 +28,48 @@
            
           </div>
           <div class="col-md-3 mt-4">
-            <b-button type="submit" variant="info">Search</b-button> 
+            <!-- <b-button type="submit" variant="info">Search</b-button>  -->
             <b-button @click="onClearSearch" class="ml-1" variant="warning">Clear</b-button> 
             
           </div>
           <div class="col-md-12 text-secondary font-weight-bold">
             <Loader :isBusy="isBusy" />
             <b-card v-if="patient!=null">
+              <div class="row">
+              <div class="col-md-6">
             <b-card-title>Patient Info #{{patient.pid}}</b-card-title>
             <div v-if="patient.id>0"> <span>Patient Name: {{patient.fullName}}</span>
             <span v-if="patient.gender">, Sex: {{patient.gender}} </span></div>
-            <div> IS GB?: <Status :data="form.cardRegistration.gb"/> </div>
+            <div> IS GB?: <Status :data="patient.registration.gb"/> </div>
             <div> Card Registered?:  <Status :data="patient.registration && patient.registration.id"/> 
             
             </div>
-            <span v-if="form.cardRegistration && form.cardRegistration.id">Card Number: {{form.cardRegistration.cardNumber}}</span>
-            <div v-if="form.cardRegistration && form.cardRegistration.members.length>0">
+            <span v-if="patient.registration && patient.registration.id">Card Number: {{patient.registration.cardNumber}}</span>
+            <div v-if="patient.registration && patient.registration.members.length>0">
               Family Members
             <ul>
               <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}}</li>
             </ul>
             </div>
-            <p v-if="form.cardRegistration && form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
-             - {{getDate(form.cardRegistration.expiredDate)}}  </p>
-             
+            <p v-if="patient.registration && patient.registration.validityDuration>0"> Registration Valid for ({{patient.registration.validityDuration}}) Months From {{getDate(patient.registration.startDate)}} 
+             - {{getDate(patient.registration.expiredDate)}}  </p>
+             </div>
+             <div class="col-md-6">
+             <h5 class="mt-1">Invoice Detail</h5>
+             <p>Invoice No: {{invoice.invoiceNumber}}</p>
+             <ul class="nav">
+                <li v-for="d in invoice.patientServiceDetails" :key="d.id">
+                  <p>{{d.service.name}} - {{d.payableAmount}}</p>
+                </li>
+              </ul>
+             </div>
+             </div>
             </b-card>
           </div>
         </div>
         
       </b-form>
-      <div class="row">
-            <div class="col-md-9">
-            <b-form-group
-                  id="input-group-advice"
-                  label="Advice:"
-                  label-for="advice"
-                  description="Advice for patient"
-              >
-              <b-textarea/>
-            </b-form-group>
-            </div>
-      </div>
-      <div class="row">
+      <div class="row mt-1">
             <div class="col-md-9">
             <b-form-group
                   id="input-group-observation"
@@ -81,6 +81,19 @@
             </b-form-group>
             </div>
       </div>
+      <div class="row mt-1">
+            <div class="col-md-9">
+            <b-form-group
+                  id="input-group-advice"
+                  label="Advice:"
+                  label-for="advice"
+                  description="Advice for patient"
+              >
+              <b-textarea/>
+            </b-form-group>
+            </div>
+      </div>
+      
       <div class="row">
           <!-- <vue-typeahead-bootstrap :data="services"
           :serializer="input=>input.name" v-model="service.id"/> -->
@@ -98,7 +111,7 @@
             </b-form-group>
           </div>
           <div class="col-md-3 mt-4" v-if="service">
-            <b-button @click="addPatientService" class="ml-2" pill variant="success"> 
+            <b-button  class="ml-2" pill variant="success"> 
               <b-icon-plus-circle scale="1.25" class="t-bold"></b-icon-plus-circle></b-button>
           </div>
          
@@ -106,7 +119,7 @@
     </div>
 </template>
 <script>
-import {PatientService,PatientInvoiceService} from '@/services'
+import {PatientService,PatientInvoiceService, HealthService} from '@/services'
 
 export default {
   name: 'Home',
@@ -118,8 +131,12 @@ export default {
         patient:null,
         tests:[],
         invoices:[],
+        attributes:[],
         invoice:{},
+        serviceAutocomplete:null,
+        invoiceAutocomplete:null,
         service:null,
+        
         form:{ cardRegistration:{members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0} }
       }
   },
@@ -137,69 +154,92 @@ export default {
       return this.$store.state.message;
     },
   },
+  mounted(){
+    this.getAdminToken();
+    this.fetchLabServices();
+  },
   methods:{
+      getAdminToken(){
+        
+        const details = {
+            "grant_type":"password",
+            "client_id":"admin-cli",
+            "username":"admin",
+            "password":"admin"
+          };
+        let formBody = [];
+        for (const property in details) {
+          const encodedKey = encodeURIComponent(property);
+          const encodedValue = encodeURIComponent(details[property]);
+          formBody.push(encodedKey + "=" + encodedValue);
+        }
+        formBody = formBody.join("&");
+
+        fetch('http://103.26.136.30:8080/auth/realms/master/protocol/openid-connect/token',{
+          method:'POST',
+          
+          headers:new Headers({
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }),
+          body:formBody
+        }).then(res=> res.text()).then(r=>console.log(r));
+      },
+      getDate(dateStr){
+        return (new Date(dateStr)).toLocaleDateString()
+      },
       handleAutocomplete(service,autocomplete){
          this.service = service;
-         this.autocomplete = autocomplete;
+         this.serviceAutocomplete = autocomplete;
+         this.fetchServiceAttribute()
       },
       handleInvoiceNumberAutocomplete(invoice,autocomplete){
          (new PatientInvoiceService()).getInvoiceById(invoice.id).then(result=>{
              this.invoice = result;
+             this.patient = this.invoice.patient;
+             console.log(result,this.invoice);
+             this.invoiceAutocomplete = autocomplete;
          }) 
       },
       handleInvoiceNumberAjaxCall(searchText){
           if(searchText.length>=3){
               (new PatientInvoiceService()).getInvoiceNumbers(searchText).then(result=>{
-                  this.invoices = result;
+                  this.invoices = result.collection;
                 })
           }
       },
       onClearSearch(){
-            this.patient=null;
-            this.patientInvoice.patientServiceDetails=[];
-            this.registration=null;
-            this.service=null;
-            if(this.autocomplete.setInputValue!=undefined){
-            this.autocomplete.setInputValue('');
-            }
-            this.pid="";
-        },
-      findPatient(){
-      
-        (new PatientService()).getPatientByPid(this.pid).then(result=>{
+        this.patient=null;
+        this.invoice=null;
+        this.service=null;
+
+        if(this.serviceAutocomplete.setInputValue!=undefined){
+          this.serviceAutocomplete.setInputValue('');
+        }
+
+        if(this.invoiceAutocomplete.setInputValue!=undefined){
+          this.invoiceAutocomplete.setInputValue('');
+        }
+        
+    },
+    fetchServiceAttribute(){
+       (new HealthService()).findServicesById(this.service.serviceId).then(result=>{
+            this.attributes=result;
             this.$store.commit('finish');
-            if(result!=null && result.status==200){
-            this.patient = result.patient;
-            // if((this.patient.registration == null) || (this.patient.registration && this.patient.registration.active == false)){
-            //     this.form.cardRegistration = {members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0};
-            // }else{
-            //     this.form.cardRegistration = this.patient.registration;
-            // }
-            
-            //     this.patientInvoice = {id:null,discountAmount:0,payableAmount:0,paidAmount:0,serviceAmount:0,
-            //     patientServiceDetails:[]}//this.patient.patientInvoices[this.patient.patientInvoices.length-1];
-            
-            this.notFound = false;
-            }else{
-            this.$store.commit('setErrorMsg',result.message)
-            this.notFound = true;
-            }
-            
-        }).catch(error=>{
-            this.$store.commit('finish');
-            if(error.toString().match('Error: Network Error') !=null){
-            this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-            }else if(error.toString.length>0){
-            this.$store.commit('setErrorMsg',error);
-            }
         });
+    },
+    fetchLabServices(){
+      this.$store.commit('start');
+      (new HealthService()).getLabServices().then(result=>{
+        this.$store.commit('finish');
+        this.tests = result;
+      })
     },
     onSearch(){
       this.patient=null;
       
       this.$store.commit('clearMessage')
-      this.$store.commit('start');
-      this.findPatient()
+      //this.$store.commit('start');
+      //this.findPatient()
     },
   }
 }

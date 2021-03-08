@@ -16,6 +16,14 @@ export class HealthService{
         return this.services;
     }
 
+    async getLabServices(): Promise<Service[]> {
+        const response = await axios.get(GetApiRoute(ApiRoutes.LAB_SERVICES));
+        if(response.status == 200){
+            response.data.map((obj: Service) => this.services.push(obj));
+        }
+        return this.services;
+    }
+
     async findServicesById(id: string): Promise<Service> {
         const response = await axios.get(GetApiRoute(ApiRoutes.GET_SERVICE_BY_ID,id));
         let service!: Service;

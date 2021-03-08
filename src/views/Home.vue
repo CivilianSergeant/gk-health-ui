@@ -94,7 +94,7 @@
         <tbody>
           <tr v-for="(ps,i) in patientInvoice.patientServiceDetails" :key="i">
               <td>{{(i+1)}}</td>
-              <td>({{ps.service.code}}) {{ps.service.name}}</td>
+              <td>{{ps.service.name}}</td>
               <td><input type="text" v-model="ps.roomNumber"/></td>
               <td>{{ps.serviceAmount}}</td>
               <td>{{ps.discountAmount}}</td>
@@ -144,7 +144,7 @@
               <tbody>
                 <tr v-for="(ps,i) in ps.patientServiceDetails" :key="i">
                     <td>{{(i+1)}}</td>
-                    <td>({{ps.service.code}}) {{ps.service.name}}</td>
+                    <td>{{ps.service.name}}</td>
                     <td>{{ps.roomNumber}}</td>
                     <td>{{ps.serviceAmount}}</td>
                     <td>{{ps.discountAmount}}</td>

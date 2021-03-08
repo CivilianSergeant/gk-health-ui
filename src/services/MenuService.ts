@@ -12,6 +12,7 @@ export class MenuService {
       new Menu('Services', '/services', false, true, 'fas fa-users', null),
       new Menu('Service Packages', '/services-packages', false, true, 'fas fa-users', null),
       new Menu('Lab Tests', '/lab-tests', false, true, 'fas fa-users', null),
+      new Menu('Medicines', '/medicines', false, true, 'fas fa-users', null),
     ]
   }
 }

@@ -34,9 +34,11 @@ const initOptions = {
   url: ApiRoutes.AUTH_PATH, 
   realm: 'GK_HEALTH', 
   clientId: clientId,
-  onLoad: 'login-required'
+  onLoad: 'login-required',
+  cors:true
 }
 const keycloak: any = Keycloak(initOptions);
+
 let authServerStatus = false;
 
 function initKeycloak (){

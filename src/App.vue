@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="layout">
       <AppHeader/>
       <div class="container-fluid">
         <div class="row">
@@ -41,7 +41,6 @@ Vue.component('VueTypeaheadBootstrap',VueTypeaheadBootstrap);
 @Component({
   components: {
     AppHeader,
- 
     SideMenu
   },
 })
@@ -53,14 +52,7 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-#app {
-  // font-family: Avenir, Helvetica, Arial, sans-serif;
-  // -webkit-font-smoothing: antialiased;
-  // -moz-osx-font-smoothing: grayscale;
-  // text-align: center;
-  // color: #2c3e50;
-  // margin-top: 60px;
-}
+
 .fade-enter-active,
 .fade-leave-active {
   transition-duration: 0.09s;
