@@ -35,7 +35,7 @@ const initOptions = {
   realm: 'GK_HEALTH', 
   clientId: clientId,
   onLoad: 'login-required',
-  cors:true
+  //cors:true
 }
 const keycloak: any = Keycloak(initOptions);
 
