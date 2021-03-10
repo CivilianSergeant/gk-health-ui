@@ -29,12 +29,11 @@ enum ENV_MODE {
 
 const ENV = ENV_MODE.DEV_MODE;
 const clientId = (ENV == ENV_MODE.PROD_MODE)? 'demo-vue-app' : 'sandbox-health-ui';
-console.log(clientId);
+
 const initOptions = {
   url: ApiRoutes.AUTH_PATH, 
   realm: 'GK_HEALTH', 
   clientId: clientId,
-  clientSecret:"8627a998-e27a-4aab-86d6-4222a4149314",
   onLoad: 'login-required'
 }
 const keycloak: any = Keycloak(initOptions);

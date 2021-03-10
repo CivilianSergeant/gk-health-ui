@@ -155,7 +155,7 @@ export default {
     },
   },
   mounted(){
-    this.getAdminToken();
+    //this.getAdminToken();
     this.fetchLabServices();
   },
   methods:{

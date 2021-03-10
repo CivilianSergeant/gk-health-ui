@@ -1,0 +1,12 @@
+{
+    "realm": "GK_HEALTH",
+    "auth-server-url": "http://103.26.136.30:8080/auth/",
+    "ssl-required": "external",
+    "resource": "sandbox-health-ui",
+    "verify-token-audience": true,
+    "credentials": {
+      "secret": "8627a998-e27a-4aab-86d6-4222a4149314"
+    },
+    "confidential-port": 0,
+    "policy-enforcer": {}
+  }
