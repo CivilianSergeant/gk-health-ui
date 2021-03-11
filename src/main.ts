@@ -62,11 +62,10 @@ function initKeycloak (){
       }).$mount('#app')
     }
 
-    console.log('h2')
   //Token Refresh
     setInterval(() => {
       console.log('h3')
-      keycloak.updateToken(70).then((refreshed: any) => {
+      keycloak.updateToken(30).then((refreshed: any) => {
         console.log('h4')
         if (refreshed) {
           console.info('Token refreshed' + refreshed,);

@@ -37,7 +37,7 @@ export enum ApiRoutes{
     PATIENT_INVOICE_NUMBERS_BY_KEYWORD = '/invoice/invoice-numbers/:id',
     PATIENT_INVOICE_BY_ID = '/invoice/by-id/:id',
 
-    
+    ALL_FEEDING_RULES = '/feeding-rules',
     ALL_LAB_TEST_GROUP = '/lab-test-groups',
     ALL_LAB_TEST_UNIT = '/service-units'
 }

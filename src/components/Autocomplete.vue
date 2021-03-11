@@ -121,7 +121,7 @@ export default class Autocomplete extends Vue {
 			this.selectedIndex = index;
 			const _index = (this.label)? this.label : 'name';
 			this.inputValue = this.searchMatch[this.selectedIndex][_index];
-			this.$emit('choose-item',this.searchMatch[this.selectedIndex],this,index);
+			this.$emit('choose-item',this.searchMatch[this.selectedIndex],this,index,this.rowIndex);
 			this.showResult = false;
 			this.focusout(null);
 
