@@ -25,7 +25,7 @@
                 </b-form-group>
             </div>
         </div>
-        <div class="row" v-if="isCategoryPathology">
+        <div class="row" v-if="isShowLabTestGroup">
             <div class="col-md-3">
                 <b-form-group
                     
@@ -145,14 +145,16 @@ import axios from 'axios';
 export default {
   name: 'Services',
   computed: {
-    isCategoryPathology(){
+    isShowLabTestGroup(){
       let _isCategoryPathology=false;
+      console.log('h1',_isCategoryPathology)
       this.categories.forEach(c=>{
-        if(c.id==this.form.serviceCategory.id && c.text.toString().toLowerCase().match('pathology')){
-          _isCategoryPathology=true;
+          
+        if(c.id==this.form.serviceCategory.id){
+          _isCategoryPathology= (c.labTest) ? true : false;
+          console.log('h32',c)
         }
       });
-     
       return _isCategoryPathology;
     },
     rows() {
@@ -202,6 +204,9 @@ export default {
         this.$store.commit('start');
         (new HealthService()).findServicesById(id).then(result=>{
             this.form=result;
+            if(this.form.labTestGroup == null){
+                this.form.labTestGroup = {id:null};
+            }
         });
     },
     fetchLabTestGroups(){
@@ -226,7 +231,7 @@ export default {
       (new CategoryService()).getCategories().then(result=>{
           this.categories.push({value:null,text:'Select Category'});
           result.forEach(category=>{
-              this.categories.push({value:category.id,text:category.name,id:category.id})
+              this.categories.push({labTest:category.labTest,value:category.id,text:category.name,id:category.id})
             });
           this.$store.commit('finish');
         })

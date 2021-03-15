@@ -36,6 +36,10 @@ const routes: Array<RouteConfig> = [
     component: PatientDetail
   },
   {
+    path: '/patients/:id/edit',
+    component: PatientForm
+  },
+  {
     name:'patients',
     path: '/patients',
     component: Patients

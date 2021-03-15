@@ -40,6 +40,7 @@
                 <div v-if="patient.id>0">
                   <span>Patient Name: {{patient.fullName}}</span>
                   <span v-if="patient.gender">, Sex: {{patient.gender}}</span>
+                  <span v-if="patient.age">, Age: {{patient.age}}</span>
                 </div>
                 <div>
                   IS GB?:
@@ -84,26 +85,92 @@
     <div class="row">
       <div class="col-md-5">
         <div class="row mt-1">
+          <div class="col-md-12">
+            <b-form-group
+              id="input-group-symptoms"
+              label="C/C:"
+              label-for="symptoms"
+              description="Disease symptoms"
+            >
+              <b-textarea id="symptoms" v-model="prescription.symptoms" placeholder="ex. Fever, Cough etc"/>
+            </b-form-group>
+          </div>
+        </div>
+        
+        <div class="row mt-1">
           <div class="col-md-9">
             <b-form-group
               id="input-group-observation"
-              label="Primary Observation:"
-              label-for="observation"
-              description="Observation of patient"
+              label="Family History:"
+              description="Family history of patient"
             >
-              <b-textarea  id="observation" v-model="prescription.observations" placeholder="ex. Blood pressure, weight, etc"/>
+            <div class="d-flex flex-row justify-content-between">
+              <b-form-checkbox v-model="prescription.familyHistory.dm"> DM</b-form-checkbox>
+              <b-form-checkbox v-model="prescription.familyHistory.htn"> HTN</b-form-checkbox>
+              <b-form-checkbox v-model="prescription.familyHistory.asthma"> Br. Asthma</b-form-checkbox>
+              <b-form-checkbox v-model="prescription.familyHistory.tb"> TB</b-form-checkbox>
+            </div>
             </b-form-group>
           </div>
         </div>
         <div class="row mt-1">
           <div class="col-md-9">
             <b-form-group
-              id="input-group-symptoms"
-              label="Symptoms:"
-              label-for="symptoms"
-              description="Disease symptoms"
+            
+              id="input-group-observation"
+              label="Personal History:"
+              description="Personal history of patient"
             >
-              <b-textarea id="symptoms" v-model="prescription.symptoms" placeholder="ex. Fever, Cough etc"/>
+            <div class="d-flex flex-row justify-content-between">
+              <b-form-checkbox v-model="prescription.personalHistory.dm"> DM</b-form-checkbox>
+              <b-form-checkbox v-model="prescription.personalHistory.htn"> HTN</b-form-checkbox>
+              <b-form-checkbox v-model="prescription.personalHistory.asthma"> Br. Asthma</b-form-checkbox>
+              <b-form-checkbox v-model="prescription.personalHistory.tb"> TB</b-form-checkbox>
+              <b-form-checkbox v-model="prescription.personalHistory.pud"> PUD</b-form-checkbox>
+            </div>
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row mt-1">
+          <div class="col-md-12">
+            <b-form-group
+            
+              id="input-group-prev-history"
+              label="Previous History:"
+              description="Previous history of patient"
+            >
+            <b-form-textarea v-model="prescription.previousHistory"></b-form-textarea>
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row mt-1">
+          <div class="col-md-9">
+            <b-form-group
+              id="input-group-observation"
+              label="G/E:"
+              label-for="observation"
+              description="General Examination of patient"
+            >
+              <label>Blood Pressure</label>
+              <b-form-input  v-model="prescription.bloodPressure" />
+              <label>Pulse</label>
+              <b-form-input  v-model="prescription.pulse" />
+              <label>Tempurature</label>
+              <b-form-input  v-model="prescription.tempurature" />
+              <label>Weight</label>
+              <b-form-input  v-model="prescription.weight" />
+            </b-form-group>
+          </div>
+        </div>
+        <div class="row mt-1">
+          <div class="col-md-9">
+            <b-form-group
+              id="input-group-observation"
+              label="P/A/E:"
+              label-for="observation"
+              description="Per abdominal examination of patient"
+            >
+              <b-textarea  id="observation" v-model="prescription.observations"/>
             </b-form-group>
           </div>
         </div>
@@ -153,11 +220,12 @@
         <table class="table">
               <tr v-for="(rt,r) in recommendedTests" :key="r">
                 <td style="width:180px">{{rt.service.name}}</td>
-                <td>
+                <td><b-form-input placeholder="Write any remark here" type="text" v-model="rt.remark"></b-form-input></td>
+                <!-- <td>
                   <span v-for="(attr,a) in rt.attributes" :key="a" class="badge badge-info ml-2">{{attr.labTestAttribute.attributeName}} 
                     <a class="removeAttrBtn anchorBtn" @click="removeAttribute(rt,a)"><b-icon-x scale="1.5" class="t-bold"></b-icon-x></a>
                   </span>
-                </td>
+                </td> -->
               </tr>
             </table>
       </div>
@@ -168,7 +236,7 @@
               <th>Medicine</th>
               <th>Rules</th>
               <th>Course Duration</th>
-              <th><a @click="addMedicine" v-if="patient" class="anchorBtn"><b-icon-plus-circle></b-icon-plus-circle> Add</a></th>
+              <th><a @click="addMedicine" v-if="patient" class="anchorBtn"><b-icon-plus-circle></b-icon-plus-circle> ADD</a></th>
             </tr>
           </thead>
           <tbody>
@@ -194,6 +262,12 @@
             </tr>
           </tbody>
         </table>
+        <uploder-ui accept=".png" 
+        ref="Fileuploader"
+        :disable="!patient" 
+        allowedFileType="image/png" 
+        uploadUrl=""
+        allowedFileExt="png"></uploder-ui>
       </div>
     </div>
     <div class="row mb-3 pt-3 border-top">

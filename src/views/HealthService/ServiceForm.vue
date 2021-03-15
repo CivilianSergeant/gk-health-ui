@@ -147,8 +147,8 @@ export default {
     isCategoryPathology(){
       let _isCategoryPathology=false;
       this.categories.forEach(c=>{
-        if(c.id==this.form.serviceCategory.id && c.text.toString().toLowerCase().match('pathology')){
-          _isCategoryPathology=true;
+        if(c.id==this.form.serviceCategory.id){
+          _isCategoryPathology= (c.labTest)? true: false;
         }
       });
      
@@ -218,7 +218,7 @@ export default {
       (new CategoryService()).getCategories().then(result=>{
           this.categories.push({value:null,text:'Select Category'});
           result.forEach(category=>{
-              this.categories.push({value:category.id,text:category.name,id:category.id})
+              this.categories.push({labTest:category.labTest,value:category.id,text:category.name,id:category.id})
             });
           this.$store.commit('finish');
         })

@@ -93,7 +93,7 @@
                          :options="maritalStatusOptions"></b-form-select>
                     </b-form-group>
                 </div>
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <b-form-group
                         id="input-group-6"
                         label="Date Of Birth:"
@@ -101,6 +101,16 @@
                         description="Patient's Date of Birth"
                     >
                         <b-form-datepicker :required="true" id="patient-datepicker"  v-model="form.dateOfBirth" class="mt-2"></b-form-datepicker>
+                    </b-form-group>
+                </div> -->
+                <div class="col-md-4">
+                    <b-form-group
+                        id="input-group-6"
+                        label="Age:"
+                        label-for="patient-age"
+                        description="Patient's Age"
+                    >
+                        <b-form-input :required="true" id="patient-age"  v-model="form.age" class="mt-2"></b-form-input>
                     </b-form-group>
                 </div>
             </div>
@@ -183,7 +193,7 @@
                     </b-form-group>
                 </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-5">
                 <b-form-checkbox
                     id="checkbox-1"
@@ -195,7 +205,7 @@
                     <strong>Card registration ?</strong>
                 </b-form-checkbox>
                 </div>
-            </div>
+            </div> -->
             <div class="row mt-3" v-if="cardRegistrationAccepted">
                 <b-card class="col-md-12">
                     <div class="row">
@@ -354,7 +364,7 @@ export default {
         referrer:null,
         cardRegistrationAccepted:false,
         title: "Patients",
-        
+        id:null,
         centers: [],
         bloodGroups:[
             {value:'O(ve)', text:'O(ve)'},
@@ -384,7 +394,7 @@ export default {
             center:{id:null},
             apiVillageId:null,
             fullName:'',
-            dateOfBirth:'',
+            age:'',
             guardianName:'',
             motherName:'',
             gender:null,
@@ -421,6 +431,10 @@ export default {
   },
   beforeMount(){
     this.$store.commit('clearMessage');
+    this.id = this.$route.params.id;
+    if(this.id!=null){
+        this.fetchPatient(this.$route.params.id);
+    }
     this.fetchCenters(()=>{
         this.form.center = this.centers[1];
         console.log('here',this.centers[1])
@@ -450,16 +464,16 @@ export default {
         }
         
         
-        if(formRequest.dateOfBirth){
-            formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
-        }else{
-            formRequest.dateOfBirth = null;
-        }
+        // if(formRequest.dateOfBirth){
+        //     formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
+        // }else{
+        //     formRequest.dateOfBirth = null;
+        // }
 
-        if(!formRequest.dateOfBirth){
-            this.$store.commit('setErrorMsg','Date Of Birth required');
-            return;
-        }
+        // if(!formRequest.dateOfBirth){
+        //     this.$store.commit('setErrorMsg','Date Of Birth required');
+        //     return;
+        // }
 
         axios.defaults.headers.common = {
         "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
@@ -507,6 +521,10 @@ export default {
         const response = await axios.get(GetApiRoute(ApiRoutes.GET_PATIENT_BY_ID,id));
         if(response.status==200){
             this.form = response.data;
+            if(response.data.detail == null){
+                   this.form.detail = {bloodGroup:null,nationality:null,nationalId:null,occupation:null}
+            }
+            
         }
         console.log(response);
     },

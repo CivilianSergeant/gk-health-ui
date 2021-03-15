@@ -12,13 +12,32 @@ import {
       return {
         title: "Prescription",
         notFound: false,
-        pid: "",
         patient: null,
+
         prescription:{
-          observations:'',
+          bloodPressure:'',
+          pulse:'',
+          tempurature:'',
+          weight:'',
           symptoms:'',
-          advice:''
+          advice:'',
+          familyHistory:{
+            dm:false,
+            htn:false,
+            asthma:false,
+            tb:false
+          },
+          personalHistory:{
+            dm:false,
+            htn:false,
+            asthma:false,
+            tb:false,
+            pud:false
+          },
+          previousHistory:'',
+          pae:''
         },
+
         tests: [],
         invoices: [],
         attributes: [],
@@ -27,6 +46,7 @@ import {
         medicines: [],
         recommendedMedicines:[],
         selectedMedicineRow:[],
+
         invoice: {},
         serviceAutocomplete: null,
         invoiceAutocomplete: null,
@@ -169,9 +189,9 @@ import {
         this.service = null;
   
         this.$store.commit("clearMessage");
-  
-        if (this.serviceAutocomplete.setInputValue != undefined) {
-          this.serviceAutocomplete.setInputValue("");
+        this.$refs.Fileuploader.reset();
+        if (this.invoiceAutocomplete.setInputValue != undefined) {
+          this.invoiceAutocomplete.setInputValue("");
         }
   
         if (this.invoiceAutocomplete.setInputValue != undefined) {

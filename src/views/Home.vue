@@ -18,6 +18,7 @@
                   <b-form-input id="relation" 
                   placeholder="Patient ID"
                   v-model="pid"
+                  required
                   ></b-form-input>
                   
               </b-form-group>
@@ -34,7 +35,9 @@
             <b-card v-if="patient!=null">
             <b-card-title>Patient Info #{{patient.pid}}</b-card-title>
             <div v-if="patient.id>0"> <span>Patient Name: {{patient.fullName}}</span>
-            <span v-if="patient.gender">, Sex: {{patient.gender}} </span></div>
+            <span v-if="patient.gender">, Sex: {{patient.gender}} </span>
+            <span v-if="patient.age">, Age: {{patient.age}}</span>
+            </div>
             <div> IS GB?: <Status :data="form.cardRegistration.gb"/> </div>
             <div> Card Registered?:  <Status :data="patient.registration && patient.registration.id"/> 
             

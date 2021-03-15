@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import {BootstrapVue , IconsPlugin } from 'bootstrap-vue'
 
+import FileUploder from '@/plugin/file-uploader/index.ts'
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -9,6 +11,8 @@ import './assets/dashboard.css'
 Vue.use(BootstrapVue)
 
 Vue.use(IconsPlugin)
+
+Vue.use(FileUploder)
 
 import App from './App.vue'
 import Error from './Error.vue'
@@ -28,7 +32,7 @@ enum ENV_MODE {
 }
 
 const ENV = ENV_MODE.DEV_MODE;
-const clientId = (ENV == ENV_MODE.PROD_MODE)? 'demo-vue-app' : 'sandbox-health-ui';
+const clientId = (ENV.toString() === ENV_MODE.PROD_MODE)? 'demo-vue-app' : 'sandbox-health-ui';
 
 const initOptions = {
   url: ApiRoutes.AUTH_PATH, 

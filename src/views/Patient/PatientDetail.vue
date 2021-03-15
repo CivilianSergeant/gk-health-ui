@@ -2,7 +2,10 @@
   <div>
     <ContentBar :PageTitle="title"/>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
-    <h5>Patient Info #{{form.pid}}<router-link to="/patients" class=" btn btn-primary btn-sm float-right">Patient List</router-link></h5>
+    <h5>Patient Info #{{form.pid}}
+        <router-link to="/patients" class=" btn btn-primary btn-sm float-right ml-2">Patient List</router-link>
+        <router-link :to="'/patients/'+id+'/edit'" class=" btn btn-primary btn-sm float-right">Patient Edit</router-link>
+    </h5>
     <div>
             <div class="row">
                 <div class="col-md-3">
@@ -70,10 +73,10 @@
                 <div class="col-md-4">
                     <b-form-group
                         id="input-group-6"
-                        label="Date Of Birth:"
-                        label-for="patient-datepicker"
+                        label="Age:"
+                        label-for="patient-age"
                     >
-                        <strong class="text-secondary" >{{(form.dateOfBirth)?form.dateOfBirth:'N/A'}}</strong>
+                        <strong class="text-secondary" >{{(form.age)?form.age:'N/A'}}</strong>
                     </b-form-group>
                 </div>
             </div>
@@ -173,6 +176,7 @@ export default {
         title: "Patients",
         isBusy: false,
         centers: [],
+        id: this.$route.params.id,
         genderOptions: [
           { value: null, text: 'Please Select Gender' },
           { value: 'Male', text: 'Male' },
@@ -247,7 +251,7 @@ export default {
             formRequest.cardRegistration = null;
         }
         console.log(formRequest);
-        formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
+        // formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
         axios.defaults.headers.common = {
         "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
         'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
