@@ -22,6 +22,7 @@ import store from './store'
 import Keycloak from 'keycloak-js'
 import { UserService } from './services/UserService';
 import { ApiRoutes } from './helpers/ApiRoutes';
+import { hasRole, Role } from './helpers/Roles';
 // import axios from 'axios';
 
 Vue.config.productionTip = false
@@ -44,6 +45,14 @@ const keycloak: any = Keycloak(initOptions);
 
 let authServerStatus = false;
 
+const MyMixin = {
+  created(){
+    console.log(hasRole(Role.PARAMEDIC,keycloak.realmAccess.roles));
+  }
+}
+
+
+
 function initKeycloak (){
   keycloak.init({ onLoad: initOptions.onLoad }).then((auth: any) => {
     if (!auth) {
@@ -62,6 +71,7 @@ function initKeycloak (){
       new Vue({
         router,
         store,
+        mixins:[MyMixin],
         render: h => h(App,{ props: { keycloak: keycloak } })
       }).$mount('#app')
     }

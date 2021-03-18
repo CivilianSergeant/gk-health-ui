@@ -36,7 +36,7 @@ export default class AppHeader extends Vue {
   }
 
   get username(){
-    return this.$store.state.user.preferred_username;
+    return this.$store.state.user.name;
   }
 
   onLogout(){

@@ -90,7 +90,7 @@
               <th>Amount</th>
               <th>Discount</th>
               <th>Payable</th>
-              <th>Action</th>
+              <!-- <th>Action</th> -->
           </tr>
         </thead>
 
@@ -102,19 +102,29 @@
               <td>{{ps.serviceAmount}}</td>
               <td>{{ps.discountAmount}}</td>
               <td>{{ps.payableAmount}}</td>
-              <td>
+              <!-- <td>
                 <div class="row">
                 <div class="col-md-6"><b-form-file>Upload</b-form-file></div>
                 <div class="col-md-6"><b-button>Download</b-button></div>
                 </div>
-              </td>
+              </td> -->
           </tr>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="5"></td>
+                <td colspan="5" class="text-right">Grand Total</td>
                 <td>{{totalPayable}}</td>
-                <td></td>
+                <!-- <td></td> -->
+            </tr>
+            <tr>
+                <td colspan="5" class="text-right">Total Paid</td>
+                <td><b-form-input type="number" @input="changeTotalPaid" v-model="patientInvoice.paidAmount"></b-form-input></td>
+                <!-- <td></td> -->
+            </tr>
+            <tr>
+                <td colspan="5" class="text-right">Due Amount</td>
+                <td><b-form-input type="number" v-model="patientInvoice.dueAmount" readonly="readonly"></b-form-input></td>
+                <!-- <td></td> -->
             </tr>
         </tfoot>
       </table>
@@ -318,6 +328,7 @@ import { PatientInvoiceService } from '@/services';
 
 export default {
   name: 'Home',
+ 
   data(){
       return {
         title: "Patient Service",
@@ -327,12 +338,15 @@ export default {
         service:null,
         notFound:false,
         registration:null,
+
+        
         patientInvoice:{
           id:null,
           serviceAmount:0,
           payableAmount:0,
           discountAmount:0,
           paidAmount:0,
+          dueAmount:0,
           patientServiceDetails:[]
         },
         form:{
@@ -432,6 +446,15 @@ export default {
     }
   },
   methods:{
+    changeTotalPaid(val){
+      this.patientInvoice.paidAmount = parseFloat(val);
+      if(this.patientInvoice.paidAmount < this.patientInvoice.payableAmount){
+        this.patientInvoice.dueAmount = (this.patientInvoice.payableAmount - this.patientInvoice.paidAmount)
+      }else{
+        this.patientInvoice.dueAmount=0;
+      }
+
+    },
     showDate(){
       const dateObj = new Date();
       const toDayDateObj = new Date();
