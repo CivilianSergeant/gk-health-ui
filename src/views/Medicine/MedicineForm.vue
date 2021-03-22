@@ -102,7 +102,6 @@ export default {
         // console.log("test",this.id);
         if(this.id!=undefined){
             this.fetchMedicineById(this.id);
-            console.log("test");
         }
         this.fetcheMedicineGroups();
         this.fetcheMedicineBrands();

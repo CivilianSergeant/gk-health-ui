@@ -14,9 +14,13 @@ export enum ApiRoutes{
     ALL_EMPLOYEES = '/employee',
     ADD_EMPLOYEE = '/employee/add',
 
-    //Service Routes
+    //Service Category  Routes
     ALL_CATEGORIES = '/service-category',
     ADD_CATEGORY = '/service-category/add',
+    GET_SERVICIE_CATEGORY_BY_ID = '/service-category/:id',
+
+
+  //Service  Routes
     ALL_SERVICES = '/service',
     ADD_SERVICE = '/service/add',
     UPDATE_SERVICE = '/service/update',

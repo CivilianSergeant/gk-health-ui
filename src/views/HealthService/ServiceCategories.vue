@@ -4,8 +4,7 @@
     <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
     <h5>All Service Categories 
-      <b-button v-if="!showForm" @click="toggleView" class=" btn btn-info btn-sm float-right">Add Service Category</b-button>
-      <b-button v-if="showForm" @click="toggleView" class=" btn btn-info btn-sm float-right">Service Category List</b-button>
+      <router-link to="/service-category/add" class=" btn btn-primary btn-sm float-right">Add Service Category</router-link >
     </h5>
     <b-form v-if="showForm" @submit.prevent="onSubmit" @reset.prevent="onReset">
         <div class="row">
@@ -39,6 +38,15 @@
                 required
                 ></b-form-input>
         </b-form-group>
+              <div class="row">
+                
+                <div class="col-md-2">
+                        <b-form-checkbox  id="isLabTest" v-model="form.labTest"> Lab Test</b-form-checkbox>
+                </div>
+                <div class="col-md-2">
+                        <b-form-checkbox  id="isActive" v-model="form.active"> Is Active</b-form-checkbox>
+                </div>
+              </div>
         <div class="row mt-2 mb-2">
             <div class="col-md-2 d-flex justify-content-between">
                 <b-button type="submit" variant="success">Submit</b-button>
@@ -48,9 +56,16 @@
     </b-form>
     <b-table v-if="!showForm" id="category-table" :fields="fields" :per-page="perPage" :busy.sync="isBusy"
         :current-page="currentPage" :items="categories">
+         <template #cell(labTest)="row">
+          <span v-if="row.item.labTest" class="badge badge-success">Yes </span>
+          <span v-if="!row.item.labTest" class="badge badge-danger">No </span>
+        </template>
         <template #cell(active)="row">
           <span v-if="row.item.active" class="badge badge-success">Active </span>
           <span v-if="!row.item.active" class="badge badge-danger">Inactive </span>
+        </template>
+         <template #cell(action)="row">
+            <router-link class="btn btn-primary btn-sm " :to="'/service-category/'+row.item.id+'/detail'">Edit</router-link>
         </template>
       </b-table>
       <Loader :isBusy="isBusy"/>
@@ -66,7 +81,7 @@
 <script>
 
 
-import {CategoryService} from '@/services/CategoryService'
+import {CategoryService} from '@/services'
 import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
 import axios from 'axios';
 export default {
@@ -93,10 +108,10 @@ export default {
         title: "Service Categories",
         categories:[],
         showForm:false,
-        fields:['name','description',{'key':'active','label':'Status'},],
+        fields:['name','description','labTest',{'key':'active','label':'Status'},'action'],
         perPage: 20,
         currentPage: 1,
-        form:{name:'',active:true}
+        form:{name:'',labTest:true,active:true}
       }
   },
   beforeMount(){
