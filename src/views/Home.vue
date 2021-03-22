@@ -15,11 +15,21 @@
                   label-for="patient-id"
                   description="Search By Patient ID"
               >
-                  <b-form-input id="relation" 
+                  <!-- <b-form-input id="relation" 
                   placeholder="Patient ID"
                   v-model="pid"
                   required
-                  ></b-form-input>
+                  ></b-form-input> -->
+
+                  <Autocomplete
+                    :ajax="true"
+                    @choose-item="handlePatientSelect"
+                    :items="patientNumbers"
+                    label="pid"
+                    rowId="id"
+                    :disable="false"
+                    @ajax-call="handlePatientAutocomplete"
+                  />
                   
               </b-form-group>
            
@@ -71,6 +81,8 @@
           <Autocomplete @choose-item="handleAutocomplete" 
             :items="services" label="name" rowId="serviceId"
             :disabled="!patient"/>
+
+            
              </b-form-group>
           </div>
           <div class="col-md-3 mt-4" v-if="service">
@@ -335,6 +347,7 @@ export default {
         pid:'',
         patient:null,
         services:[],
+        patientNumbers:[],
         service:null,
         notFound:false,
         registration:null,
@@ -382,6 +395,7 @@ export default {
           {value:12,text:'12 Months'}
         ],
         autocomplete:{},
+        patientIdAutocomplete:{},
         totalPayable:0
       }
   },
@@ -446,6 +460,21 @@ export default {
     }
   },
   methods:{
+
+    handlePatientAutocomplete(searchText){
+      // ajax call
+      if (searchText.length >= 3) {
+        new PatientService()
+          .getPatientIdsByPid(searchText)
+          .then(result => {
+            this.patientNumbers = result.collection;
+          });
+      }
+    },
+    handlePatientSelect(obj,autocomplete,index,rowIndex){
+      this.pid=obj.pid
+      this.patientIdAutocomplete = autocomplete;
+    },
     changeTotalPaid(val){
       this.patientInvoice.paidAmount = parseFloat(val);
       if(this.patientInvoice.paidAmount < this.patientInvoice.payableAmount){
