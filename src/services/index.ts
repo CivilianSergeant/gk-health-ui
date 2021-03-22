@@ -7,6 +7,8 @@ import {NavigationService} from './NavigationService'
 import {LabTestGroupService} from './LabTestGroupService'
 import {PatientInvoiceService} from './PatientInvoiceService'
 import {FeedingRuleService} from './FeedingRuleService'
+import {MedicineBrandService} from './MedicineBrandService'
+import {MedicineGroupService} from './MedicineGroupService'
 import {MedicineService} from './MedicineService'
 import {MenuService} from './MenuService'
 
@@ -21,5 +23,7 @@ export {
         PatientInvoiceService,
         MenuService,
         FeedingRuleService,
-        MedicineService
+        MedicineService,
+        MedicineBrandService,
+        MedicineGroupService
     }

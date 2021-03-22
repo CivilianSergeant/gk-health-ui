@@ -99,9 +99,7 @@ export default {
         fields:[{key:'serviceCategory.name',label:'Service Category'},'name',
         {'key':'currentGbCost','label':'GB Cost'}, 
         {'key':'currentCost','label':'Non CH-GB Cost'},
-          
-          
-          {'key':'labTestGroup','label':'Lab Test Group'},'active','action'],
+        {'key':'labTestGroup','label':'Lab Test Group'},'active','action'],
         perPage: 20,
         currentPage: 1,
         showForm:false,

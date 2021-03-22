@@ -8,6 +8,8 @@ import PatientForm from '../views/Patient/PatientForm.vue'
 import PatientDetail from '../views/Patient/PatientDetail.vue'
 import ServiceCategories from '../views/ServiceCategories.vue'
 import Prescription from '../views/Prescription/Prescription.vue'
+import Medicine from '../views/Medicine/Medicine.vue'
+import MedicineForm from '../views/Medicine/MedicineForm.vue'
 import {Services,ServiceForm, ServiceDetail, ServiceAttribute }from '../views/HealthService'
 
 Vue.use(VueRouter)
@@ -73,6 +75,23 @@ const routes: Array<RouteConfig> = [
     path: '/prescription',
     component: Prescription
   },
+  {
+    name:'edit-medicine',
+    path: '/medicines/:id/detail',
+    component: MedicineForm
+  },
+  {
+    name:'create-medicine',
+    path: '/medicines/add',
+    component: MedicineForm
+  },
+  {
+    name:'medicines',
+    path: '/medicines',
+    component: Medicine
+  },
+ 
+  
   // {
   //   path: '/about',
   //   name: 'About',

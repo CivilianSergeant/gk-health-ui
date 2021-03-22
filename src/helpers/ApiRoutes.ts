@@ -1,6 +1,6 @@
 export enum ApiRoutes{
     DOMAIN = 'http://localhost:8081',
-    BASE_PATH = 'http://localhost:8181/api/',
+    BASE_PATH = 'http://localhost:8282/api/',
     AUTH_BASEPATH = 'http://103.26.136.30:8080',
     AUTH_PATH = 'http://103.26.136.30:8080/auth',
     REALM_PATH = 'http://103.26.136.30:8080/auth/realms/GK_HEALTH',
@@ -24,6 +24,16 @@ export enum ApiRoutes{
     GET_SERVICE_BY_ID = '/service/:id',
     ADD_SERVICE_ATTRIBUTES = '/service-attribute/add',
     SERVICE_ATTRIBUTE_BY_ID = '/service-attribute/:id',
+
+    //Medicine Routs
+    ALL_MEDICINE = '/medicine',
+    ADD_MEDICINE = '/medicine/add',
+    GET_MEDICINE_BY_ID = '/medicine/:id',
+
+    ALL_MEDICINE_BRAND = '/medicine-brand',
+    ADD_MEDICINE_BRAND = '/medicine-brand/add',
+    ALL_MEDICINE_GROUP = '/medicine-group',
+    ADD_MEDICINE_GROUP = '/medicine-group/add',
 
     // Patient Routes
     ALL_PATIENTS = '/patient',
