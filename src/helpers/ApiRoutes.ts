@@ -31,6 +31,7 @@ export enum ApiRoutes{
     PATIENT_CARD_REGISTRATION = '/patient/card-registration',
     GET_PATIENT_BY_ID = '/patient/:id',
     GET_PATIENT_BY_PID = '/patient/by-pid/:id',
+    GET_PATIENTIDS_BY_PID = '/patient/patient-ids/:id',
 
     // Patient Invoice Routes
     PATIENT_INVOICE_CREATE = '/invoice/create',
