@@ -168,6 +168,7 @@ import {
           this.invoice = result;
           this.patient = this.invoice.patient;
           console.log(result, this.invoice);
+          this.recommendedMedicines = [];
           this.addMedicine();
           this.addMedicine();
           this.addMedicine();

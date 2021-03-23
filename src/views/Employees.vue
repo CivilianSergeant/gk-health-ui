@@ -51,6 +51,9 @@ export default {
   },
   methods:{
     fetchEmployees(){
+      (new EmployeeService).getRemoteEmployees().then(res=>{
+        console.log(res)
+      });
       this.$store.commit('start');
       (new EmployeeService).getEmployees().then(result=> {
           this.employees = result; 

@@ -54,6 +54,14 @@ export default new Vuex.Store({
       state.employee = employee;
     }
   },
+  getters:{
+    center: state=>{
+      return state.center;
+    },
+    employee: state=>{
+      return state.employee;
+    }
+  },
   actions: {
   },
   modules: {

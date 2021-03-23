@@ -42,4 +42,8 @@ export class PatientService{
     async addPatient(formRequest: Record<string,any>): Promise<Record<string,any>>{
         return await axios.post(GetApiRoute(ApiRoutes.ADD_PATIENT),formRequest);
     }
+
+    async addPatientFromCardMember(formRequest: Record<string,any>): Promise<Record<string,any>>{
+        return await axios.post(GetApiRoute(ApiRoutes.ADD_PATIENT_FROM_CARD_MEMBER),formRequest);
+    }
 }
