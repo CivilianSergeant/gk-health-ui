@@ -2,6 +2,7 @@ import {CategoryService} from './CategoryService'
 import {CenterService} from './CenterService'
 import {EmployeeService} from './EmployeeService'
 import {HealthService} from './HealthService'
+import {ServiceRecordService} from './ServiceRecordService'
 import {PatientService} from './PatientService'
 import {NavigationService} from './NavigationService'
 import {LabTestGroupService} from './LabTestGroupService'
@@ -12,10 +13,12 @@ import {MedicineGroupService} from './MedicineGroupService'
 import {MedicineService} from './MedicineService'
 import {MenuService} from './MenuService'
 
+
 export {
         CategoryService,
         CenterService,
         EmployeeService,
+        ServiceRecordService,
         HealthService,
         PatientService,
         LabTestGroupService,

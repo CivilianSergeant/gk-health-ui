@@ -28,7 +28,7 @@
             />
           </b-form-group>
         </div>
-        <div class="col-md-3 mt-4" style="margin-top:1.7rem">
+        <div class="col-md-3 mt-4 px-0" style="margin-top:1.8rem !important">
           <!-- <b-button type="submit" variant="info">Search</b-button>  -->
           <b-button @click="onClearSearch" class="ml-1" variant="warning">Clear</b-button>
         </div>
@@ -156,9 +156,11 @@
                 <b-form-select id="r-rule" v-model="medicine.rule" 
                                         :options="feedingRules"></b-form-select>
               </td>
-              <td><b-form-input type="number" v-model="medicine.duration" ></b-form-input></td>
-              <td><b-form-select id="r-durationUnit" v-model="medicine.durationUnit" 
-                                        :options="durationUnits"></b-form-select></td>
+              <td style="width:150px"><b-form-input type="number" v-model="medicine.duration" ></b-form-input></td>
+              <td><b-form-select id="r-durationUnit" class="courseDuration" v-model="medicine.durationUnit" 
+                                        :options="durationUnits"></b-form-select> 
+                <b-icon-trash-fill @click="deleteMedicine(m)" variant="danger" class="d-inline-block cursor-pointer ml-2"></b-icon-trash-fill>
+                </td>
               
             </tr>
           </tbody>
@@ -206,7 +208,7 @@
                   <tr v-for="(rt,r) in recommendedTests" :key="r">
                     <td style="width:180px">{{rt.service.name}}</td>
                     <td><b-form-input placeholder="Write any remark here" class="w-75 d-inline-block" type="text" v-model="rt.remark"></b-form-input> 
-                   <b-icon-trash-fill @click="deleteTest(r)" variant="danger" class="d-inline-block cursor-pointer"></b-icon-trash-fill>
+                   <b-icon-trash-fill @click="deleteTest(r)" variant="danger" class="d-inline-block cursor-pointer ml-2"></b-icon-trash-fill>
                     </td>
                   </tr>
                 </table>
@@ -224,7 +226,7 @@
     </div>
     <div class="row mb-3 pt-3 border-top">
         
-      <div class="col-md-12 d-flex justify-content-end">
+      <div class="col-md-12 d-flex justify-content-between">
           <b-button type="submit" class=""  variant="info">Print</b-button>
          <div>
           <b-button type="submit" class="ml-2" variant="success">Submit</b-button>
@@ -252,4 +254,5 @@
 
 .table th{ border-top:0px}
 /* table .form-control{ height:20px;} */
+.courseDuration{width:92px; display: inline-block;}
 </style>
