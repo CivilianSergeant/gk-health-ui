@@ -6,7 +6,8 @@ import Employees from '../views/Employees.vue'
 import Patients from '../views/Patient/Patients.vue'
 import PatientForm from '../views/Patient/PatientForm.vue'
 import PatientDetail from '../views/Patient/PatientDetail.vue'
-import ServiceCategories from '../views/ServiceCategories.vue'
+import ServiceCategories from '../views/HealthService/ServiceCategories.vue'
+import ServiceCategoryForm from '../views/HealthService/ServiceCategoryForm.vue'
 import Prescription from '../views/Prescription/Prescription.vue'
 import Medicine from '../views/Medicine/Medicine.vue'
 import MedicineForm from '../views/Medicine/MedicineForm.vue'
@@ -47,6 +48,17 @@ const routes: Array<RouteConfig> = [
     component: Patients
   },
   {
+    name:'edit-service-category',
+    path: '/service-category/:id/detail',
+    component: ServiceCategoryForm
+  },
+  {
+    name:'create-service-category',
+    path: '/service-category/add',
+    component: ServiceCategoryForm
+  },
+  {
+    name:'service-categories',
     path: '/service-categories',
     component: ServiceCategories
   },

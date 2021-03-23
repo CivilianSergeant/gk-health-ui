@@ -5,7 +5,7 @@ import {
     FeedingRuleService,
     MedicineService
   } from "@/services";
-  
+  import PatientInfo from '@/components/patientInfo/PatientInfo.vue'
   export default {
     name: "Home",
     data() {
@@ -86,6 +86,9 @@ import {
       this.fetchFeedingRules();
       this.fetchMedicines();
     },
+    components:{
+      PatientInfo
+    },
     methods: {
       addMedicine(){
         const medicine = {
@@ -154,9 +157,7 @@ import {
           this.serviceAutocomplete.setInputValue("");
         }
       },
-      getDate(dateStr) {
-        return new Date(dateStr).toLocaleDateString();
-      },
+     
       handleAutocomplete(service, autocomplete) {
         this.service = service;
         this.serviceAutocomplete = autocomplete;
@@ -167,6 +168,9 @@ import {
           this.invoice = result;
           this.patient = this.invoice.patient;
           console.log(result, this.invoice);
+          this.addMedicine();
+          this.addMedicine();
+          this.addMedicine();
           this.invoiceAutocomplete = autocomplete;
         });
       },
@@ -238,6 +242,9 @@ import {
         }
           
         console.log(patient);
+      },
+      deleteTest(index){
+        this.recommendedTests.splice(index,1);
       }
     }
   };
