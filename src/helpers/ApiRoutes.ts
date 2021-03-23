@@ -29,6 +29,9 @@ export enum ApiRoutes{
     ADD_SERVICE_ATTRIBUTES = '/service-attribute/add',
     SERVICE_ATTRIBUTE_BY_ID = '/service-attribute/:id',
 
+    //Service Records  Routes
+    ALL_SERVICE_RECORD = '/service-records',
+
     //Medicine Routs
     ALL_MEDICINE = '/medicine',
     ADD_MEDICINE = '/medicine/add',

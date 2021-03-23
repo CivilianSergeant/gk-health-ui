@@ -8,6 +8,7 @@ import PatientForm from '../views/Patient/PatientForm.vue'
 import PatientDetail from '../views/Patient/PatientDetail.vue'
 import ServiceCategories from '../views/HealthService/ServiceCategories.vue'
 import ServiceCategoryForm from '../views/HealthService/ServiceCategoryForm.vue'
+import ServiceRecords from '../views/ServiceRecords/ServiceRecords.vue'
 import Prescription from '../views/Prescription/Prescription.vue'
 import Medicine from '../views/Medicine/Medicine.vue'
 import MedicineForm from '../views/Medicine/MedicineForm.vue'
@@ -101,6 +102,11 @@ const routes: Array<RouteConfig> = [
     name:'medicines',
     path: '/medicines',
     component: Medicine
+  },
+  {
+    name:'serviceRecords',
+    path: '/service-records',
+    component: ServiceRecords
   },
  
   

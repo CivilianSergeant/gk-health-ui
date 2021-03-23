@@ -245,6 +245,10 @@ import {
       },
       deleteTest(index){
         this.recommendedTests.splice(index,1);
+      },
+      deleteMedicine(index){
+        console.log("test");
+        this.recommendedMedicines.splice(index,1);
       }
     }
   };
