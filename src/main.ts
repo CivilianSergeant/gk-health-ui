@@ -67,7 +67,17 @@ function initKeycloak (){
           console.log(res);
           store.commit('setUser',res)
         });
-
+        fetch("http://training.ghrmplus.com/api/EmployeeInfo/GetCurrentEmployeeInfo",{
+        method:"GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+keycloak.token,
+        },
+        }).then(result=>result.json()).then(result=>{
+          const _result = result.Result;
+          store.commit('setCurrentCenter',{id:_result.Office.OfficeId,name:_result.Office.OfficeName})
+          store.commit('setCurrentEmployee',{id:_result.EmployeeId,name:_result.EmployeeName})
+        });  
       new Vue({
         router,
         store,

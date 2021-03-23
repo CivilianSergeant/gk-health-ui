@@ -38,4 +38,8 @@ export class PatientService{
          }
         return this.response;
     }
+
+    async addPatient(formRequest: Record<string,any>): Promise<Record<string,any>>{
+        return await axios.post(GetApiRoute(ApiRoutes.ADD_PATIENT),formRequest);
+    }
 }
