@@ -355,6 +355,7 @@ import axios from 'axios';
 import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
 import { LocalStorageService } from '@/services/LocalStorageService';
 import { NavigationService } from '@/services/NavigationService';
+import { PatientService } from '@/services';
 
 export default {
   name: 'Patients',
@@ -481,7 +482,7 @@ export default {
         };
 
         try{
-            const response = await axios.post(GetApiRoute(ApiRoutes.ADD_PATIENT),formRequest);
+            const response = await (new PatientService()).addPatient(formRequest);
             console.log(response)
             if(response.status==200){
                 

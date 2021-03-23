@@ -56,7 +56,7 @@
             <div v-if="form.cardRegistration && form.cardRegistration.members.length>0">
               Family Members
             <ul>
-              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}}</li>
+              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button class="btn btn-info btn-sm" type="button" @click="selectPatient(member)">Select</button></li>
             </ul>
             </div>
             <p v-if="form.cardRegistration && form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
@@ -460,10 +460,24 @@ export default {
     }
   },
   methods:{
-
+    selectPatient(member){
+      const formRequest = Object.assign({},member);
+      
+      if(!member.patient){
+        formRequest.patient = {
+          fullName:member.fullName,
+          gender:member.gender,
+          age:member.age
+        }
+        console.log(formRequest);
+        // (new PatientService()).addPatientFromCardMember(formRequest).then(result=>{
+        //   console.log(result);
+        // })
+      }
+    },
     handlePatientAutocomplete(searchText){
       // ajax call
-      if (searchText.length >= 3) {
+      if (searchText.length >= 2) {
         new PatientService()
           .getPatientIdsByPid(searchText)
           .then(result => {
@@ -698,6 +712,8 @@ export default {
         (new PatientInvoiceService()).saveInvoice(this.patient).then(result=>{
             if(result.status == 200){
               this.patient = result.object;
+              this.patientInvoice = {id:null,discountAmount:0,payableAmount:0,paidAmount:0,serviceAmount:0,
+              patientServiceDetails:[]}
             }
         }).catch(error=>{
           this.$store.commit('finish');

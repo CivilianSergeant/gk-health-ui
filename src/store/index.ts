@@ -10,6 +10,8 @@ export default new Vuex.Store({
     isSuccess:false,
     user:{},
     auth:{},
+    center:{},
+    employee:{},
     message:''
   },
   mutations: {
@@ -44,6 +46,12 @@ export default new Vuex.Store({
     },
     setAuth(state,keycloak){
       state.auth = keycloak;
+    },
+    setCurrentCenter(state,center){
+      state.center = center;
+    },
+    setCurrentEmployee(state, employee){
+      state.employee = employee;
     }
   },
   actions: {
