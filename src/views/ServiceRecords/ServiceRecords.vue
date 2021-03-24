@@ -4,10 +4,10 @@
         <h5 class="py-3">Service Records</h5>
         <div class="row py-2 mr-3 d-flex justify-content-end">
             <div class="mr-2">
-                    <b-form-datepicker id="datepicker-placeholder" placeholder="from date" locale="en"></b-form-datepicker>
+                    <b-form-datepicker id="datepicker-placeholder" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" placeholder="from date" locale="en"></b-form-datepicker>
             </div>
             <div>
-                <b-form-datepicker id="datepicker-placeholder" placeholder="To date" locale="en"></b-form-datepicker>
+                <b-form-datepicker id="datepicker-placeholder2" placeholder="To date" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" locale="en"></b-form-datepicker>
             </div>
             <div>
                 <b-button class="ml-2" variant="info">Search</b-button>
@@ -38,7 +38,7 @@ export default {
     data(){
         return{
             title:"Service Record",
-            fields:[{key:'createdAt',label:'Date'},'invoiceNumber',{key:'name',label:'Name'},'address','receivableAmount','paid','action'],
+            fields:['date',{key:'invoiceNumber',label:'Invoice No'},'name','address',{key:'receivableAmount',label:'Receivable'},'paid','action'],
             serviceRecords:[],
             perPage: 20,
             currentPage: 1,

@@ -30,7 +30,7 @@ export enum ApiRoutes{
     SERVICE_ATTRIBUTE_BY_ID = '/service-attribute/:id',
 
     //Service Records  Routes
-    ALL_SERVICE_RECORD = '/service-records',
+    ALL_SERVICE_RECORD = '/report/service-records',
 
     //Medicine Routs
     ALL_MEDICINE = '/medicine',
