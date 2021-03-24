@@ -11,9 +11,11 @@ export enum ApiRoutes{
     VERSION = 'v1',
     ALL_CENTERS = '/health-center',
     ADD_CENTER  = '/health-center/add',
+
     ALL_EMPLOYEES = '/employee',
-    ALL_REMOTE_EMPLOYEES = '/employee/employees',
+    ALL_REMOTE_EMPLOYEES = '/employee/remote-employees',
     ADD_EMPLOYEE = '/employee/add',
+    EMPLOYEE_BY_API_ID = '/employee/api-id/:id',
 
     //Service Category  Routes
     ALL_CATEGORIES = '/service-category',

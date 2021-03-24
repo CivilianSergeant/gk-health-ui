@@ -6,6 +6,7 @@ import store from '@/store';
 export class EmployeeService{
 
     private employees: Employee[] = [];
+    private employee!: Employee;
 
     async getEmployees(): Promise<Employee[]>{
         const result = await axios.get(GetApiRoute(ApiRoutes.ALL_EMPLOYEES));
@@ -28,4 +29,12 @@ export class EmployeeService{
 
         return this.employees;
     } 
+
+    async getEmployeeByApiId(id: number): Promise<Employee>{
+        const result = await axios.get(GetApiRoute(ApiRoutes.EMPLOYEE_BY_API_ID,id.toString()));
+        if(result.status == 200){
+            this.employee = result.data.object;
+        }
+        return this.employee;
+    }
 }

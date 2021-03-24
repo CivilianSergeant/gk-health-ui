@@ -6,39 +6,47 @@
       <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
       <b-form @submit.prevent="onSearch">
         <div class="row">
-           
-          <div class="col-md-3">
-           
-              <b-form-group
-                  id="input-group-patient-id"
-                  label="Patient ID:"
-                  label-for="patient-id"
-                  description="Search By Patient ID"
-              >
-                  <!-- <b-form-input id="relation" 
-                  placeholder="Patient ID"
-                  v-model="pid"
-                  required
-                  ></b-form-input> -->
+          <div class="col-md-6"> 
+            <div class="row">
+            <div class="col-md-5">
+            
+                <b-form-group
+                    id="input-group-patient-id"
+                    label="Patient ID:"
+                    label-for="patient-id"
+                    description="Search By Patient ID"
+                >
+                    <!-- <b-form-input id="relation" 
+                    placeholder="Patient ID"
+                    v-model="pid"
+                    required
+                    ></b-form-input> -->
 
-                  <Autocomplete
-                    :ajax="true"
-                    @choose-item="handlePatientSelect"
-                    :items="patientNumbers"
-                    label="pid"
-                    rowId="id"
-                    :disable="false"
-                    @ajax-call="handlePatientAutocomplete"
-                  />
-                  
-              </b-form-group>
-           
+                    <Autocomplete
+                      :ajax="true"
+                      @choose-item="handlePatientSelect"
+                      :items="patientNumbers"
+                      label="pid"
+                      rowId="id"
+                      :disable="false"
+                      @ajax-call="handlePatientAutocomplete"
+                    />
+                    
+                </b-form-group>
+                
+            </div>
+            <div class="col-md-7 mt-4">
+              <b-button type="submit" variant="info">Search</b-button> 
+              <b-button @click="onClearSearch" class="ml-1" variant="warning">Clear</b-button> 
+              <b-button  @click="gotoPatientCreateView" class="ml-2" pill variant="success"> 
+                <b-icon-plus-circle scale="1.25" class="t-bold"></b-icon-plus-circle></b-button>
+            </div>
           </div>
-          <div class="col-md-3 mt-4">
-            <b-button type="submit" variant="info">Search</b-button> 
-            <b-button @click="onClearSearch" class="ml-1" variant="warning">Clear</b-button> 
-            <b-button  @click="gotoPatientCreateView" class="ml-2" pill variant="success"> 
-              <b-icon-plus-circle scale="1.25" class="t-bold"></b-icon-plus-circle></b-button>
+          <div class="row">
+            <div class="col-md-12">
+              <h6 v-if="consumer">Service For: {{consumer.fullName}}</h6>
+            </div>
+          </div>
           </div>
           <div class="col-md-6 text-secondary font-weight-bold">
             <Loader :isBusy="isBusy" />
@@ -56,7 +64,7 @@
             <div v-if="form.cardRegistration && form.cardRegistration.members.length>0">
               Family Members
             <ul>
-              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button class="btn btn-info btn-sm" type="button" @click="selectPatient(member)">Select</button></li>
+              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button class="btn btn-info btn-sm" type="button" @click="selectPatient(member)">{{member.patient? 'Select Patient': 'Create Patient'}}</button></li>
             </ul>
             </div>
             <p v-if="form.cardRegistration && form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
@@ -346,6 +354,7 @@ export default {
         title: "Patient Service",
         pid:'',
         patient:null,
+        consumer:null,
         services:[],
         patientNumbers:[],
         service:null,
@@ -470,6 +479,9 @@ export default {
       if(!member.patient){
         formRequest.center = this.$store.getters.center
         formRequest.createdBy = this.$store.getters.employee
+        formRequest.cardRegistration = {
+          id:this.form.cardRegistration.id
+        }
         formRequest.patient = {
           fullName:member.fullName,
           gender:member.gender,
@@ -478,9 +490,20 @@ export default {
           createdBy: this.$store.getters.employee
         }
         console.log(formRequest);
-        (new PatientService()).addPatientFromCardMember(formRequest).then(result=>{
-          console.log(result);
+        (new PatientService()).addPatientFromCardMember(formRequest).then(_member=>{
+          this.consumer = _member.patient;
+          this.patient.registration.members.map(m=>{
+            
+            if(m.id == _member.id){
+              /// here some change need
+            }
+            
+          }) 
+          console.log(member);
         })
+      }else{
+        this.consumer = member.patient;
+        console.log(this.consumer);
       }
     },
     handlePatientAutocomplete(searchText){
@@ -675,6 +698,7 @@ export default {
         this.$store.commit('finish');
         if(result!=null && result.status==200){
           this.patient = result.patient;
+          this.consumer = this.patient;
           if((this.patient.registration == null) || (this.patient.registration && this.patient.registration.active == false)){
             this.form.cardRegistration = {members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0};
           }else{
