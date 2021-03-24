@@ -143,7 +143,7 @@
       <div class="row mt-2 mb-2" v-if="patientInvoice.patientServiceDetails.length>0">
           <div class="col-md-2 d-flex justify-content-between">
               <b-button type="button" @click="onSubmit" variant="success">Submit</b-button>
-              <b-button type="reset" class="ml-4" variant="danger">Cancel</b-button>
+              <b-button type="reset" @click="onReset" class="ml-4" variant="danger">Cancel</b-button>
           </div>
       </div>  
           
@@ -460,19 +460,27 @@ export default {
     }
   },
   methods:{
+    onReset(){
+      this.patientInvoice.paidAmount=0;
+       this.patientInvoice.patientServiceDetails = []; 
+    },
     selectPatient(member){
       const formRequest = Object.assign({},member);
       
       if(!member.patient){
+        formRequest.center = this.$store.getters.center
+        formRequest.createdBy = this.$store.getters.employee
         formRequest.patient = {
           fullName:member.fullName,
           gender:member.gender,
-          age:member.age
+          age:member.age,
+          center: this.$store.getters.center,
+          createdBy: this.$store.getters.employee
         }
         console.log(formRequest);
-        // (new PatientService()).addPatientFromCardMember(formRequest).then(result=>{
-        //   console.log(result);
-        // })
+        (new PatientService()).addPatientFromCardMember(formRequest).then(result=>{
+          console.log(result);
+        })
       }
     },
     handlePatientAutocomplete(searchText){
@@ -513,6 +521,7 @@ export default {
           this.patientInvoice.serviceAmount += serviceAmount;
           this.patientInvoice.discountAmount += discountAmount;
           this.patientInvoice.payableAmount += payableAmount;
+          this.patientInvoice.paidAmount = this.patientInvoice.payableAmount;
     },
     handleOk(){
       this.$store.commit('clearMessage');

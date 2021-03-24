@@ -6,8 +6,9 @@
         </button>
         <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
         <ul class="navbar-nav px-3" v-if="isLive">
+          <li><span class="nav-link text-white" :href="showAccount()"> {{'Center: '+HealthCenter}}</span></li>
           <li class="nav-item text-nowrap">
-            <!-- <a class="nav-link text-white" :href="showAccount()"> {{'Welcome '+username}},</a> -->
+            
             <b-dropdown id="dropdown-1" :text="'Welcome '+username" class="m-md-2">
               <a class="dropdown-item text-dark" :href="showAccount()">Profile</a>
               <a class="dropdown-item text-dark" target="_blank" href="http://training.ghrmplus.com">HRM</a>
@@ -31,12 +32,19 @@ export default class AppHeader extends Vue {
   @Prop() private msg!: string;
 
   private title = 'GK Health';
+
+  
+
   isLive(){
     return (this.$store.state.keycloak != null)? true :false
   }
 
+  get HealthCenter(){
+    return this.$store.state.center.name;
+  }
+
   get username(){
-    return this.$store.state.user.name;
+    return this.$store.state.employee.name;
   }
 
   onLogout(){
