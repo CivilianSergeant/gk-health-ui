@@ -45,6 +45,8 @@
           <div class="row">
             <div class="col-md-12">
               <h6 v-if="consumer">Service For: {{consumer.fullName}} [{{consumer.pid}}]</h6>
+              <div v-if="showReferredCard()">Referred Card Number: {{showReferredCard() }}</div>
+              <div v-if="showReferredPatient()">Referred Patient: {{showReferredPatient() }}</div>
             </div>
           </div>
           </div>
@@ -469,6 +471,17 @@ export default {
     }
   },
   methods:{
+    showReferredCard(){
+      if(this.consumer && this.consumer.cardMember){
+        return this.consumer.cardMember.cardRegistration.cardNumber
+      }
+    },
+    showReferredPatient(){
+      if(this.consumer && this.consumer.cardMember){
+        const patient = this.consumer.cardMember.cardRegistration.patient;
+        return patient.fullName + " ["+patient.pid+"]";
+      }
+    },
     onReset(){
       this.patientInvoice.paidAmount=0;
        this.patientInvoice.patientServiceDetails = []; 

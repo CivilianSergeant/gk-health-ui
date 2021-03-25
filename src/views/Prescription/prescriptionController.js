@@ -1,9 +1,9 @@
 import {
-    PatientService,
     PatientInvoiceService,
     HealthService,
     FeedingRuleService,
-    MedicineService
+    MedicineService,
+    PrescriptionService
   } from "@/services";
   import PatientInfo from '@/components/patientInfo/PatientInfo.vue'
   export default {
@@ -15,12 +15,16 @@ import {
         patient: null,
 
         prescription:{
-          bloodPressure:'',
-          pulse:'',
-          tempurature:'',
-          weight:'',
+          id:null,
           symptoms:'',
           advice:'',
+          generalExamination:{
+            bloodPressure:'',
+            pulse:'',
+            tempurature:'',
+            weight:'',
+            pae:''
+          },
           familyHistory:{
             dm:false,
             htn:false,
@@ -32,10 +36,15 @@ import {
             htn:false,
             asthma:false,
             tb:false,
-            pud:false
+            pud:false,
+            previousHistory:'',
           },
-          previousHistory:'',
-          pae:''
+          patientInvoice: {},
+          prescriptionPatient: {},
+          doctor: {},
+          visitDate:new Date(),
+          nextVisitDate:"",
+          new:true
         },
 
         tests: [],
@@ -47,7 +56,7 @@ import {
         recommendedMedicines:[],
         selectedMedicineRow:[],
 
-        invoice: {},
+        invoice: null,
         serviceAutocomplete: null,
         invoiceAutocomplete: null,
         service: null,
@@ -82,6 +91,7 @@ import {
     },
     mounted() {
       this.$store.commit("clearMessage");
+      
       this.fetchLabServices();
       this.fetchFeedingRules();
       this.fetchMedicines();
@@ -90,6 +100,10 @@ import {
       PatientInfo
     },
     methods: {
+      isPaid(d){
+        console.log(d);
+        return (this.invoice.paidAmount < d.payableAmount)? 'NOT PAID' : 'PAID'
+      },
       addMedicine(){
         const medicine = {
           medicine:{},
@@ -144,10 +158,11 @@ import {
             serviceId:this.service.serviceId,
             name:this.service.name
           },
-          attributes: (this.service.labTestAttributes.map(s => {
-            const attribute = {labTestAttribute: {id:s.id,attributeName:s.attributeName}}
-            return (!s.group)? attribute:null;
-          })).filter(s=>s!=null)
+          prescription: {}
+          // attributes: (this.service.labTestAttributes.map(s => {
+          //   const attribute = {labTestAttribute: {id:s.id,attributeName:s.attributeName}}
+          //   return (!s.group)? attribute:null;
+          // })).filter(s=>s!=null)
         });
         this.clearTestSelection();
       },
@@ -167,7 +182,11 @@ import {
         new PatientInvoiceService().getInvoiceById(invoice.id).then(result => {
           this.invoice = result;
           this.patient = this.invoice.patient;
-          console.log(result, this.invoice);
+          this.prescription.doctor = this.$store.getters.employee;
+          this.prescription.center = this.$store.getters.center;
+          this.prescription.patientInvoice = {id:this.invoice.id}
+          this.prescription.prescriptionPatient = {id:this.patient.id}
+          
           this.recommendedMedicines = [];
           this.addMedicine();
           this.addMedicine();
@@ -176,7 +195,7 @@ import {
         });
       },
       handleInvoiceNumberAjaxCall(searchText) {
-        if (searchText.length >= 3) {
+        if (searchText.length >= 2) {
           new PatientInvoiceService()
             .getInvoiceNumbers(searchText)
             .then(result => {
@@ -194,14 +213,14 @@ import {
         this.service = null;
   
         this.$store.commit("clearMessage");
-        this.$refs.Fileuploader.reset();
-        if (this.invoiceAutocomplete.setInputValue != undefined) {
+        if(this.$refs.Fileuploader){
+          this.$refs.Fileuploader.reset();
+        }
+        if (this.invoiceAutocomplete != undefined) {
           this.invoiceAutocomplete.setInputValue("");
         }
   
-        if (this.invoiceAutocomplete.setInputValue != undefined) {
-          this.invoiceAutocomplete.setInputValue("");
-        }
+        
       },
       fetchFeedingRules() {
         new FeedingRuleService().getFeedingRules().then(result => {
@@ -236,13 +255,10 @@ import {
       onSubmitPrescription(){
         this.prescription.recommendedTests= this.recommendedTests;
         this.prescription.recommendedMedicines=this.recommendedMedicines;
-        const patient = {
-          id: this.patient.id,
-          fullName: this.patient.fullName,
-          prescription:this.prescription
-        }
+        
           
-        console.log(patient);
+        console.log(this.prescription);
+        (new PrescriptionService()).savePrescription(this.prescription).then(result=>console.log(result));
       },
       deleteTest(index){
         this.recommendedTests.splice(index,1);

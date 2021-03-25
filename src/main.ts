@@ -52,6 +52,11 @@ const MyMixin = {
   }
 }
 
+declare global{
+  interface Window{
+    uploadedFiles: [];
+  }
+}
 
 
 function initKeycloak (){
@@ -76,7 +81,7 @@ function initKeycloak (){
         },
         }).then(result=>result.json()).then(result=>{
           const _result = result.Result;
-          store.commit('setCurrentCenter',{id:_result.Office.OfficeId,name:_result.Office.OfficeName});
+          store.commit('setCurrentCenter',{id:_result.Office.OfficeId,centerCode:_result.Office.OfficeCode,name:_result.Office.OfficeName});
           
           (new EmployeeService()).getEmployeeByApiId(_result.EmployeeId).then(result=>{
             store.commit('setCurrentEmployee',result);

@@ -18,7 +18,7 @@ export class CategoryService{
     }
 
     async getServiceCategoryById(id: number): Promise<Category>{
-        const response = await axios.get(GetApiRoute(ApiRoutes.GET_SERVICIE_CATEGORY_BY_ID,id));
+        const response = await axios.get(GetApiRoute(ApiRoutes.GET_SERVICIE_CATEGORY_BY_ID,id.toString()));
         if(response.status==200){
             this.serviceCategory = response.data.object;
         }

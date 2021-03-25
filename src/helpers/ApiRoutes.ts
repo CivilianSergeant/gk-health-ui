@@ -61,7 +61,12 @@ export enum ApiRoutes{
 
     ALL_FEEDING_RULES = '/feeding-rules',
     ALL_LAB_TEST_GROUP = '/lab-test-groups',
-    ALL_LAB_TEST_UNIT = '/service-units'
+    ALL_LAB_TEST_UNIT = '/service-units',
+
+    // Prescription Routes
+    GET_PRESCRIPTION_BY_ID = '/prescription/:id',
+    ADD_PRESCRIPTION = '/prescription/add',
+    ALL_PRESCRIPTION = '/prescription'
 }
 
 export function GetApiRoute(route: string,value=""){

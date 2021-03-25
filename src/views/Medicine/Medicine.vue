@@ -42,7 +42,7 @@
       </b-table>
     </div>
 </template>
-<script lang="ts">
+<script>
 import {MedicineService} from '@/services'
 
 export default {
@@ -85,12 +85,12 @@ export default {
     },
     methods:{
         fetcheMedicines (){
-           (new MedicineService()).getMedicines().then((result: any)=>{
+           (new MedicineService()).getMedicines().then((result)=>{
                this.medicines = result;
                this.totalRows=this.medicines.length;
            })
         },
-         onFiltered(filteredItems: any) {
+         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length
             this.currentPage = 1

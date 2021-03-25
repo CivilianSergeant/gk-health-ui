@@ -3,6 +3,8 @@ import axios from 'axios';
 import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
 import store from '@/store';
 
+
+
 export class EmployeeService{
 
     private employees: Employee[] = [];
@@ -17,10 +19,15 @@ export class EmployeeService{
         return this.employees;
     } 
 
+    
+
     async getRemoteEmployees(): Promise<Employee[]>{
+        const auth: any =  store.getters.auth;
         const result = await axios.get(GetApiRoute(ApiRoutes.ALL_REMOTE_EMPLOYEES),{
+            
+
             headers: {
-              'Authorization': 'Bearer '+ store.state.auth.token
+              'Authorization': 'Bearer '+ auth.token
             }
         });
         if(result.status==200){

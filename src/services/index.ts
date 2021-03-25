@@ -12,7 +12,7 @@ import {MedicineBrandService} from './MedicineBrandService'
 import {MedicineGroupService} from './MedicineGroupService'
 import {MedicineService} from './MedicineService'
 import {MenuService} from './MenuService'
-
+import {PrescriptionService} from './PrescriptionService'
 
 export {
         CategoryService,
@@ -28,5 +28,6 @@ export {
         FeedingRuleService,
         MedicineService,
         MedicineBrandService,
-        MedicineGroupService
+        MedicineGroupService,
+        PrescriptionService
     }

@@ -27,7 +27,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import {ServiceRecordService} from '@/services'
 export default {
     computed:{
@@ -51,7 +51,7 @@ export default {
     },
     methods:{
             fetchServiceRecords(){
-               (new ServiceRecordService()).getServiceRecords().then((result: any)=>{
+               (new ServiceRecordService()).getServiceRecords().then((result)=>{
                    this.serviceRecords = result;
                    this.totalRows = this.serviceRecords.length;
                })

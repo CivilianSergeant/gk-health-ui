@@ -68,7 +68,7 @@
        
     </div>
 </template>
-<script lang="ts">
+<script>
 import {MedicineGroupService, MedicineService, NavigationService} from '@/services'
 import {MedicineBrandService} from '@/services'
 
@@ -97,7 +97,7 @@ export default {
             form:{name:'',medicineBrand:{id:null},medicineGroup:{id:null},active:true}
         }
     },
-     mounted(): void{
+     mounted(){
         this.id = this.$route.params.id;
         // console.log("test",this.id);
         if(this.id!=undefined){
@@ -110,9 +110,9 @@ export default {
     },
     methods:{
         fetcheMedicineGroups (){
-           (new MedicineGroupService()).getMedicineGroups().then((result: any)=>{
+           (new MedicineGroupService()).getMedicineGroups().then((result)=>{
                result.unshift({'id':null,'name':'Select Group'});
-               result.map((r: Record<string,any>)=>{
+               result.map((r)=>{
                    r.value = r.id;
                    r.text = r.name;
                })
@@ -121,17 +121,17 @@ export default {
            })
         },
         fetcheMedicineBrands (){
-           (new MedicineBrandService()).getMedicineBrands().then((result: any)=>{
+           (new MedicineBrandService()).getMedicineBrands().then((result)=>{
                result.unshift({'id':null,'name':'Select Brand'});
-               result.map((r: Record<string,any>)=>{
+               result.map((r)=>{
                    r.value = r.id;
                    r.text = r.name;
                })
                this.medicineBrands = result;
            })
         },
-        fetchMedicineById(id: string){
-             (new MedicineService()).getMedicineById(id).then((result: any)=>{
+        fetchMedicineById(id){
+             (new MedicineService()).getMedicineById(id).then((result)=>{
                  this.form = result;
              })
         },

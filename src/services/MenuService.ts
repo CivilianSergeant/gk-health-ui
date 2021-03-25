@@ -4,8 +4,9 @@ import store from '@/store';
 
 export class MenuService {
   static getMenus () {
-    const paramedicRole = hasRole(Role.PARAMEDIC,store.state.auth.realmAccess.roles);
-    const superadminRole = hasRole(Role.SUPER_ADMIN,store.state.auth.realmAccess.roles);
+    const auth: any = store.getters.auth;
+    const paramedicRole = hasRole(Role.PARAMEDIC,auth.realmAccess.roles);
+    const superadminRole = hasRole(Role.SUPER_ADMIN,auth.realmAccess.roles);
     console.log(superadminRole)
     const menus: Menu[] = [];
     if(paramedicRole.length){
@@ -21,6 +22,7 @@ export class MenuService {
       menus.push(new Menu('Employees', '/employees', false, true, 'fas fa-laptop-house', null));
       menus.push(new Menu('Patients', '/patients', false, true, 'fas fa-users', null));
       menus.push(new Menu('Prescription', '/prescription', false, true, 'fas fa-users', null));
+      menus.push(new Menu('My Prescriptions', '/prescriptions', false, true, 'fas fa-users', null));
       menus.push(new Menu('Service Categories', '/service-categories', false, true, 'fas fa-users', null));
       menus.push(new Menu('Services', '/services', false, true, 'fas fa-users', null));
       menus.push(new Menu('Service Packages', '/services-packages', false, true, 'fas fa-users', null));

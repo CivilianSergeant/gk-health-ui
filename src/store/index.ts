@@ -55,12 +55,9 @@ export default new Vuex.Store({
     }
   },
   getters:{
-    center: state=>{
-      return state.center;
-    },
-    employee: state=>{
-      return state.employee;
-    }
+    center: state=> {return state.center} ,
+    employee: state=>  {return state.employee} ,
+    auth: state=> {return state.auth}
   },
   actions: {
   },
