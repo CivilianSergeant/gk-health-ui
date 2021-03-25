@@ -44,7 +44,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <h6 v-if="consumer">Service For: {{consumer.fullName}}</h6>
+              <h6 v-if="consumer">Service For: {{consumer.fullName}} [{{consumer.pid}}]</h6>
             </div>
           </div>
           </div>
@@ -64,7 +64,7 @@
             <div v-if="form.cardRegistration && form.cardRegistration.members.length>0">
               Family Members
             <ul>
-              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button class="btn btn-info btn-sm" type="button" @click="selectPatient(member)">{{member.patient? 'Select Patient': 'Create Patient'}}</button></li>
+              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button class="btn btn-info btn-sm" type="button" @click="selectPatient(member,m)">{{member.patient? 'Select Patient': 'Create Patient'}}</button></li>
             </ul>
             </div>
             <p v-if="form.cardRegistration && form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
@@ -158,7 +158,7 @@
 
       <h4>Service History</h4> 
       <b-card v-if="patient">
-          <b-card-body v-for="(ps,i) in patient.patientInvoices" :key="i">
+          <b-card-body v-for="(ps,i) in consumer.patientInvoices" :key="i">
             <h5>Invoice No # {{ps.invoiceNumber}} </h5>
             <h6>Date: {{getDate(ps.createdAt)}}</h6>
             <table class="table table-bordered">
@@ -473,7 +473,7 @@ export default {
       this.patientInvoice.paidAmount=0;
        this.patientInvoice.patientServiceDetails = []; 
     },
-    selectPatient(member){
+    selectPatient(member,i){
       const formRequest = Object.assign({},member);
       
       if(!member.patient){
@@ -492,14 +492,8 @@ export default {
         console.log(formRequest);
         (new PatientService()).addPatientFromCardMember(formRequest).then(_member=>{
           this.consumer = _member.patient;
-          this.patient.registration.members.map(m=>{
-            
-            if(m.id == _member.id){
-              /// here some change need
-            }
-            
-          }) 
-          console.log(member);
+          
+          this.patient.registration.members[i] = _member;
         })
       }else{
         this.consumer = member.patient;
@@ -740,11 +734,11 @@ export default {
     },
 
     onSubmit(){
-        this.patient.patientInvoices.push(this.patientInvoice);
-        console.log(this.patient);
-        (new PatientInvoiceService()).saveInvoice(this.patient).then(result=>{
+        this.consumer.patientInvoices.push(this.patientInvoice);
+        
+        (new PatientInvoiceService()).saveInvoice(this.consumer).then(result=>{
             if(result.status == 200){
-              this.patient = result.object;
+              this.consumer = result.object;
               this.patientInvoice = {id:null,discountAmount:0,payableAmount:0,paidAmount:0,serviceAmount:0,
               patientServiceDetails:[]}
             }
