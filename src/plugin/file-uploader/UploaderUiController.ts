@@ -22,13 +22,13 @@ export default class UploaderUi extends Vue {
     private title="File Uploader";
     private file=null;
     private maxFileSize=5;
-    private files=[];
+    private files: string[]=[];
     
     private uploaderObject=null;
     private reader!: any;
     uploadAllClicked=false;
     private errorMessage = "";
-    private header = {
+    private header: Record<any,any> = {
         headers: {'Content-Type': 'multipart/form-data'}
     }
 
@@ -92,11 +92,12 @@ export default class UploaderUi extends Vue {
 
     handleOnFileReader(reader: FileReader,index: number){
         setTimeout(()=>{
+            const refs: any = this.$refs['file-'+index];
             if(this.files[index] != undefined){
                 const _file: any = this.files[index];
                 _file.src=reader.result;
                 if(_file.isIMG){
-                    this.$refs['file-'+index][0].src=this.files[index].src;
+                    refs[0].src=_file.src;
                 }
             }
         },250);
@@ -156,9 +157,11 @@ export default class UploaderUi extends Vue {
         return allowedTypeFlag;
     }
     refreshPreview(){
+        
         for(const i in this.files){
-            const file = this.files[i];
-            this.$refs['file-'+i][0].src=file.src;
+            const refs: any = this.$refs['file-'+i];
+            const file: any = this.files[i];
+            refs[0].src=file.src;
         }
     }
 
@@ -180,7 +183,7 @@ export default class UploaderUi extends Vue {
     }
 
     uploadFile(index: number){
-        const file =this.files[index];
+        const file: any =this.files[index];
         const formData = new FormData();
         formData.append('file', file);
         
@@ -191,25 +194,31 @@ export default class UploaderUi extends Vue {
         axios.post(this.uploadUrl,formData,{
             headers: {'Allowed-File-Types':this.allowedFileType,'Content-Type': 'multipart/form-data'},
             onUploadProgress:( progressEvent: ProgressEvent )=> {
-                
-                this.files[index].uploadPercentage =  Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) ;
-                if(this.files[index].uploadPercentage==100){
-                    this.files[index].uploadFlag=false;
+                const file: any = this.files[index];
+                const refs: any = this.$refs['file-progress-'+index];
+                file.uploadPercentage =  Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) ;
+                if(file.uploadPercentage==100){
+                    file.uploadFlag=false;
                     this.$forceUpdate();
+                    
                 }
-                this.$refs['file-progress-'+index][0].value=this.files[index].uploadPercentage;
+                refs[0].value=file.uploadPercentage;
                 
             }
         }).then((res: Record<string,any>) =>{
-            if(res.data.code != 200){
-                this.files[index].errorMessage = res.data.message;  
+            const file: any = this.files[index];
+            if(res.status != 200){
+                file.errorMessage = res.data.message;  
                 this.$forceUpdate();
-            }else if(res.data.code==200){
-                if(window.uploadedFiles == undefined){
-                    window.uploadedFiles = [];
-                }
+            }else if(res.status==200){
+                
+                this.$emit('uploadedfile',res.data);
+                // if(window.uploadedFiles == undefined){
+                //     window.uploadedFiles = [];
+                // }
+                
                 // store uploaded data
-                window.uploadedFiles.push(res.data.uploaded);
+                // window.uploadedFiles.push(res.data.uploaded);
                 // window.parent.ProcessChildWindow(this.uploaderObject,res.data.uploaded);
             }
         }).catch((error: Record<string,any>)=>{

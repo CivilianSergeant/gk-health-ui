@@ -18,6 +18,7 @@ import {
           id:null,
           symptoms:'',
           advice:'',
+          filePath:'',
           generalExamination:{
             bloodPressure:'',
             pulse:'',
@@ -100,6 +101,9 @@ import {
       PatientInfo
     },
     methods: {
+      handleUploadedFile(data){
+        this.filePath = data.object.filename;
+      },
       isPaid(d){
         console.log(d);
         return (this.invoice.paidAmount < d.payableAmount)? 'NOT PAID' : 'PAID'

@@ -161,7 +161,7 @@
       <h4>Service History</h4> 
       <b-card v-if="patient">
           <b-card-body v-for="(ps,i) in consumer.patientInvoices" :key="i">
-            <h5>Invoice No # {{ps.invoiceNumber}} </h5>
+            <h5>Invoice No # {{ps.invoiceNumber}} <a @click="showReport(i)" class="cursor-pointer btn btn-info btn-sm"><b-icon-printer></b-icon-printer> Print</a></h5>
             <h6>Date: {{getDate(ps.createdAt)}}</h6>
             <table class="table table-bordered">
               <thead class="thead-light">
@@ -347,6 +347,7 @@ import {PatientService} from '@/services/PatientService'
 import {LocalStorageService} from '@/services/LocalStorageService'
 import {HealthService} from '@/services/HealthService'
 import { PatientInvoiceService } from '@/services';
+import jspdf,{ jsPDF } from 'jspdf';
 
 export default {
   name: 'Home',
@@ -471,6 +472,71 @@ export default {
     }
   },
   methods:{
+    showReport(i){
+      const invoice = this.patient.patientInvoices[i];
+      const pdf = new jsPDF({
+        orientation:"portrait",
+        format:"A4"
+      });
+      let x=80;
+      let y=30;
+      pdf.text("Money Receipt",x,y);
+      pdf.line(x,y+1,120,y+1);
+
+      x=15;
+      y=y+20;
+      pdf.setFontSize(11);
+      pdf.text("Patient Reg.",x,y);
+      pdf.text(": "+this.patient.pid,x+40,y);
+      y=y+5;
+      pdf.text("Patient Name",x,y);
+      pdf.text(": "+this.patient.fullName,x+40,y);
+      y=y+5;
+      pdf.text("Patient Type",x+100,y-10);
+      pdf.text(": "+this.showPatientType(),x+140,y-10);
+      pdf.text("Date",x+100,y-5);
+
+      pdf.text(": "+(new Date()).toLocaleString(),x+140,y-5);
+      y=y+5;
+      const headers = [
+        'Sl# ',
+        'Particulars',
+        'Rate ',
+        'Amount'
+        
+      ]
+      let paidAmount = 0;
+      const invoiceItems = []
+         pdf.cell(x,y,20,10,"SL#",1,"center")
+         pdf.cell(x,y,110,10,"Particulars",1,"center")
+         pdf.cell(x,y,25,10,"Rate",1,"center")
+         pdf.cell(x,y,25,10,"Amount",1,"right")
+         y=y+5;
+      invoice.patientServiceDetails.forEach((ps,i)=>{
+         
+         const index= (i<=1)? 2 : i+1; 
+         pdf.cell(x,y,20,10,(i+1).toString(),index,"center")
+         pdf.cell(x,y,110,10,ps.service.name.toString(),index,"center")
+         pdf.cell(x,y,25,10,ps.payableAmount.toString(),index,"right")
+         pdf.cell(x,y,25,10,ps.payableAmount.toString(),index,"right")
+         y=y+5;
+         paidAmount += ps.payableAmount;
+      });
+      
+      pdf.text("Total : ",x+140,y+20);
+      pdf.text(paidAmount.toString(), x+170,y+20);
+      
+      pdf.output("dataurlnewwindow");
+    },
+    showPatientType(){
+      if(this.consumer.registration){
+        if(this.consumer.registration.gb){
+          return "CH-GB";
+        }
+        return "CH-NGB";
+      }
+      return "NCH";
+    },
     showReferredCard(){
       if(this.consumer && this.consumer.cardMember){
         return this.consumer.cardMember.cardRegistration.cardNumber

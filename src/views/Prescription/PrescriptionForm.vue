@@ -231,7 +231,8 @@
         ref="Fileuploader"
         :disable="!patient" 
         allowedFileType="image/png" 
-        uploadUrl=""
+        @uploadedfile="handleUploadedFile"
+        uploadUrl="http://localhost:8282/api/v1/file-upload/upload"
         allowedFileExt="png"></uploder-ui>
       </div>
     </div>
