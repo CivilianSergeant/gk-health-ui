@@ -45,6 +45,47 @@
             </div>
             <PatientInfo :invoice="invoice" :patient="patient" :form="form"></PatientInfo>
             </b-form>
+            <table class="table" v-if="service">
+                <thead>
+                    <tr>
+                        <th>Attribute List</th>
+                        <th colspan="6">
+                        </th>
+                        
+                    </tr>
+                    <tr>
+                        
+                        <th>Name</th>
+                        <th>Result</th>
+                        <th>Range</th>
+                        <th>Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(attr,i) in service.labTestAttributes" :key="i">
+                        <td class="p-0" colspan="6" v-if="attr.group">
+                            <span> {{attr.attributeName}} </span>
+                        </td>
+                        
+                        
+                        <td v-if="!attr.group"  class="p-0">
+                            <span> {{attr.attributeName}}</span>
+                        </td>
+                        <td v-if="!attr.group" class="p-2"><input v-model="attr.result" type="text" style="width:100%" /></td>
+                        <td v-if="!attr.group" class="p-2" v-html="showRange(attr)"></td>
+                        
+                        <td v-if="!attr.group" class="p-0">{{showUnit(attr)}}</td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+            <div v-if="service" class="col-md-12 d-flex justify-content-between">
+                <b-button type="submit" class=""  variant="info">Print</b-button>
+                <div>
+                    <b-button type="submit" class="ml-2" variant="success">Submit</b-button>
+                    <b-button type="reset" class="ml-2" variant="danger">Cancel</b-button>
+                </div>
+            </div>
     </div>
 </template>
 
@@ -80,7 +121,39 @@ export default {
                 return this.$store.state.message;
             }
         },
+        mounted(){
+            this.fetchLabTestUnits();
+        },
         methods:{
+            showUnit(attr){
+                const unit = this.units.filter(u=>u.id == attr.labTestUnit.id);
+                return unit[0].name;
+            },
+            showRange(attr){
+                let range=" ";
+                if(attr){
+                    if(attr.averageRange){
+                        range = attr.averageRange;
+                    }
+                    if(attr.maleRange){
+                        range += "Male: "+attr.maleRange+"<br/>";
+                    }
+                    if(attr.femaleRange){
+                        range += "Female: "+attr.femaleRange+"<br/>";
+                    }
+                    if(attr.childRange){
+                        range += "Child Range: "+attr.childRange+"<br/>";
+                    }
+                }
+                return range;
+            },
+            fetchLabTestUnits(){
+                this.$store.commit('start');
+                (new HealthService()).getServiceUnits().then(result=>{
+                    this.units = result;
+                    this.$store.commit('finish')
+                })
+            },
             setService(i){
                 const patientService = this.invoice.patientServiceDetails[i];
                 patientService.selected=true;
@@ -119,7 +192,7 @@ export default {
             onClearSearch() {
                 this.patient = null;
                 this.invoice = null;
-                
+                this.service = null;
         
                 this.$store.commit("clearMessage");
                 
