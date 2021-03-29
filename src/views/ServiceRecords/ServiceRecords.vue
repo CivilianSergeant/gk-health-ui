@@ -14,8 +14,8 @@
             </div>
         </div>
         <b-table :fields="fields" :per-page="perPage" :current-page="currentPage" :items="serviceRecords">
-              <template #foot(receivableAmount)="data">
-                    <span class="text-danger">{{ data.label }}</span>
+              <template>
+                    
             </template>
         </b-table>
 
