@@ -12,6 +12,7 @@
         </template>
         <template #cell(action)="row">
           <b-button size="sm" variant="info" @click="viewDetail(row.item.prescriptionId)">Detail</b-button>
+          <b-button size="sm" variant="" class="ml-1"><b-icon-printer></b-icon-printer> Print</b-button>
         </template>
       </b-table>
       <Loader :isBusy="isBusy" />

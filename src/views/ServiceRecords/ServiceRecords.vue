@@ -14,16 +14,12 @@
             </div>
         </div>
         <b-table :fields="fields" :per-page="perPage" :current-page="currentPage" :items="serviceRecords">
-             <template #cell(action)="row">
-            <router-link class="btn btn-primary btn-sm " :to="'/service-record/'+row.item.id+'/detail'">Details</router-link>
-        </template>
+              <template #foot(receivableAmount)="data">
+                    <span class="text-danger">{{ data.label }}</span>
+            </template>
         </b-table>
-        <b-pagination 
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        aria-controls="service-record-table"
-      ></b-pagination>
+
+       
     </div>
 </template>
 
@@ -35,14 +31,35 @@ export default {
             return this.totalRows;
         },
     },
+    watch:{
+        serviceRecords: {
+        handler(serviceRecords){
+            this.totalReceivable=0;
+        
+            serviceRecords.map(r=>{
+            // if(this.registration.gb){
+            //   this.totalPayable+= r.currentGbCost
+            // }else{
+            //   this.totalPayable+= r.currentCost
+            // }
+            
+            
+            this.totalReceivable+= r.receivableAmount;
+            });
+            
+        },
+        deep:true
+        }
+  },
     data(){
         return{
             title:"Service Record",
-            fields:['date',{key:'invoiceNumber',label:'Invoice No'},'name','address',{key:'receivableAmount',label:'Receivable'},'paid','action'],
+            fields:['date',{key:'invoiceNumber',label:'Invoice No'},'name','address',{key:'receivableAmount',label:'Receivable'},'paid'],
             serviceRecords:[],
             perPage: 20,
             currentPage: 1,
-            totalRows:0
+            totalRows:0,
+            totalReceivable:0
         }
         
     },
