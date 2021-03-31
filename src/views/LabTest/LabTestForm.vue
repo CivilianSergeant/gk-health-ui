@@ -248,7 +248,6 @@ export default {
                     if(result.id != undefined && result.id > 0){
                         this.$store.commit('setSuccessMsg','Lab Report Created Sucessfully');
                         const navigationService =new NavigationService();
-                        navigationService.setLocalStorageService(new LocalStorageService());
                         navigationService.redirect(this,"lab-tests");
 
                     }
