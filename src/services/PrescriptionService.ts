@@ -30,4 +30,14 @@ export class PrescriptionService{
         }
         return this.prescription;
     }
+
+    async getPrescriptionByPatientAndInvoice(patientId: number,invoiceId: number): Promise<Record<string, any>> {
+        const route = ApiRoutes.GET_PRESCRIPTION_PATIENT_AND_INVOICE.replace(":patientId",patientId.toString())
+                                .replace(":invoiceId",invoiceId.toString());
+        const response = await axios.get(GetApiRoute(route));
+        if(response.status == 200){
+            this.prescription = response.data.object;
+        }
+        return this.prescription;
+    }
 }

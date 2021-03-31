@@ -160,9 +160,9 @@
 
       <h4>Service History</h4> 
       <b-card v-if="patient">
-          <b-card-body v-for="(ps,i) in consumer.patientInvoices" :key="i">
-            <h5>Invoice No # {{ps.invoiceNumber}} <a @click="showReport(i)" class="cursor-pointer btn btn-info btn-sm"><b-icon-printer></b-icon-printer> Print</a></h5>
-            <h6>Date: {{getDate(ps.createdAt)}}</h6>
+          <b-card-body v-for="(pi,i) in consumer.patientInvoices" :key="i">
+            <h5>Invoice No # {{pi.invoiceNumber}} <a @click="showReport(i)" class="cursor-pointer btn btn-info btn-sm"><b-icon-printer></b-icon-printer> Print</a></h5>
+            <h6>Date: {{getDate(pi.createdAt)}}</h6>
             <table class="table table-bordered">
               <thead class="thead-light">
                 <tr>
@@ -172,18 +172,20 @@
                     <th>Amount</th>
                     <th>Discount</th>
                     <th>Payable</th>
+                    <th>Action</th>
                     
                 </tr>
               </thead>
 
               <tbody>
-                <tr v-for="(ps,i) in ps.patientServiceDetails" :key="i">
+                <tr v-for="(ps,i) in pi.patientServiceDetails" :key="i">
                     <td>{{(i+1)}}</td>
                     <td>{{ps.service.name}}</td>
                     <td>{{ps.roomNumber}}</td>
                     <td>{{ps.serviceAmount}}</td>
                     <td>{{ps.discountAmount}}</td>
                     <td>{{ps.payableAmount}}</td>
+                    <td><router-link  v-if="hasReportButton(ps.service)" :to="showReportButton(ps.service,consumer.id,pi.id)">Report</router-link></td>
                     
                 </tr>
               </tbody>
@@ -829,6 +831,22 @@ export default {
             this.$store.commit('setErrorMsg',error);
           }
         });
+    },
+    hasReportButton(servic){
+        if(servic.labTest==true || servic.prescription==true){
+          return true;
+        }
+
+        return false;
+    },
+    showReportButton(servic,patientId,invoiceId){
+        if(servic.labTest==true){
+          return `/lab-tests/${patientId}/${invoiceId}`;
+        }
+        if(servic.prescription==true){
+          return `/prescriptions/${patientId}/${invoiceId}`;
+        }
+        return null;
     }
   }
 

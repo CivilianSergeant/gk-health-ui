@@ -218,6 +218,8 @@ export default {
         return {
             title:'Prescription',
             id: this.$route.params.id,
+            patientId:this.$route.params.patientId,
+            invoiceId:this.$route.params.invoiceId,
             resultData:{
                 center:{name:''},
                 prescriptionPatient:{registration:null},
@@ -228,12 +230,24 @@ export default {
     },
     mounted(){
         this.fetchFeedingRules();
-        this.fetchPrescriptionById(this.id);
+        if(this.patientId !=undefined && this.invoiceId!=undefined){
+            this.fetchPrescriptionByPatientAndInvoice(this.patientId,this.invoiceId);
+        }else{
+            this.fetchPrescriptionById(this.id);
+        }
+        
+        
         
     },
     methods:{
         fetchPrescriptionById(id){
             (new PrescriptionService()).getPrescriptionById(id).then(result=>{
+                this.resultData = result;
+                 console.log(this.resultData.recommendedMedicines);
+            })
+        },
+         fetchPrescriptionByPatientAndInvoice(patientId,invoiceId){
+            (new PrescriptionService()).getPrescriptionByPatientAndInvoice(patientId,invoiceId).then(result=>{
                 this.resultData = result;
                  console.log(this.resultData.recommendedMedicines);
             })
