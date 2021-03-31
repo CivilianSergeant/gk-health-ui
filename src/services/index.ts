@@ -13,6 +13,8 @@ import {MedicineGroupService} from './MedicineGroupService'
 import {MedicineService} from './MedicineService'
 import {MenuService} from './MenuService'
 import {PrescriptionService} from './PrescriptionService'
+import {SpecimenService} from './SpecimenService'
+import {LabTestService} from './LabTestService'
 
 export {
         CategoryService,
@@ -29,5 +31,7 @@ export {
         MedicineService,
         MedicineBrandService,
         MedicineGroupService,
-        PrescriptionService
+        PrescriptionService,
+        SpecimenService,
+        LabTestService
     }
