@@ -249,7 +249,7 @@ export default {
          fetchPrescriptionByPatientAndInvoice(patientId,invoiceId){
             (new PrescriptionService()).getPrescriptionByPatientAndInvoice(patientId,invoiceId).then(result=>{
                 this.resultData = result;
-                 console.log(this.resultData.recommendedMedicines);
+                 //console.log(this.resultData.recommendedMedicines);
             })
         },
         showVisitDate(resultData){
