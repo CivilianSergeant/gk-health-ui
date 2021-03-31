@@ -6,15 +6,27 @@
         
         <h5>All Reports <router-link to="/lab-tests/add" class=" btn btn-primary btn-sm float-right">Create Lab Test Report</router-link></h5>
         <Loader :isBusy="isBusy"/>
+        <b-table striped hover class="mt-4" id="lab-tests" :fields="fields" :items="labTests">
+        
+        <template #cell(action)="row">
+            <router-link class="btn btn-primary btn-sm " :to="'/lab-tests/'+row.item.id+'/detail'">Details</router-link>
+        </template>
+        </b-table>
     
     </div>
 </template>
 
 <script>
+import { LabTestService } from '@/services';
     export default {
         data(){
             return {
-                title: "Lab Test Reports"
+                title: "Lab Test Reports",
+                fields:['invoiceNumber','serviceName','fullName','pid','createdAt','action'],
+                perPage: 20,
+                currentPage: 1,
+                labTests:[],
+                totalRows:0
             }
         },
         computed: {
@@ -31,5 +43,17 @@
                 return this.$store.state.message;
             }
         },
+        mounted(){
+            this.fetchLabtests();
+        },
+        methods:{
+            fetchLabtests(){
+               (new LabTestService()).getLabTests().then((result)=>{
+                   this.labTests = result;
+                   console.log(this.labTests);
+                   this.totalRows = this.labTests.length;
+               })
+            },
+        }
     }
 </script>

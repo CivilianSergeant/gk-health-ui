@@ -5,10 +5,10 @@
         <b-form @submit.prevent="onSearch">
         <div class="row py-2 mr-3 d-flex justify-content-end">
             <div class="mr-2">
-                    <b-form-datepicker id="datepicker-placeholder" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" placeholder="from date" locale="en" v-model="form.from_date"></b-form-datepicker>
+                    <b-form-datepicker id="datepicker-placeholder" placeholder="from date" locale="en" v-model="form.from_date"></b-form-datepicker>
             </div>
             <div>
-                <b-form-datepicker id="datepicker-placeholder2" placeholder="To date" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" locale="en" v-model="form.to_date"></b-form-datepicker>
+                <b-form-datepicker id="datepicker-placeholder2" placeholder="To date"  locale="en" v-model="form.to_date"></b-form-datepicker>
             </div>
             <div>
                 <b-button type="submit" class="ml-2" variant="info">Search</b-button>
