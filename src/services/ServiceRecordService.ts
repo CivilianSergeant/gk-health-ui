@@ -8,13 +8,14 @@ export class ServiceRecordService{
      async getServiceRecords(fromDate: Date,toDate: Date): Promise<Record<string, any>[]>{
        
         let response: any = '';
-       
+
+        const route = ApiRoutes.ALL_SERVICE_RECORD;
         if(fromDate!=undefined && toDate!=undefined){
-            const route = ApiRoutes.ALL_SERVICE_RECORD_WITH_DATE.replace(":fromDate",fromDate.toString())
-                                    .replace(":toDate",toDate.toString());
-             response = await axios.get(GetApiRoute(route));
+            
+             response = await axios.post(GetApiRoute(route),{toDate:toDate,fromDate:fromDate});
+             
         }else{
-             response = await axios.get(GetApiRoute(ApiRoutes.ALL_SERVICE_RECORD));
+             response = await axios.get(GetApiRoute(route));
             
         }
 
