@@ -45,6 +45,15 @@
             </div>
             <PatientInfo :invoice="invoice" :patient="patient" :form="form"></PatientInfo>
             </b-form>
+            <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
+                <div class="col-md-2"><b-form-group
+                    v-if="specimens && service"
+                    label="Specimen"
+                    description="Select Lab Test Specimen"
+                >
+                    <b-form-select required :options="specimens" v-model="form.specimen.id"></b-form-select>
+                </b-form-group>
+                </div>
             <table class="table" v-if="service">
                 <thead>
                     <tr>
@@ -86,11 +95,13 @@
                     <b-button type="reset" class="ml-2" variant="danger">Cancel</b-button>
                 </div>
             </div>
+            </b-form>
     </div>
 </template>
 
 <script>
-import {PatientInvoiceService,HealthService} from '@/services'
+import {PatientInvoiceService,NavigationService,
+HealthService,SpecimenService, LabTestService} from '@/services'
 import PatientInfo from '@/components/patientInfo/PatientInfo.vue'
 export default {
         components:{
@@ -104,7 +115,16 @@ export default {
                 service: null,
                 invoiceAutocomplete: null,
                 patient:null,
-                form:null
+                specimens:[],
+                form:{
+                  id:null,
+                  patient:{id:null}  ,
+                  patientInvoice: {id:null} ,
+                  specimen:{id:null},
+                  labTestGroup: {id:null},
+                  details:[],
+                  testDate: new Date()
+                }
             }
         },
         computed: {
@@ -123,6 +143,7 @@ export default {
         },
         mounted(){
             this.fetchLabTestUnits();
+            this.fetchSpecimens();
         },
         methods:{
             showUnit(attr){
@@ -147,6 +168,16 @@ export default {
                 }
                 return range;
             },
+            fetchSpecimens(){
+                (new SpecimenService()).getSpecimens().then(result=>{
+                    this.specimens.push({value:null,text:'Select Specimen'});
+                        result.map(r=>{
+                            this.specimens.push({
+                            value:r.id,text:r.name
+                        });
+                    });
+                });
+            },
             fetchLabTestUnits(){
                 this.$store.commit('start');
                 (new HealthService()).getServiceUnits().then(result=>{
@@ -161,7 +192,6 @@ export default {
                 this.$forceUpdate();
             },
             isPaid(){
-                
                 return (this.invoice.paidAmount < this.invoice.payableAmount)? 'NOT PAID' : 'PAID'
             },
             handleInvoiceNumberAutocomplete(invoice, autocomplete) {
@@ -199,8 +229,50 @@ export default {
                 if (this.invoiceAutocomplete != undefined) {
                 this.invoiceAutocomplete.setInputValue("");
                 }
-        
+            },
+            onSubmit(){
+                this.$store.commit('start');
+                this.service.labTestAttributes.map(a=>{
+                    if(!a.group){
+                        this.form.details.push({
+                            labTestAttribute: {id:a.id},
+                            result: a.result
+                        })
+                    }
+                });
+                this.form.patient = {id:this.patient.id};
+                this.form.patientInvoice = {id:this.invoice.id};
+                this.form.labTestGroup = {id:this.service.labTestGroup.id};
                 
+                (new LabTestService()).saveLabTest(this.form).then(result=>{
+                    if(result.id != undefined && result.id > 0){
+                        this.$store.commit('setSuccessMsg','Lab Report Created Sucessfully');
+                        const navigationService =new NavigationService();
+                        navigationService.setLocalStorageService(new LocalStorageService());
+                        navigationService.redirect(this,"lab-tests");
+
+                    }
+                    this.$store.commit('finish');
+                });
+            },
+            onReset(){
+
+                this.service = null;
+                this.patient = null;
+                this.invoice = null;
+                this.form = {
+                  id:null,
+                  patient:{id:null},
+                  patientInvoice: {id:null},
+                  speciman:{id:null},
+                  labTestGroup: {id:null},
+                  details:[],
+                  testDate: new Date()
+                };
+
+                if(this.invoiceAutocomplete != undefined){
+                    this.invoiceAutocomplete.setInputValue('')
+                }
             }
         }
     }
