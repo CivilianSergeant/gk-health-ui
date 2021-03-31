@@ -34,6 +34,7 @@ export enum ApiRoutes{
 
     //Service Records  Routes
     ALL_SERVICE_RECORD = '/report/service-records',
+    ALL_SERVICE_RECORD_WITH_DATE = '/report/service-records/:fromDate/:toDate',
 
     //Medicine Routs
     ALL_MEDICINE = '/medicine',

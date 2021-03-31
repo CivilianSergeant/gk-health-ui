@@ -2,17 +2,19 @@
     <div>
          <!-- <ContentBar :PageTitle="title"/> -->
         <h5 class="py-3">Service Records</h5>
+        <b-form @submit.prevent="onSearch">
         <div class="row py-2 mr-3 d-flex justify-content-end">
             <div class="mr-2">
-                    <b-form-datepicker id="datepicker-placeholder" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" placeholder="from date" locale="en"></b-form-datepicker>
+                    <b-form-datepicker id="datepicker-placeholder" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" placeholder="from date" locale="en" v-model="form.from_date"></b-form-datepicker>
             </div>
             <div>
-                <b-form-datepicker id="datepicker-placeholder2" placeholder="To date" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" locale="en"></b-form-datepicker>
+                <b-form-datepicker id="datepicker-placeholder2" placeholder="To date" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" locale="en" v-model="form.to_date"></b-form-datepicker>
             </div>
             <div>
-                <b-button class="ml-2" variant="info">Search</b-button>
+                <b-button type="submit" class="ml-2" variant="info">Search</b-button>
             </div>
         </div>
+        </b-form>
         <table class="table table-bordered">
               <thead class="thead-light">
                 <tr>
@@ -84,6 +86,7 @@ export default {
             totalRows:0,
             totalReceivable:0,
             totalPaid:0,
+            form:{},
         }
         
     },
@@ -94,6 +97,14 @@ export default {
             fetchServiceRecords(){
                (new ServiceRecordService()).getServiceRecords().then((result)=>{
                    this.serviceRecords = result;
+                   this.totalRows = this.serviceRecords.length;
+               })
+            },
+            onSearch(){
+                console.log("test");
+
+                (new ServiceRecordService()).getServiceRecords(this.form.from_date,this.form.to_date).then((result)=>{
+                this.serviceRecords = result;
                    this.totalRows = this.serviceRecords.length;
                })
             }
