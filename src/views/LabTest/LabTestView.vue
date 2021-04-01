@@ -10,24 +10,24 @@
         :pdf-quality="2"
         :manual-pagination="false"
         pdf-format="a4"
-        pdf-orientation="landscape"
-        pdf-content-width="960px"
+        pdf-orientation="portrait"
+        pdf-content-width="780px"
         ref="html2Pdf"
     >
-        <section slot="pdf-content">
+        <section class="container" slot="pdf-content">
             <h5 class="text-center mt-3">Center: {{getCenterName}} <a @click="printPrescription()"  class="btn btn-sm btn-primary cursor-pointer"><b-icon-printer></b-icon-printer></a></h5>
         <div class="row">
             <div class="col-md-6">
                 SL: {{resultData.id}}<br/>
                 Date: {{showCreatedDate(resultData)}}
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6"> -->
                 <MemberRegStatus v-if="resultData.patient"
                     :nch="hasCard()"
                     :chgb="isGb()"
                     :chngb="hasCardNonGB()"
                 ></MemberRegStatus>
-            </div>
+            <!-- </div> -->
         </div>
         <div class="row  py-3">
             <div class="col-md-3 offset-md-4"><h6 class="text-center border p-2">{{resultData.service.name}}</h6></div>
@@ -67,13 +67,13 @@
                 SL: {{resultData.id}}<br/>
                 Date: {{showCreatedDate(resultData)}}
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6"> -->
                 <MemberRegStatus v-if="resultData.patient"
                     :nch="hasCard()"
                     :chgb="isGb()"
                     :chngb="hasCardNonGB()"
                 ></MemberRegStatus>
-            </div>
+            <!-- </div> -->
         </div>
         <div class="row  py-3">
             <div class="col-md-3 offset-md-4"><h6 class="text-center border p-2">{{resultData.service.name}}</h6></div>
@@ -136,8 +136,7 @@ export default{
      methods:{
          fetchLabTestById(id){
               (new LabTestService()).getLabTestById(id).then(result=>{
-                this.fetchServiceById(result);
-               
+                this.fetchServiceById(result);               
             })
          },
          showResult(td){
@@ -179,9 +178,9 @@ export default{
             return new Date(resultData.createdAt).toLocaleString().substr(0,10).replace(',','');
         },
         isGb(){
-                const patient = this.resultData.patient;
-                if(patient.registration != null){
-                        return patient.cardRegistration.gb;
+            const patient = this.resultData.patient;
+            if(patient.registration != null){
+                    return patient.cardRegistration.gb;
             }
             if(patient.cardMember!=null){
                 return patient.cardMember.cardRegistration.gb;
@@ -222,3 +221,4 @@ export default{
     }
  }
 </script>
+
