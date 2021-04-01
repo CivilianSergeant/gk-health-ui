@@ -239,7 +239,7 @@
     <div class="row mb-3 pt-3 border-top">
         
       <div class="col-md-12 d-flex justify-content-between">
-          <b-button type="submit" class=""  variant="info">Print</b-button>
+        
          <div>
           <b-button type="submit" class="ml-2" variant="success">Submit</b-button>
           <b-button type="reset" class="ml-2" variant="danger">Cancel</b-button>

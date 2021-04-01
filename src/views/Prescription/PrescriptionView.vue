@@ -116,19 +116,11 @@
         <div class="row" >
             <div class="col-md-5"></div>
             <div class="col-md-2 mt-3 text-center"><h6 class="border p-1">{{title}}</h6></div>
-            <div class="col-md-5 text-right">
-                <div>
-                    <span class="w-50 d-inline-block"> NCH:</span> <Status :type="1" :data="!resultData.prescriptionPatient.registration"/>
-                </div>
-                <div>
-                        <span class="w-50 d-inline-block">CH-GB:</span> <Status :type="1" :data="isGb()"/>
-                </div>
-
-                <div>
-                        <span class="w-50 d-inline-block">CH-NGB:</span> <Status :type="1" :data="resultData.prescriptionPatient.registration && (!isGb())"/>
-                </div>
-            
-        </div>
+             <MemberRegStatus v-if="resultData.prescriptionPatient"
+                    :nch="hasCard()"
+                    :chgb="isGb()"
+                    :chngb="hasCardNonGB()"
+                ></MemberRegStatus>
         </div>
         <div class="row">
             <div class="col-md-12 py-2">Date:{{showVisitDate(resultData)}}</div>
@@ -211,7 +203,8 @@
 </template>
 <script>
 import { PrescriptionService, FeedingRuleService } from '@/services';
-import VueHtml2pdf from 'vue-html2pdf'
+import VueHtml2pdf from 'vue-html2pdf';
+import MemberRegStatus from "@/components/MemberRegStatus.vue";
 
 export default {
     data(){
@@ -254,12 +247,41 @@ export default {
             return new Date(resultData.visitDate).toLocaleString().substr(0,10).replace(',','');
         },
         isGb(){
-            const patient = this.resultData.prescriptionPatient;
-          if(patient.registration!=null){
-            return patient.registration.gb
-         }
-         return false;
-      },
+                const patient = this.resultData.prescriptionPatient;
+                if(patient.registration != null){
+                        return patient.registration.gb;
+            }
+            if(patient.cardMember!=null){
+                return patient.cardMember.cardRegistration.gb;
+            }
+
+            return false;
+        },
+        hasCard(){
+         const patient = this.resultData.prescriptionPatient;
+
+            if(patient.cardMember==null){
+                return false;
+            }else if(patient.registration == null){
+                        return false;
+            }else{
+                return true;
+            }
+            
+        },
+        hasCardNonGB(){
+         const patient = this.resultData.prescriptionPatient;
+         console.log(this.resultData);
+                if(patient.registration != null){
+                        return !patient.registration.gb;
+                }
+             if(patient.cardMember!=null){
+                return  !patient.cardMember.cardRegistration.gb;
+            }
+
+            return false;
+        },
+     
        fetchFeedingRules() {
         new FeedingRuleService().getFeedingRules().then(result => {
           this.feedingRules = result;
@@ -280,7 +302,8 @@ export default {
       }
     },
     components: {
-        VueHtml2pdf
+        VueHtml2pdf,
+        MemberRegStatus
     }
 }
 </script>
