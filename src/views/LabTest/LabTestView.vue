@@ -180,7 +180,7 @@ export default{
         isGb(){
             const patient = this.resultData.patient;
             if(patient.registration != null){
-                    return patient.cardRegistration.gb;
+                    return patient.registration.gb;
             }
             if(patient.cardMember!=null){
                 return patient.cardMember.cardRegistration.gb;
@@ -203,7 +203,7 @@ export default{
         hasCardNonGB(){
          const patient = this.resultData.patient;
                 if(patient.registration != null){
-                        return !patient.cardRegistration.gb;
+                        return !patient.registration.gb;
                 }
              if(patient.cardMember!=null){
                 return  !patient.cardMember.cardRegistration.gb;
