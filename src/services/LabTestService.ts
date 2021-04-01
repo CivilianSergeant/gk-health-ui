@@ -23,4 +23,12 @@ export class LabTestService {
  
         return this.labTests;
      }
+
+     async getLabTestById(id: number): Promise<Record<string, any>> {
+        const response = await axios.get(GetApiRoute(ApiRoutes.GET_LAB_TEST_BY_ID,id.toString()));
+        if(response.status == 200){
+            this.labTest = response.data.object;
+        }
+        return this.labTest;
+    }
 }

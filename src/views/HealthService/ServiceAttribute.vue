@@ -180,6 +180,12 @@ export default {
     fetchServiceById(id){
         this.$store.commit('start');
         (new HealthService()).findServicesById(id).then(result=>{
+            result.labTestAttributes.map(m=>{
+                if(!m.labTestUnit){
+                    m.labTestUnit = {id:null}
+                }
+                return m;
+            })
             this.form=result;
             this.$store.commit('finish');
         });
@@ -193,16 +199,18 @@ export default {
     },
     onSubmit(){
         this.$store.commit('clearMessage')
-        let valid=true;
+        const valid=true;
         this.form.labTestAttributes.map(attr=>{
             if(attr.group){
                 attr.labTestUnit=null;
             }else{
                 if(attr.labTestUnit.id==null){
-                    this.$store.commit('setErrorMsg','Please Select Unit')
-                    valid=false;
+                    attr.labTestUnit=null;
+                //     this.$store.commit('setErrorMsg','Please Select Unit')
+                //     valid=false;
                     return;
                 }
+                return;
             }
             return attr;
         })

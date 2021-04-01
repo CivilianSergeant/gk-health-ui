@@ -89,7 +89,6 @@
                 </tbody>
             </table>
             <div v-if="service" class="col-md-12 d-flex justify-content-between">
-                <b-button type="submit" class=""  variant="info">Print</b-button>
                 <div>
                     <b-button type="submit" class="ml-2" variant="success">Submit</b-button>
                     <b-button type="reset" class="ml-2" variant="danger">Cancel</b-button>
@@ -148,8 +147,10 @@ export default {
         },
         methods:{
             showUnit(attr){
+                if(attr.labTestUnit){
                 const unit = this.units.filter(u=>u.id == attr.labTestUnit.id);
                 return unit[0].name;
+                }
             },
             showRange(attr){
                 let range=" ";

@@ -9,7 +9,7 @@
         <b-table striped hover class="mt-4" id="lab-tests" :fields="fields" :items="labTests">
         
         <template #cell(action)="row">
-            <router-link class="btn btn-primary btn-sm " :to="'/lab-tests/'+row.item.id+'/detail'">Details</router-link>
+            <b-button size="sm" variant="info" @click="viewDetail(row.item.id)">Detail</b-button>
         </template>
         </b-table>
     
@@ -54,6 +54,10 @@ import { LabTestService } from '@/services';
                    this.totalRows = this.labTests.length;
                })
             },
+            viewDetail(id){
+                this.$router.push('/lab-test/'+id);
+            },
+            
         }
     }
 </script>
