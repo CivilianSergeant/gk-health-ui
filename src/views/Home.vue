@@ -55,7 +55,7 @@
             <Loader :isBusy="isBusy" />
             <b-card v-if="patient!=null">
             <b-card-title>Patient Info #{{patient.pid}}</b-card-title>
-            <div v-if="patient.id>0"> <span>Patient Name: {{patient.fullName}}</span>
+            <div v-if="patient.id>0"> <span>Patient Name: {{consumer.fullName}}</span>
             <span v-if="patient.gender">, Sex: {{patient.gender}} </span>
             <span v-if="patient.age">, Age: {{patient.age}}</span>
             </div>
@@ -753,7 +753,7 @@ export default {
       this.findPatient()
     },
     isGB(){
-      if(this.form.registration != null){
+      if(this.form.cardRegistration != null){
         return this.form.cardRegistration.gb;
       }
       if(this.consumer.cardMember!=null){
