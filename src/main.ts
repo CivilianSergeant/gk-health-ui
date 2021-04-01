@@ -84,6 +84,7 @@ function initKeycloak (){
           store.commit('setCurrentCenter',{id:_result.Office.OfficeId,centerCode:_result.Office.OfficeCode,name:_result.Office.OfficeName});
           
           (new EmployeeService()).getEmployeeByApiId(_result.EmployeeId).then(result=>{
+            console.log('here', result)
             store.commit('setCurrentEmployee',result);
           });
           

@@ -25,7 +25,6 @@ export class MenuService {
       menus.push(new Menu('My Prescriptions', '/prescriptions', false, true, 'fas fa-users', null));
       menus.push(new Menu('Service Categories', '/service-categories', false, true, 'fas fa-users', null));
       menus.push(new Menu('Services', '/services', false, true, 'fas fa-users', null));
-      menus.push(new Menu('Service Packages', '/services-packages', false, true, 'fas fa-users', null));
       menus.push(new Menu('Lab Tests', '/lab-tests', false, true, 'fas fa-users', null));
       menus.push(new Menu('Medicines', '/medicines', false, true, 'fas fa-users', null));
     }else if(superadminRole.length){
@@ -39,7 +38,6 @@ export class MenuService {
       menus.push(new Menu('My Prescriptions', '/prescriptions', false, true, 'fas fa-users', null));
       menus.push(new Menu('Service Categories', '/service-categories', false, true, 'fas fa-users', null));
       menus.push(new Menu('Services', '/services', false, true, 'fas fa-users', null));
-      menus.push(new Menu('Service Packages', '/services-packages', false, true, 'fas fa-users', null));
       menus.push(new Menu('Lab Tests', '/lab-tests', false, true, 'fas fa-users', null));
       menus.push(new Menu('Medicines', '/medicines', false, true, 'fas fa-users', null));
     }

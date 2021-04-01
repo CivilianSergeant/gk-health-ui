@@ -16,7 +16,7 @@ const labTestRoutes: Array<RouteConfig> = [
         component: LabTestForm
     },
     {
-        name:'labtestreports',
+        name:'lab-tests',
         path: '/lab-tests/',
         component: LabTest
     },

@@ -118,6 +118,7 @@ export default {
                 specimens:[],
                 form:{
                   id:null,
+                  service:{serviceId:null},
                   patient:{id:null}  ,
                   patientInvoice: {id:null} ,
                   specimen:{id:null},
@@ -240,10 +241,11 @@ export default {
                         })
                     }
                 });
+                this.form.service = {serviceId:this.service.serviceId};
                 this.form.patient = {id:this.patient.id};
                 this.form.patientInvoice = {id:this.invoice.id};
                 this.form.labTestGroup = {id:this.service.labTestGroup.id};
-                
+               
                 (new LabTestService()).saveLabTest(this.form).then(result=>{
                     if(result.id != undefined && result.id > 0){
                         this.$store.commit('setSuccessMsg','Lab Report Created Sucessfully');
