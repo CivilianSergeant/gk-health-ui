@@ -47,6 +47,7 @@
               <h6 v-if="consumer">Service For: {{consumer.fullName}} [{{consumer.pid}}]</h6>
               <div v-if="showReferredCard()">Referred Card Number: {{showReferredCard() }}</div>
               <div v-if="showReferredPatient()">Referred Patient: {{showReferredPatient() }}</div>
+              <div v-if="showReferredCard()"> IS GB?: <Status :data="isGB()"/> </div>
             </div>
           </div>
           </div>
@@ -636,7 +637,7 @@ export default {
       }
 
       const serviceAmount = service.currentCost;
-      const discountAmount = (this.form.cardRegistration.gb)? (service.currentCost-service.currentGbCost) : 0;
+      const discountAmount = (this.isGB())? (service.currentCost-service.currentGbCost) : 0;
       const payableAmount = (serviceAmount-discountAmount);
 
       const patientService = {
@@ -700,7 +701,7 @@ export default {
 
       
       const serviceAmount = this.service.currentCost;
-      const discountAmount = (this.form.cardRegistration.gb)? (this.service.currentCost-this.service.currentGbCost) : 0;
+      const discountAmount = (this.isGB())? (this.service.currentCost-this.service.currentGbCost) : 0;
       const payableAmount = (serviceAmount-discountAmount);
       const patientService = {
         serviceAmount,
@@ -726,6 +727,7 @@ export default {
         this.patientInvoice.patientServiceDetails=[];
         this.registration=null;
         this.service=null;
+        this.consumer = null;
         if(this.autocomplete.setInputValue!=undefined){
           this.autocomplete.setInputValue('');
         }
@@ -749,6 +751,16 @@ export default {
       this.$store.commit('clearMessage')
       this.$store.commit('start');
       this.findPatient()
+    },
+    isGB(){
+      if(this.form.registration != null){
+        return this.form.cardRegistration.gb;
+      }
+      if(this.consumer.cardMember!=null){
+        return this.consumer.cardMember.cardRegistration.gb;
+      }
+
+      return false;
     },
     // isGb(registrations){
     //   // if(registrations!=null && registrations.length>0){
@@ -815,14 +827,18 @@ export default {
     },
 
     onSubmit(){
-        this.consumer.patientInvoices.push(this.patientInvoice);
-        
+        this.$store.commit('start');
+        this.consumer.patientInvoices.unshift(this.patientInvoice);
+        this.consumer.center = this.$store.getters.center;
+        this.consumer.createdBy = this.$store.getters.employee;
         (new PatientInvoiceService()).saveInvoice(this.consumer).then(result=>{
             if(result.status == 200){
               this.consumer = result.object;
               this.patientInvoice = {id:null,discountAmount:0,payableAmount:0,paidAmount:0,serviceAmount:0,
               patientServiceDetails:[]}
+              this.$store.commit('setSuccessMsg','Service Purchased Successfully');
             }
+            this.$store.commit('finish');
         }).catch(error=>{
           this.$store.commit('finish');
           if(error.toString().match('Error: Network Error') !=null){
