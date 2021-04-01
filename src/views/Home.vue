@@ -762,23 +762,7 @@ export default {
 
       return false;
     },
-    // isGb(registrations){
-    //   // if(registrations!=null && registrations.length>0){
-    //   //   registrations.map(r=>{
-    //   //     if(r.active){
-    //   //       this.form.cardRegistration = r;
-    //   //     }
-    //   //   })
-        
-    //   //   return (this.form.cardRegistration.gb)? true:false
-    //   // }
-
-    //   if(this.patient.registration != null){
-    //     this.form.cardRegistration = this.patient.registration;
-    //     return (this.form.cardRegistration.gb)? true:false
-    //   }
-    //   return false
-    // },
+    
     findPatient(){
       
       (new PatientService()).getPatientByPid(this.pid).then(result=>{
