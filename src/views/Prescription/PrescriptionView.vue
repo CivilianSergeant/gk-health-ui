@@ -234,9 +234,7 @@ export default {
             this.fetchPrescriptionByPatientAndInvoice(this.patientId,this.invoiceId);
         }else{
             this.fetchPrescriptionById(this.id);
-        }
-        
-        
+        } 
         
     },
     methods:{

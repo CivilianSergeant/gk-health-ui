@@ -92,6 +92,7 @@ export default {
     },
     mounted(){
         this.fetchServiceRecords();
+        
     },
     methods:{
             fetchServiceRecords(){
