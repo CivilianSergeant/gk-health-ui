@@ -31,4 +31,15 @@ export class LabTestService {
         }
         return this.labTest;
     }
+
+    async getLabTestByPatientInvoiceService(patientId: number,invoiceId: number, serviceId: number): Promise<Record<string, any>> {
+        const route = ApiRoutes.GET_LAB_TEST_BY_PATIENT_INVOICE_SERVICE.replace(":patientId",patientId.toString())
+        .replace(":invoiceId",invoiceId.toString())
+        .replace(":serviceId", serviceId.toString())
+        const response = await axios.get(GetApiRoute(route));
+        if(response.status == 200){
+            this.labTest = response.data.object;
+        }
+        return this.labTest;
+    }
 }

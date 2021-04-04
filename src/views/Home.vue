@@ -186,7 +186,9 @@
                     <td>{{ps.serviceAmount}}</td>
                     <td>{{ps.discountAmount}}</td>
                     <td>{{ps.payableAmount}}</td>
-                    <td><router-link  v-if="hasReportButton(ps.service)" :to="showReportButton(ps.service,consumer.id,pi.id)">Report</router-link></td>
+                    <td>
+                      <router-link  v-if="hasReportButton(ps.service)" :to="showReportButton(ps.service,consumer.id,pi.id)">Report</router-link>
+                      </td>
                     
                 </tr>
               </tbody>
@@ -839,11 +841,11 @@ export default {
 
         return false;
     },
-    showReportButton(servic,patientId,invoiceId){
-        if(servic.labTest==true){
-          return `/lab-tests/${patientId}/${invoiceId}`;
+    showReportButton(service,patientId,invoiceId){
+        if(service.labTest==true){
+          return `/lab-tests/${patientId}/${invoiceId}/${service.serviceId}`;
         }
-        if(servic.prescription==true){
+        if(service.prescription==true){
           return `/prescriptions/${patientId}/${invoiceId}`;
         }
         return null;

@@ -71,6 +71,7 @@ export enum ApiRoutes{
     ADD_PRESCRIPTION = '/prescription/add',
     ALL_PRESCRIPTION = '/prescription',
 
+    GET_LAB_TEST_BY_PATIENT_INVOICE_SERVICE = '/lab-test/:patientId/:invoiceId/:serviceId',
     GET_LAB_TEST_BY_ID = '/lab-test/:id',
     ADD_LAB_TEST = '/lab-test/add',
     GET_LAB_TEST_ALL = '/lab-test'

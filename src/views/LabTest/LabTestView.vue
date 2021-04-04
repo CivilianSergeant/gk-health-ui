@@ -61,8 +61,10 @@
         </table>
         </section>
         </vue-html2pdf>
+        <b-alert class="my-3" v-model="isSuccess" variant="success">{{message}}</b-alert>
+        <b-alert class="my-3" v-model="isError" variant="danger">{{message}}</b-alert>
         <Loader class="mt-5" :isBusy="isBusy"/>
-        <div v-if="!isBusy">
+        <div v-if="!isBusy && service!=null">
         <h5 class="text-center mt-3">Center: {{getCenterName}} <a @click="printLabReport()"  class="btn btn-sm btn-primary cursor-pointer"><b-icon-printer></b-icon-printer></a></h5>
         <div class="row">
             <div class="col-md-6">
@@ -77,7 +79,7 @@
                 ></MemberRegStatus>
             <!-- </div> -->
         </div>
-        <div class="row  py-3"> sdfsdf
+        <div class="row  py-3"> 
             <div class="col-md-3 offset-md-4"><h6 class="text-center border p-2">{{resultData.service.name}}</h6></div>
         </div>
          <div class="row"  v-if="resultData.patient">
@@ -146,12 +148,27 @@ export default{
      },
      mounted(){
             this.id = this.$route.params.id;
+            this.patientId = this.$route.params.patientId;
+            this.invoiceId = this.$route.params.invoiceId;
+            this.serviceId = this.$route.params.serviceId;
+            if(this.patientId!=undefined && this.invoiceId!=undefined && this.serviceId!=undefined ){
+                this.fetchLabTestByPatientInvoiceService(this.patientId, this.invoiceId, this.serviceId);
+            }else{
             this.fetchLabTestById(this.id);
+            }
+
      },
      methods:{
          fetchLabTestById(id){
              this.$store.commit("start");
               (new LabTestService()).getLabTestById(id).then(result=>{
+                this.fetchServiceById(result);  
+                this.$store.commit("finish");             
+            })
+         },
+         fetchLabTestByPatientInvoiceService(patientId,invoiceId,serviceId){
+             this.$store.commit("start");
+              (new LabTestService()).getLabTestByPatientInvoiceService(patientId,invoiceId,serviceId).then(result=>{
                 this.fetchServiceById(result);  
                 this.$store.commit("finish");             
             })
@@ -181,6 +198,10 @@ export default{
                 return range;
             },
          fetchServiceById(result){
+             if(result==null){
+                 this.$store.commit("setErrorMsg","Report not done yet");
+                 return;
+             }
             this.$store.commit('start');
             (new HealthService()).findServicesById(result.service.serviceId).then(r=>{
                 this.service=r;
