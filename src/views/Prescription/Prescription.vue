@@ -3,16 +3,22 @@
     <ContentBar :PageTitle="title"/>
     <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
-    <h5>Prescription List </h5>
+    <h5>Prescription List
+     <router-link to="/prescription" class=" btn btn-primary btn-sm float-right">New Prescription</router-link >    
+     </h5>
+
     <b-table id="prescription-table" :fields="fields" :per-page="0" :busy.sync="isBusy"
         :current-page="currentPage" :items="prescriptions">
         
         <template #cell(fullName)="row">
             <router-link :to="'/patients/'+row.item.id">{{row.item.fullName}}</router-link>
         </template>
+        <template #cell(createdAt)="row">
+            <span>{{showDate(row.item.createdAt)}}</span>
+        </template>
         <template #cell(action)="row">
           <b-button size="sm" variant="info" @click="viewDetail(row.item.prescriptionId)">Detail</b-button>
-          <b-button size="sm" variant="" class="ml-1"><b-icon-printer></b-icon-printer> Print</b-button>
+          <!-- <b-button size="sm" variant="" class="ml-1"><b-icon-printer></b-icon-printer> Print</b-button> -->
         </template>
       </b-table>
       <Loader :isBusy="isBusy" />
@@ -53,7 +59,7 @@ export default {
             perPage:20,
             currentPage:1,
             fields:[{'key':'pNumber','label':'Prescription No'},
-            {'key':'fullName','label':'Patient Name'},'action']
+            {'key':'fullName','label':'Patient Name'},{'key':'createdAt','label':'Date'},'action']
         }
     },
     mounted(){
@@ -76,6 +82,9 @@ export default {
         },
         viewDetail(id){
             this.$router.push('/prescriptions/'+id);
+        },
+         showDate(createdAt){
+            return new Date(createdAt).toLocaleString().substr(0,10).replace(',','');
         },
     }
 }

@@ -3,7 +3,8 @@ import {
     HealthService,
     FeedingRuleService,
     MedicineService,
-    PrescriptionService
+    PrescriptionService,
+    NavigationService
   } from "@/services";
   import PatientInfo from '@/components/patientInfo/PatientInfo.vue'
   export default {
@@ -258,11 +259,20 @@ import {
       },
       onSubmitPrescription(){
         this.prescription.recommendedTests= this.recommendedTests;
-        this.prescription.recommendedMedicines=this.recommendedMedicines;
-        
-          
-        console.log(this.prescription);
-        (new PrescriptionService()).savePrescription(this.prescription).then(result=>console.log(result));
+        this.prescription.recommendedMedicines=this.recommendedMedicines.filter(m=>m.medicine.id!=undefined && m.rule!=""
+        && m.duration!="" && m.durationUnit!="" );
+        // console.log(this.prescription);
+
+        (new PrescriptionService()).savePrescription(this.prescription).then(result=>{
+          // console.log(result);
+          if(result.id>0){
+            this.$store.commit('setSuccessMsg','Prescription Created Successfully');
+            const navigationService =new NavigationService();
+            navigationService.redirect(this,"prescriptions");
+            window.scrollTo(0,0);
+            }
+
+        });
       },
       deleteTest(index){
         this.recommendedTests.splice(index,1);

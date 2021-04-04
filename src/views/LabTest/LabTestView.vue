@@ -61,7 +61,9 @@
         </table>
         </section>
         </vue-html2pdf>
-         <h5 class="text-center mt-3">Center: {{getCenterName}} <a @click="printLabReport()"  class="btn btn-sm btn-primary cursor-pointer"><b-icon-printer></b-icon-printer></a></h5>
+        <Loader class="mt-5" :isBusy="isBusy"/>
+        <div v-if="!isBusy">
+        <h5 class="text-center mt-3">Center: {{getCenterName}} <a @click="printLabReport()"  class="btn btn-sm btn-primary cursor-pointer"><b-icon-printer></b-icon-printer></a></h5>
         <div class="row">
             <div class="col-md-6">
                 SL: {{resultData.id}}<br/>
@@ -75,7 +77,7 @@
                 ></MemberRegStatus>
             <!-- </div> -->
         </div>
-        <div class="row  py-3">
+        <div class="row  py-3"> sdfsdf
             <div class="col-md-3 offset-md-4"><h6 class="text-center border p-2">{{resultData.service.name}}</h6></div>
         </div>
          <div class="row"  v-if="resultData.patient">
@@ -105,6 +107,7 @@
                      </tr>
               </tbody>
         </table>
+        </div>
     </div>
 </template>
 
@@ -127,6 +130,18 @@ export default{
      computed:{
             getCenterName(){
                 return this.$store.getters.center.name;
+            },
+            isBusy() {
+                return this.$store.state.isBusy;
+            },
+            isError() {
+                return this.$store.state.isError;
+            },
+            isSuccess() {
+                return this.$store.state.isSuccess;
+            },
+            message() {
+                return this.$store.state.message;
             }
      },
      mounted(){
@@ -135,8 +150,10 @@ export default{
      },
      methods:{
          fetchLabTestById(id){
+             this.$store.commit("start");
               (new LabTestService()).getLabTestById(id).then(result=>{
-                this.fetchServiceById(result);               
+                this.fetchServiceById(result);  
+                this.$store.commit("finish");             
             })
          },
          showResult(td){

@@ -218,7 +218,7 @@
                  <table class="table">
                   <tr v-for="(rt,r) in recommendedTests" :key="r">
                     <td style="width:180px">{{rt.service.name}}</td>
-                    <td><b-form-input placeholder="Write any remark here" class="w-75 d-inline-block" type="text" v-model="rt.remark"></b-form-input> 
+                    <td><b-form-input placeholder="Write any remark here" class="w-75 d-inline-block" type="text" v-model="rt.remarks"></b-form-input> 
                    <b-icon-trash-fill @click="deleteTest(r)" variant="danger" class="d-inline-block cursor-pointer ml-2"></b-icon-trash-fill>
                     </td>
                   </tr>
