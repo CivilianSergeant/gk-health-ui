@@ -26,6 +26,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { ApiRoutes } from '@/helpers/ApiRoutes';
 import axios from 'axios';
+import { hasRole } from '@/helpers/Roles';
 
 @Component
 export default class AppHeader extends Vue {
@@ -44,7 +45,7 @@ export default class AppHeader extends Vue {
   }
 
   get username(){
-    return this.$store.state.employee.fullName;
+    return this.$store.state.employee.fullName + ` (${hasRole(this.$store.getters.auth.realmAccess.roles)})`;
   }
 
   onLogout(){

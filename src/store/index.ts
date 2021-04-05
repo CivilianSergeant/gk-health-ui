@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isBusy:false,
+    isMenuLoading:false,
     isError:false,
     isSuccess:false,
     user:{},
@@ -15,6 +16,12 @@ export default new Vuex.Store({
     message:''
   },
   mutations: {
+    startLoadingMenu(state){
+      state.isMenuLoading=true;
+    },
+    menuLoaded(state){
+      state.isMenuLoading=false;
+    },
     start(state){
       state.isBusy=true;
     },

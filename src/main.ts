@@ -48,7 +48,7 @@ let authServerStatus = false;
 
 const MyMixin = {
   created(){
-    console.log(hasRole(Role.PARAMEDIC,keycloak.realmAccess.roles));
+    console.log(hasRole(keycloak.realmAccess.roles));
   }
 }
 
