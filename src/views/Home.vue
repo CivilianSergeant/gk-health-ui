@@ -187,7 +187,7 @@
                     <td>{{ps.discountAmount}}</td>
                     <td>{{ps.payableAmount}}</td>
                     <td>
-                      <router-link  v-if="hasReportButton(ps.service)" :to="showReportButton(ps.service,consumer.id,pi.id)">Report</router-link>
+                      <router-link  v-if="hasReportButton(ps)" :to="showReportButton(ps.service,consumer.id,pi.id)">{{(ps.service.labTest)? 'Lab Report' : 'Prescription'}}</router-link>
                       </td>
                     
                 </tr>
@@ -512,14 +512,16 @@ export default {
       ]
       let paidAmount = 0;
       const invoiceItems = []
-         pdf.cell(x,y,20,10,"SL#",1,"center")
-         pdf.cell(x,y,110,10,"Particulars",1,"center")
-         pdf.cell(x,y,25,10,"Rate",1,"center")
-         pdf.cell(x,y,25,10,"Amount",1,"right")
+         let index = 1;
+         pdf.cell(x,y,20,10,"SL#",index,"center")
+         pdf.cell(x,y,110,10,"Particulars",index,"center")
+         pdf.cell(x,y,25,10,"Rate",index,"center")
+         pdf.cell(x,y,25,10,"Amount",index,"right")
          y=y+5;
+        
       invoice.patientServiceDetails.forEach((ps,i)=>{
-         
-         const index= (i<=1)? 2 : i+1; 
+         console.log(i)
+         index++; 
          pdf.cell(x,y,20,10,(i+1).toString(),index,"center")
          pdf.cell(x,y,110,10,ps.service.name.toString(),index,"center")
          pdf.cell(x,y,25,10,ps.payableAmount.toString(),index,"right")
@@ -586,11 +588,13 @@ export default {
     },
     handlePatientAutocomplete(searchText){
       // ajax call
-      if (searchText.length >= 2) {
+      if (searchText.length >= 1) {
+        this.$store.commit('start');
         new PatientService()
           .getPatientIdsByPid(searchText)
           .then(result => {
             this.patientNumbers = result.collection;
+            this.$store.commit('finish');
           });
       }
     },
@@ -834,8 +838,9 @@ export default {
           }
         });
     },
-    hasReportButton(servic){
-        if(servic.labTest==true || servic.prescription==true){
+    hasReportButton(patientServiceDetail){
+        if(patientServiceDetail.reportGenerated && 
+          (patientServiceDetail.service.labTest==true || patientServiceDetail.service.prescription==true)){
           return true;
         }
 
