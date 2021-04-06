@@ -9,6 +9,8 @@
         <b-table striped hover class="mt-4" id="lab-tests" :fields="fields" :items="labTests">
         
         <template #cell(action)="row">
+            <router-link class="btn btn-primary btn-sm " :to="'/lab-test/'+row.item.id+'/edit'">Edit</router-link> &nbsp;&nbsp;
+            <!-- <b-button size="sm" variant="success">Eidit</b-button> &nbsp;&nbsp; -->
             <b-button size="sm" variant="info" @click="viewDetail(row.item.id)">Detail</b-button>
         </template>
         </b-table>
