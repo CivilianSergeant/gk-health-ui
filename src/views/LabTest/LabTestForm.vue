@@ -37,8 +37,9 @@
                     <span  v-if="invoice!=null">Status: {{ isPaid()}}</span>
                     <div v-if="invoice">
                         <div  v-for="(d,i) in invoice.patientServiceDetails" :key="i">
-                            <a class="cursor-pointer" @click="setService(i)" v-if="d.service.labTest==true">{{d.service.name}} </a>    
+                            <a class="cursor-pointer" @click="setService(i)" v-if="d.service.labTest==true && !d.reportGenerated">{{d.service.name}} </a>    
                             <span v-if="d.service.labTest==false">{{d.service.name}}</span>
+                            <span v-if="d.service.labTest==true && d.reportGenerated">{{d.service.name}} (Generated)</span>
                             <span v-if="d.selected">Selected</span>
                         </div> 
                     </div>
@@ -218,6 +219,7 @@ export default {
                 })
             },
             setService(i){
+                this.invoice.patientServiceDetails.map(s=>s.selected=false);
                 const patientService = this.invoice.patientServiceDetails[i];
                 patientService.selected=true;
                 this.fetchServiceById(patientService.service.serviceId);
