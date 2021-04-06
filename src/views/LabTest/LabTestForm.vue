@@ -47,6 +47,7 @@
             <PatientInfo :invoice="invoice" :patient="patient" :form="form"></PatientInfo>
             </b-form>
             <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
+                <div class="row">
                 <div class="col-md-2"><b-form-group
                     v-if="specimens && service"
                     label="Specimen"
@@ -55,6 +56,27 @@
                     <b-form-select required :options="specimens" v-model="form.specimen.id"></b-form-select>
                 </b-form-group>
                 </div>
+                 <div class="col-md-3 offset-md-5">
+                     <b-form-group
+                    v-if="service"
+                    label="Delivery date"
+                    description=""
+                    >
+                      <b-form-datepicker id="datepicker-placeholder" placeholder="Delivery date" locale="en" v-model="form.deliveryDate"></b-form-datepicker>
+                     </b-form-group>
+                </div>
+                <div class="col-md-2">
+                    <b-form-group
+                            id="input-group-1"
+                            v-if="service"
+                            label="Status:"
+                            label-for="input-1"
+                            description=""
+                        >
+                         <b-form-select v-model="form.status" :options="labTestStatus"></b-form-select>
+                    </b-form-group>
+                </div>
+            </div>
             <table class="table" v-if="service">
                 <thead>
                     <tr>
@@ -124,8 +146,15 @@ export default {
                   specimen:{id:null},
                   labTestGroup: {id:null},
                   details:[],
+                  status:null,
                   testDate: new Date()
-                }
+                },
+                labTestStatus: [
+                        { value: null, text: 'select status' },
+                        { value: 'pending', text: 'Pending' },
+                        { value: 'processing', text: 'Processing' },
+                        { value: 'complete', text: 'Complete' },
+                    ]
             }
         },
         computed: {
