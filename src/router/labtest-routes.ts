@@ -5,22 +5,27 @@ import LabTestView from "@/views/LabTest/LabTestView.vue";
 
 const labTestRoutes: Array<RouteConfig> = [
     {
-        name:'view-labtest-report',
+        name: 'view-labtest-report',
         path: '/lab-tests/:patientId/:invoiceId/:serviceId',
         component: LabTestView
     },
     {
-        name:'view-labtest',
+        name: 'edit-labtest',
+        path: '/lab-test/:id/edit',
+        component: LabTestForm
+    },
+    {
+        name: 'view-labtest',
         path: '/lab-test/:id',
         component: LabTestView
     },
     {
-        name:'create-labtestreport',
+        name: 'create-labtestreport',
         path: '/lab-tests/add',
         component: LabTestForm
     },
     {
-        name:'lab-tests',
+        name: 'lab-tests',
         path: '/lab-tests/',
         component: LabTest
     },
