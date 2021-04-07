@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/Home.vue'
+import Dashboard from '../views/Dashboard.vue'
 import HealthCenter from '../views/HealthCenter.vue'
 import Employees from '../views/Employees.vue'
 
 
 import ServiceRecords from '../views/ServiceRecords/ServiceRecords.vue'
+import RolePermission from '@/views/RolePermission.vue'
+import PageNotFound from '../views/PageNotFound.vue'
 
 import LabTestRoutes from "@/router/labtest-routes";
 import PatientRoutes from "@/router/patient-routes";
@@ -17,11 +19,7 @@ import ServiceCategoryRoutes from './service-category-routes';
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
+  
   {
     path: '/health-centers',
     component: HealthCenter
@@ -45,16 +43,22 @@ const routes: Array<RouteConfig> = [
 
   ...MedicineRoutes,
 
-  ...LabTestRoutes
-  
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
+  ...LabTestRoutes,
+  {
+    path:'/role-permissions',
+    name:'role-permissions',
+    component:RolePermission
+  },
+  {
+    path: '/',
+    name: 'dashboard',
+    component: Dashboard
+  },
+  {
+    path: '*',
+    name: 'pagenotfound',
+    component: PageNotFound
+  }
 ]
 
 const router = new VueRouter({

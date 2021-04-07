@@ -76,7 +76,9 @@ export enum ApiRoutes{
     ADD_LAB_TEST = '/lab-test/add',
     GET_LAB_TEST_ALL = '/lab-test',
 
-    GET_AVAILABLE_MENUS = '/menus/available-menus'
+    GET_AVAILABLE_MENUS = '/menus/available-menus',
+    GET_ROLES = '/roles',
+    ADD_ROLE_PERMISSION = '/roles/permissions'
 }
 
 export function GetApiRoute(route: string,value=""){

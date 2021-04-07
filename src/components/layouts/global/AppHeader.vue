@@ -62,5 +62,6 @@ export default class AppHeader extends Vue {
 </script>
 <style scoped>
 .navbar-nav {flex-direction: row;}
+.navbar-nav li{line-height: 35px;}
 .text-white{ color: white !important;}
 </style>
