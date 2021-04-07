@@ -15,6 +15,7 @@ import {MenuService} from './MenuService'
 import {PrescriptionService} from './PrescriptionService'
 import {SpecimenService} from './SpecimenService'
 import {LabTestService} from './LabTestService'
+import {RolePermissionService} from './RolePermissonService'
 
 export {
         CategoryService,
@@ -33,5 +34,6 @@ export {
         MedicineGroupService,
         PrescriptionService,
         SpecimenService,
-        LabTestService
+        LabTestService,
+        RolePermissionService
     }

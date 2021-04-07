@@ -2,9 +2,9 @@
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div class="position-sticky pt-3">
         <ul class="nav flex-column" v-if="!isBusy">
-          <li  class="nav-item" v-for="(menu,i) in menus" :key="i" @click="menuClicked">
+          <li  class="nav-item"  v-for="(menu,i) in menus" :key="i" @click="menuClicked">
 
-              <router-link :to="menu.route"   class="nav-link active"> {{menu.name}}</router-link>
+              <router-link :to="menu.route" v-if="menu.permissions[0].read"  class="nav-link active"> {{menu.name}}</router-link>
               
           </li>  
           
@@ -75,7 +75,7 @@ export default class Sidebar extends Vue {
 li a.nav-link{
   color:#4a5055 !important;
 }
-li a.router-link-exact-active, li a.router-link-active{
+li a.router-link-exact-active{
   color:#507aeef8 !important;
 }
 </style>

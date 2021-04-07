@@ -2,8 +2,14 @@ import { RouteConfig } from "vue-router";
 import Patients from '@/views/Patient/Patients.vue'
 import PatientForm from '@/views/Patient/PatientForm.vue'
 import PatientDetail from '@/views/Patient/PatientDetail.vue'
+import PatientService from '@/views/Patient/PatientService.vue'
 
 const patientRoutes: Array<RouteConfig> = [
+    {
+        name:'patient-service',
+        path: '/patients/service',
+        component: PatientService
+    },
     {
         name:'patient-create',
         path: '/patients/add',
