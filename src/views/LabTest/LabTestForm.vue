@@ -319,23 +319,45 @@ export default {
       }
     },
     onSubmit() {
+      const updateDetails = [];
       this.$store.commit("start");
-      this.service.labTestAttributes.map((a) => {
-        if (!a.group) {
-          this.form.details.push({
-            labTestAttribute: { id: a.id },
-            result: a.result,
-          });
-        }
-      });
+        this.service.labTestAttributes.map((a) => {
+          
+          if (!a.group) {
+            if(this.form.id>0){
+             
+              this.form.details.map(m=>{
+                if(m.labTestAttribute.id == a.id){
+                  updateDetails.push({
+                    id: m.id,
+                    labTestAttribute:{id:m.labTestAttribute.id},
+                    result:a.result
+                  })
+                }
+                
+              });
+            }else{
+               console.log('there')
+              this.form.details.push({
+                labTestAttribute: { id: a.id },
+                result: a.result,
+              });
+            }
+            
+            
+          }
+        });
+      if(this.form.id>0){
+        this.form.details = updateDetails;
+      }
       this.form.service = { serviceId: this.service.serviceId };
       this.form.patient = { id: this.patient.id };
       this.form.patientInvoice = { id: this.invoice.id };
       this.form.labTestGroup = { id: this.service.labTestGroup.id };
 
-      //   console.log(this.form);
+      console.log(this.form.details);
 
-      new LabTestService().saveLabTest(this.form).then((result) => {
+      (new LabTestService()).saveLabTest(this.form).then((result) => {
         if (this.form.id != null) {
           this.$store.commit("setSuccessMsg", "Lab Report Updated Sucessfully");
           const navigationService = new NavigationService();
