@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    isRouteCheckingPermission:false,
     isBusy:false,
     isMenuLoading:false,
     isError:false,
@@ -63,13 +64,17 @@ export default new Vuex.Store({
     },
     setMenus(state,menus){
       state.menus = menus;
+    },
+    setRoutePermissionStatus(state,checking){
+      state.isRouteCheckingPermission = checking
     }
   },
   getters:{
     center: state=> {return state.center} ,
     employee: state=>  {return state.employee} ,
     auth: state=> {return state.auth},
-    menus: state=> {return state.menus}
+    menus: state=> {return state.menus},
+    routeChecking: state=> {return state.isRouteCheckingPermission}
   },
   actions: {
   },

@@ -9,8 +9,11 @@ export enum ApiRoutes{
     USER_ACCOUNT_PATH='http://103.26.136.30:8080/auth/realms/GK_HEALTH/account',
     REFRESH_TOKEN='http://103.26.136.30:8080/auth/realms/GK_HEALTH/protocol/openid-connect/token',
     VERSION = 'v1',
+
+    // Centers
     ALL_CENTERS = '/health-center',
     ADD_CENTER  = '/health-center/add',
+    GET_CENTERS_BY_KEYWORD = '/health-center/by-keyword/:id',
 
     ALL_EMPLOYEES = '/employee',
     ALL_REMOTE_EMPLOYEES = '/employee/remote-employees',

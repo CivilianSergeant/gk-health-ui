@@ -57,6 +57,7 @@ const routes: Array<RouteConfig> = [
     component: Dashboard
   },
   {
+    name: 'access-denied',
     path:'/access-denied',
     component: AccessDenied
   },

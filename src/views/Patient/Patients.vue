@@ -4,6 +4,24 @@
     <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
     <h5>All Patients <router-link to="/patients/add" class=" btn btn-primary btn-sm float-right">Add Patient</router-link></h5>
+    <b-form @submit.prevent="onSearch">
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <Autocomplete :ajax="true" @choose-item="handleAutoComplete" 
+            :items="centers" label="name" rowId="id"
+            @ajax-call="handleOnChangeAjaxCall" placeholder="Select Center"/>
+        </div>
+        <div class="col-md-2">
+          <b-form-select v-model="search.keywordType" :options="keywordTypes"></b-form-select>
+        </div>
+        <div class="col-md-2">
+          <b-form-input v-model="search.keyword"></b-form-input>  
+        </div>  
+        <div class="col-md-2">
+          <b-button size="sm" variant="info">Search</b-button>
+        </div>
+      </div>
+    </b-form>
     <b-table id="patient-table" :fields="fields" :per-page="0" :busy.sync="isBusy"
         :current-page="currentPage" :items="patients">
         <template #cell(active)="row">
@@ -28,6 +46,7 @@
 <script>
 
 import { PatientService } from '@/services/PatientService'
+import { CenterService } from '@/services';
 
 export default {
   name: 'Patients',
@@ -52,6 +71,9 @@ export default {
       return {
         title: "Patients",
         patients: [],
+        centers:[],
+        center:null,
+        centerSearchAutoComplete: null,
         totalPages:0,
         totalRows:0,
         errorMsg: '',
@@ -62,6 +84,13 @@ export default {
           {key:'center',label:'Center Name'},
           'fullName','guardianName','gender','maritalStatus','action'
         ],
+        keywordTypes:[
+          {value:null,text:'Select Field'},
+          {value:'fullName',text:'Name'},
+          {value:'pid', text:'PID'},
+          {value:'mobileNumber',text:'Mobile No'}
+        ],
+        search:{keywordType:null,keyword:''}
 
       }
   },
@@ -78,6 +107,21 @@ export default {
     this.fetchPatients();
   },
   methods:{
+    handleOnChangeAjaxCall(searchText){
+      if (searchText.length >= 2) {
+        (new CenterService())
+          .getCentersByKeyword(searchText)
+          .then(result => {
+            this.centers = result;
+            
+          });
+      }
+    },
+    handleAutoComplete(center, autocomplete){
+      this.center = center,
+      this.centerSearchAutoComplete = autocomplete;
+    },
+
     viewDetail(id){
       this.$router.push('/patients/'+id);
     },
