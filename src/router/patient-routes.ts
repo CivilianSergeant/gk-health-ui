@@ -7,7 +7,7 @@ import PatientService from '@/views/Patient/PatientService.vue'
 const patientRoutes: Array<RouteConfig> = [
     {
         name:'patient-service',
-        path: '/patients/service',
+        path: '/patient-service-add',
         component: PatientService
     },
     {

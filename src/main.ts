@@ -75,6 +75,8 @@ function checkRoutePermission(route: any,writePath: boolean,next: any){
       store.commit('setRoutePermissionStatus',false);
       next('/access-denied');
     }
+  }else{
+    next();
   }
 }
 

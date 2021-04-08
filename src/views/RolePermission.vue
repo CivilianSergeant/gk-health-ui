@@ -125,6 +125,7 @@ export default {
             (new RolePermissionService()).saveRolePermission(payload).then(result=>{
                 
                 if(result.status == 200){
+                    this.handleSelection();
                     this.$store.commit('setSuccessMsg',result.data.message);
                     window.scrollTo(0,0);
                 }
