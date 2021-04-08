@@ -21,6 +21,9 @@
       :fields="fields"
       :items="labTests"
     >
+      <template #cell(status)="row">
+          <span v-if="row.item.status" :class="showStatusCss(row.item.status)">{{row.item.status}}</span>
+        </template>
       <template #cell(action)="row">
         <router-link
           class="btn btn-primary btn-sm"
@@ -49,6 +52,7 @@ export default {
         "fullName",
         "pid",
         "createdAt",
+        "status",
         "action",
       ],
       perPage: 20,
@@ -85,6 +89,19 @@ export default {
     viewDetail(id) {
       this.$router.push("/lab-test/" + id);
     },
+     showStatusCss:function(status){
+            switch(status){
+                case 'pending':
+                    return 'badge badge-warning text-light text-capitalize';
+                case 'complete':
+                    return 'badge badge-success text-light text-capitalize';
+                case 'processing':
+                    return 'badge badge-primary text-light text-capitalize';
+                case 'delivered':
+                    return 'badge badge-success text-light text-capitalize';
+            }
+            return '';
+        },
   },
 };
 </script>
