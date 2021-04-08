@@ -23,7 +23,7 @@ import Keycloak from 'keycloak-js'
 import { UserService } from './services/UserService';
 import { ApiRoutes } from './helpers/ApiRoutes';
 import { hasRole, Role } from './helpers/Roles';
-import { EmployeeService } from './services';
+import { EmployeeService, MenuService } from './services';
 // import axios from 'axios';
 
 Vue.config.productionTip = false
@@ -48,6 +48,10 @@ let authServerStatus = false;
 
 const MyMixin = {
   created(){
+    MenuService.getMenus().then(result=>{
+      store.commit('setMenus',result);
+      store.commit('menuLoaded');
+    });
     console.log(hasRole(keycloak.realmAccess.roles));
   }
 }
@@ -58,6 +62,24 @@ declare global{
   }
 }
 
+router.beforeEach((to,from,next)=>{
+  const segments = to.path.split("/");
+  const route = "/"+segments[1];
+  const writePath = (to.path.includes('add') || to.path.includes('edit'));
+  if(store.getters.menus!= undefined && store.getters.menus.length>0){
+    const routes = store.getters.menus.filter((m: any)=>m.route == route);
+    if(routes.length==1){
+      if(writePath == true && routes[0].permissions[0].write == true){
+        next();
+      }else if(writePath == false && routes[0].permissions[0].read == true){
+        next();
+      }else{
+        next('/access-denied');
+      }
+    }
+  }
+  next();
+});
 
 function initKeycloak (){
   keycloak.init({ onLoad: initOptions.onLoad }).then((auth: any) => {

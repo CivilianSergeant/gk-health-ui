@@ -98,7 +98,7 @@ export default {
             
             result.map(m=>{
                         const permittedMenus = this.permittedMenus.filter(pm=>pm.id == m.id);
-                        console.log(permittedMenus);
+                        
                         this.menus.push({
                             name: m.name,
                             id:m.id,                              
@@ -120,10 +120,10 @@ export default {
             this.menus.map(m=>{
                 payload.permissions.push(m.permission);
             });
-            console.log(payload);
+            
             this.$store.commit('start');
             (new RolePermissionService()).saveRolePermission(payload).then(result=>{
-                console.log(result)
+                
                 if(result.status == 200){
                     this.$store.commit('setSuccessMsg',result.data.message);
                     window.scrollTo(0,0);

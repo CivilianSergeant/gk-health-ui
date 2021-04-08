@@ -24,7 +24,7 @@
       <template #cell(action)="row">
         <router-link
           class="btn btn-primary btn-sm"
-          :to="'/lab-test/' + row.item.id + '/edit'"
+          :to="'/lab-tests/edit/' + row.item.id"
           >Edit</router-link
         >
         &nbsp;&nbsp;
@@ -83,7 +83,7 @@ export default {
       });
     },
     viewDetail(id) {
-      this.$router.push("/lab-test/" + id);
+      this.$router.push("/lab-tests/" + id);
     },
   },
 };
