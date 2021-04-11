@@ -4,7 +4,7 @@
     <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
     <h5>All Patients <router-link to="/patients/add" class=" btn btn-primary btn-sm float-right">Add Patient</router-link></h5>
-    <b-form @submit.prevent="onSearch">
+    <b-form @submit.prevent="onSearch" @reset.prevent="onClearSearch">
       <div class="row mb-3">
         <div class="col-md-3">
           <Autocomplete :ajax="true" @choose-item="handleAutoComplete" 
@@ -17,8 +17,9 @@
         <div class="col-md-2">
           <b-form-input v-model="search.keyword"></b-form-input>  
         </div>  
-        <div class="col-md-2">
-          <b-button size="sm" variant="info">Search</b-button>
+        <div class="col-md-3">
+          <b-button type="submit" size="sm" variant="info">Search</b-button>
+          <b-button class="ml-3" type="reset" size="sm" variant="warning">Clear Search</b-button>
         </div>
       </div>
     </b-form>
@@ -28,7 +29,10 @@
           <span v-if="row.item.active" class="badge badge-success">Active </span>
           <span v-if="!row.item.active" class="badge badge-danger">Inactive </span>
         </template>
-
+        <template #cell(mobileNumber)="row">
+          <span>{{(row.item.mobileNumber)? row.item.mobileNumber : 'N/A' }} </span>
+          
+        </template>
         <template #cell(action)="row">
           <b-button size="sm" variant="info" @click="viewDetail(row.item.id)">Detail</b-button>
         </template>
@@ -82,7 +86,7 @@ export default {
         fields: [
           {key:'pid',label:'Patient ID'},
           {key:'center',label:'Center Name'},
-          'fullName','guardianName','gender','maritalStatus','action'
+          'fullName','guardianName','gender','mobileNumber','action'
         ],
         keywordTypes:[
           {value:null,text:'Select Field'},
@@ -107,6 +111,18 @@ export default {
     this.fetchPatients();
   },
   methods:{
+    onSearch(){
+      this.fetchPatients();
+    },
+    onClearSearch(){
+      this.center=null,
+      this.search.keyword='';
+      this.search.keywordType=null;
+      if(this.centerSearchAutoComplete){
+         this.centerSearchAutoComplete.setInputValue('');
+      }
+      this.fetchPatients();
+    },
     handleOnChangeAjaxCall(searchText){
       if (searchText.length >= 2) {
         (new CenterService())
@@ -127,7 +143,10 @@ export default {
     },
     fetchPatients(){
       this.$store.commit('start');
-      (new PatientService()).getPatients((this.currentPage-1),this.perPage).then(result=>{
+      const centerId  = (this.center)? this.center.id:'';
+      const field = (this.search.keywordType)? this.search.keywordType : '';
+      const value = (this.search.keyword)? this.search.keyword : '';
+      (new PatientService()).getPatients(centerId,field,value,(this.currentPage-1),this.perPage).then(result=>{
         this.$store.commit('finish');
         this.totalPages = result.totalPages;
         this.totalRows = result.totalElements;

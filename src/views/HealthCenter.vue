@@ -41,7 +41,8 @@ export default {
       return {
         title: "Health Center",
         centers:[],
-        fields:['name','apiOfficeId','centerCode','address'],
+        fields:['name','apiOfficeId','centerCode','officeLevel','officeTypeId','firstLevel','secondLevel',
+        'thirdLevel','fourthLevel'],
         currentPage:1,
         perPage:20
       }
