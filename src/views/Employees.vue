@@ -40,7 +40,8 @@ export default {
       return {
         title: "Employees",
         employees:[],
-        fields:[{'apiEmployeeId':'Employee ID'},{'center.name':'Center'},'fullName','designation','contactNumber','email'],
+        fields:[{'apiEmployeeId':'Employee ID'},{'key':'employeeCode','label':'Employee Code'},
+        {'center.name':'Center'},'fullName','designation','contactNumber','email'],
         currentPage: 1,
         perPage: 20,
       }
