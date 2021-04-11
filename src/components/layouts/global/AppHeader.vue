@@ -6,7 +6,7 @@
         </button>
         <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
         <ul class="navbar-nav px-3" v-if="isLive">
-          <li><span class="nav-link text-white" :href="showAccount()"> {{'Center: '+HealthCenter}}</span></li>
+          <li><span class="nav-link text-white" :href="showAccount()"> {{'Office/Center: '+HealthCenter}}</span></li>
           <li class="nav-item text-nowrap">
             
             <b-dropdown id="dropdown-1" :text="'Welcome '+username" class="m-md-2">

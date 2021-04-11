@@ -144,9 +144,10 @@
         formatted: '',
         optionOfficeTypes: [
           { value: null, text: 'Select Office Type' },
-          { value: 'all_office', text: 'All Office' },
-          { value: 'zonal_office', text: 'Zonal Office' },
-          { value: 'health_center', text: 'Health Center' }
+          { value: '0', text: 'All Office' },
+          { value: '2', text: 'Zonal Office' },
+          { value: '3', text: 'Regional Office' },
+          { value: '4', text: 'Health Center' }
         ],
         optionOffices: [
           { value: null, text: 'Select Office' },
