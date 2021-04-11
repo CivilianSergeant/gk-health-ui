@@ -23,20 +23,19 @@ import { MenuService } from '@/services'
 
 @Component
 export default class Sidebar extends Vue {
-  private menus: Menu[] = [];
+  
   private currentLocation = ''
 
   get isBusy(){
     return this.$store.state.isMenuLoading;
   }
-
+  get menus(){
+    return this.$store.getters.menus;
+  }
   mounted () {
     this.currentLocation = location.href
     this.$store.commit('startLoadingMenu');
-    MenuService.getMenus().then(result=>{
-      this.menus = result
-      this.$store.commit('menuLoaded');
-    });
+    
     this.selectedMenu()
   }
 
@@ -45,9 +44,9 @@ export default class Sidebar extends Vue {
   }
 
   selectedMenu () {
-    this.menus.map((menu) => {
+    this.menus.map((menu: Menu) => {
       if (menu.children) {
-        menu.children.map((submenu) => {
+        menu.children.map((submenu: Menu) => {
           if (this.currentLocation.indexOf(menu.link) > -1 || this.currentLocation.indexOf(submenu.link) > -1) {
             menu.selected = true
           }
@@ -58,7 +57,7 @@ export default class Sidebar extends Vue {
 
   handleClickMenu (index: number) {
     this.currentLocation = location.href
-    this.menus.map(menu => {
+    this.menus.map((menu: Menu) => {
       const i = this.menus.indexOf(menu)
       if (i !== -1 && index === i) {
         menu.selected = true

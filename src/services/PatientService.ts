@@ -6,11 +6,11 @@ export class PatientService{
 
     private response: any=null;
 
-    async getPatients(page: number,size: number): Promise<Patient[]>{
-
-        const response = await axios.get(GetApiRoute(ApiRoutes.ALL_PATIENTS)+'?page='+page+'&size='+size);
+    async getPatients(clientId: number, field: string, value: string, page: number,size: number): Promise<Patient[]>{
+        const urlParams = `?centerId=${clientId}${(field)?'&field='+field:''}&value=${value}&page=${page}&size=${size}`;
+        const response = await axios.get(GetApiRoute(ApiRoutes.ALL_PATIENTS)+urlParams);
         if(response.status == 200){
-           this.response = response.data;
+           this.response = response.data.object;
         }
         return this.response;
     }

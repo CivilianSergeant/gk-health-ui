@@ -23,7 +23,7 @@ import Keycloak from 'keycloak-js'
 import { UserService } from './services/UserService';
 import { ApiRoutes } from './helpers/ApiRoutes';
 import { hasRole, Role } from './helpers/Roles';
-import { EmployeeService } from './services';
+import { EmployeeService, MenuService } from './services';
 // import axios from 'axios';
 
 Vue.config.productionTip = false
@@ -48,6 +48,10 @@ let authServerStatus = false;
 
 const MyMixin = {
   created(){
+    MenuService.getMenus().then(result=>{
+      store.commit('setMenus',result);
+      store.commit('menuLoaded');
+    });
     console.log(hasRole(keycloak.realmAccess.roles));
   }
 }
@@ -58,11 +62,54 @@ declare global{
   }
 }
 
+function checkRoutePermission(route: any,writePath: boolean,next: any){
+  const routes = store.getters.menus.filter((m: any)=>m.route == route);
+  if(routes.length==1){
+    if(writePath == true && routes[0].permissions[0].write == true){
+      store.commit('setRoutePermissionStatus',false);
+      next();
+    }else if(writePath == false && routes[0].permissions[0].read == true){
+      store.commit('setRoutePermissionStatus',false);
+      next();
+    }else{
+      store.commit('setRoutePermissionStatus',false);
+      next('/access-denied');
+    }
+  }else{
+    next();
+  }
+}
+
+//Route Guard
+router.beforeEach((to,from,next)=>{
+  store.commit('setRoutePermissionStatus',true);
+  console.log(to,from,'here menus undefined',store.getters.menus);
+  const segments = to.path.split("/");
+  const route = "/"+segments[1];
+  const writePath = (to.path.includes('add') || to.path.includes('edit'));
+  if(store.getters.menus.length==0){
+     MenuService.getMenus().then(result=>{
+      store.commit('setMenus',result);
+      store.commit('menuLoaded');
+
+      checkRoutePermission(route,writePath,next);
+      
+    });
+    
+  }else if(store.getters.menus.length>0){
+    checkRoutePermission(route,writePath,next);
+    next();
+  }
+  store.commit('setRoutePermissionStatus',false);
+  
+});
+
+
 
 function initKeycloak (){
   keycloak.init({ onLoad: initOptions.onLoad }).then((auth: any) => {
     if (!auth) {
-      console.log('h')
+      // console.log('h')
       window.location.reload();
     } else {
       console.info("Authenticated", keycloak.token);
@@ -70,7 +117,7 @@ function initKeycloak (){
       
       UserService.getUserInfo(ApiRoutes.USER_INFO_PATH,keycloak.token)
         .then(res=>{
-          console.log(res);
+          // console.log(res);
           store.commit('setUser',res)
         });
         fetch("http://training.ghrmplus.com/api/EmployeeInfo/GetCurrentEmployeeInfo",{
@@ -84,7 +131,7 @@ function initKeycloak (){
           store.commit('setCurrentCenter',{id:_result.Office.OfficeId,centerCode:_result.Office.OfficeCode,name:_result.Office.OfficeName});
           
           (new EmployeeService()).getEmployeeByApiId(_result.EmployeeId).then(result=>{
-            console.log('here', result)
+            // console.log('here', result)
             store.commit('setCurrentEmployee',result);
           });
           
@@ -99,9 +146,9 @@ function initKeycloak (){
 
   //Token Refresh
     setInterval(() => {
-      console.log('h3')
+      // console.log('h3')
       keycloak.updateToken(30).then((refreshed: any) => {
-        console.log('h4')
+        // console.log('h4')
         if (refreshed) {
           console.info('Token refreshed' + refreshed,);
         } else {
@@ -132,12 +179,12 @@ function initKeycloak (){
   fetch(ApiRoutes.REALM_PATH,{
     method:"GET",
   }).then(r=>{return r.json(); }).then(result=>{
-    console.log(result)
+    // console.log(result)
     authServerStatus=true; 
     initKeycloak();
   })
   .catch((e)=>{
-    console.log(e)
+    // console.log(e)
     authServerStatus=false;
     new Vue({
       render: h => h(Error)
