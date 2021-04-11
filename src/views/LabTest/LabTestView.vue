@@ -3,7 +3,7 @@
         <vue-html2pdf
         :show-layout="false"
         :float-layout="true"
-        :enable-download="true"
+        :enable-download="false"
         :preview-modal="true"
         :paginate-elements-by-height="1400"
         
