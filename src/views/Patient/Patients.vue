@@ -94,7 +94,7 @@ export default {
           {value:'pid', text:'PID'},
           {value:'mobileNumber',text:'Mobile No'}
         ],
-        search:{keywordType:null,keyword:''}
+        search:{keywordType:null,keyword:''}, 
 
       }
   },
