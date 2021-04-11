@@ -759,11 +759,12 @@ export default {
       this.findPatient()
     },
     isGB(){
-      if(this.form.cardRegistration != null){
-        return this.form.cardRegistration.gb;
-      }
+      
       if(this.consumer.cardMember!=null){
         return this.consumer.cardMember.cardRegistration.gb;
+      }
+      if(this.form.cardRegistration != null){
+        return this.form.cardRegistration.gb;
       }
 
       return false;

@@ -128,7 +128,12 @@ function initKeycloak (){
         },
         }).then(result=>result.json()).then(result=>{
           const _result = result.Result;
-          store.commit('setCurrentCenter',{id:_result.Office.OfficeId,centerCode:_result.Office.OfficeCode,name:_result.Office.OfficeName});
+          store.commit('setCurrentCenter',{id:_result.Office.OfficeId,
+            centerCode:_result.Office.OfficeCode,
+            name:`${_result.Office.OfficeName} (${_result.Office.OfficeCode})`,
+            officeTypeId:_result.Office.OfficeTypeId,
+            officeLevel: _result.Office.OfficeLevel
+          });
           
           (new EmployeeService()).getEmployeeByApiId(_result.EmployeeId).then(result=>{
             // console.log('here', result)
