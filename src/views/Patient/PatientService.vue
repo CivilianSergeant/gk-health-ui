@@ -67,9 +67,10 @@
             <div v-if="form.cardRegistration && form.cardRegistration.members.length>0">
               Family Members
             <ul>
-              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button class="btn btn-info btn-sm" type="button" @click="selectPatient(member,m)">{{member.patient? 'Select Patient': 'Create Patient'}}</button></li>
+              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button v-if="form.cardRegistration.active" class="btn btn-info btn-sm" type="button" @click="selectPatient(member,m)">{{member.patient? 'Select Patient': 'Create Patient'}}</button></li>
             </ul>
             </div>
+            <span v-if="!form.cardRegistration.active" class="badge badge-danger">Registration Expired</span>
             <p v-if="form.cardRegistration && form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
              - {{getDate(form.cardRegistration.expiredDate)}}  </p>
              <p v-if="!hasActiveCard" class="mt-2">
@@ -777,11 +778,13 @@ export default {
         if(result!=null && result.status==200){
           this.patient = result.patient;
           this.consumer = this.patient;
-          if((this.patient.registration == null) || (this.patient.registration && this.patient.registration.active == false)){
-            this.form.cardRegistration = {members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0};
-          }else{
-            this.form.cardRegistration = this.patient.registration;
-          }
+
+          this.form.cardRegistration = this.patient.registration;
+          // if((this.patient.registration == null) || (this.patient.registration && this.patient.registration.active == false)){
+          //   this.form.cardRegistration = {members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0};
+          // }else{
+          //   this.form.cardRegistration = this.patient.registration;
+          // }
           
             this.patientInvoice = {id:null,discountAmount:0,payableAmount:0,paidAmount:0,serviceAmount:0,
               patientServiceDetails:[]}//this.patient.patientInvoices[this.patient.patientInvoices.length-1];
