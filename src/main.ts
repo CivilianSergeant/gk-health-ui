@@ -52,6 +52,7 @@ const MyMixin = {
       store.commit('setMenus',result);
       store.commit('menuLoaded');
     });
+    
     console.log(hasRole(keycloak));
   }
 }
@@ -114,13 +115,7 @@ function initKeycloak (){
     } else {
       console.info("Authenticated", keycloak.token);
       store.commit('setAuth',keycloak);
-      
-      UserService.getUserInfo(ApiRoutes.USER_INFO_PATH,keycloak.token)
-        .then(res=>{
-          // console.log(res);
-          store.commit('setUser',res)
-        });
-        fetch("http://training.ghrmplus.com/api/EmployeeInfo/GetCurrentEmployeeInfo",{
+      fetch("http://training.ghrmplus.com/api/EmployeeInfo/GetCurrentEmployeeInfo",{
         method:"GET",
         headers: {
           'Content-Type': 'application/json',
@@ -141,6 +136,12 @@ function initKeycloak (){
           });
           
         });  
+      UserService.getUserInfo(ApiRoutes.USER_INFO_PATH,keycloak.token)
+        .then(res=>{
+          // console.log(res);
+          store.commit('setUser',res)
+        });
+        
       new Vue({
         router,
         store,

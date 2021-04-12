@@ -30,4 +30,12 @@ export class CenterService {
         }
         return this.center;
     }
+
+    async getCentersByOfficeTypeId(id: number): Promise<Center[]>{
+        const result = await axios.get(GetApiRoute(ApiRoutes.CENTER_BY_OFFICE_TYPE,id.toString()));
+        if(result.status == 200){
+            this.centers = result.data.collection;
+        }
+        return this.centers;
+    }
 }

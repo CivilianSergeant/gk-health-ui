@@ -15,6 +15,7 @@ export enum ApiRoutes{
     ADD_CENTER  = '/health-center/add',
     GET_CENTERS_BY_KEYWORD = '/health-center/by-keyword/:id',
     CENTER_BY_API_ID = '/health-center/api-id/:id',
+    CENTER_BY_OFFICE_TYPE = '/health-center/by-office-type/:id',
 
     ALL_EMPLOYEES = '/employee',
     ALL_REMOTE_EMPLOYEES = '/employee/remote-employees',
@@ -82,7 +83,9 @@ export enum ApiRoutes{
 
     GET_AVAILABLE_MENUS = '/menus/available-menus',
     GET_ROLES = '/roles',
-    ADD_ROLE_PERMISSION = '/roles/permissions'
+    ADD_ROLE_PERMISSION = '/roles/permissions',
+
+    GET_STATS='/report/stats'
 }
 
 export function GetApiRoute(route: string,value=""){
