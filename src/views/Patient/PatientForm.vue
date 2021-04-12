@@ -446,7 +446,7 @@ export default {
         { value: null, text: "Please Select Marital Status" },
         { value: "Single", text: "Single" },
         { value: "Married", text: "Married" },
-        { value: "Divorced", text: "Married" },
+        { value: "Divorced", text: "Divorced" },
         { value: "Widow", text: "Widow" },
       ],
       form: {
@@ -498,13 +498,11 @@ export default {
       this.fetchPatient(this.$route.params.id);
     }
     this.fetchCenters(() => {
-      
-      console.log("here",  this.$store.getters.center );
+      console.log("here", this.$store.getters.center);
     });
   },
-  mounted(){
+  mounted() {
     console.log(this.$store.getters);
-    
   },
   created() {
     new LocalStorageService().getReferrer((r) => (this.referrer = r), this);
@@ -531,7 +529,7 @@ export default {
         formRequest.cardRegistration = null;
       }
 
-       formRequest.center.id = this.$store.getters.center.id;
+      formRequest.center.id = this.$store.getters.center.id;
       // if(formRequest.dateOfBirth){
       //     formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
       // }else{
