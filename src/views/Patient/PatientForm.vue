@@ -546,21 +546,21 @@ export default {
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
       };
       console.log(formRequest);
-      // try {
-      //   const response = await new PatientService().addPatient(formRequest);
-      //   console.log(response);
-      //   if (response.status == 200) {
-      //     this.$store.commit("setSuccessMsg", "New Patient profile Created");
-      //     this.form.pid = response.data.patient.pid;
-      //     const navigationService = new NavigationService();
-      //     navigationService.setLocalStorageService(new LocalStorageService());
-      //     navigationService.redirect(this, "patients");
-      //   } else {
-      //     this.$store.commit("setErrorMsg", response);
-      //   }
-      // } catch (e) {
-      //   this.$store.commit("setErrorMsg", e);
-      // }
+      try {
+        const response = await new PatientService().addPatient(formRequest);
+        console.log(response);
+        if (response.status == 200) {
+          this.$store.commit("setSuccessMsg", "New Patient profile Created");
+          this.form.pid = response.data.patient.pid;
+          const navigationService = new NavigationService();
+          navigationService.setLocalStorageService(new LocalStorageService());
+          navigationService.redirect(this, "patients");
+        } else {
+          this.$store.commit("setErrorMsg", response);
+        }
+      } catch (e) {
+        this.$store.commit("setErrorMsg", e);
+      }
     },
     onReset() {
       const navigationService = new NavigationService();
