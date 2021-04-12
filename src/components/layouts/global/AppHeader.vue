@@ -45,7 +45,7 @@ export default class AppHeader extends Vue {
   }
 
   get username(){
-    return this.$store.state.employee.fullName + ` (${hasRole(this.$store.getters.auth.realmAccess.roles)})`;
+    return this.$store.state.employee.fullName + ` (${hasRole(this.$store.getters.auth)})`;
   }
 
   onLogout(){

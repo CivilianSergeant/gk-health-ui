@@ -8,7 +8,7 @@ export class MenuService {
    static async getMenus (userRole?: string) {
 
     const auth: any = store.getters.auth;
-    const role = (userRole != undefined)? userRole : hasRole(auth.realmAccess.roles);
+    const role = (userRole != undefined)? userRole : hasRole(auth);
     console.log(role);
     let menus: Menu[] = [];
 

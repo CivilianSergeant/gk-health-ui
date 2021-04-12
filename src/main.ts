@@ -52,7 +52,7 @@ const MyMixin = {
       store.commit('setMenus',result);
       store.commit('menuLoaded');
     });
-    console.log(hasRole(keycloak.realmAccess.roles));
+    console.log(hasRole(keycloak));
   }
 }
 

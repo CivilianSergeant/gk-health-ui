@@ -11,7 +11,7 @@ export class RolePermissionService{
       const resposne = await axios.get(GetApiRoute(ApiRoutes.GET_ROLES));
       if(resposne.status == 200){
         this.roles = resposne.data.collection;
-        this.roles = this.roles.filter(r=> r.name != hasRole(store.getters.auth.realmAccess.roles));
+        this.roles = this.roles.filter(r=> r.name != hasRole(store.getters.auth));
       }
       return this.roles;
     }

@@ -5,8 +5,17 @@ export enum Role{
     SUPER_ADMIN='Super Admin'
 }
 
-export function hasRole(roles: string[]){
-    roles = roles.filter(r=> r!='offline_access' && r!='uma_authorization')
+export function hasRole(auth: any){
     
-    return (roles.length>0)? roles[0]:null;
+    
+    const realmRoles: string[] = auth.realmAccess.roles;
+    const accountRoles: string[] = auth.resourceAccess['demo-vue-app'].roles;
+    let role: any = accountRoles[0];
+    if(role == null || role==""){
+        const roles = realmRoles.filter(r=> r!='offline_access' && r!='uma_authorization')
+        role = (roles.length>0)? roles[0]:null;
+    }
+    
+    
+    return role;
 }
