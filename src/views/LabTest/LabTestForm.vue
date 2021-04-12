@@ -228,7 +228,7 @@ export default {
       let range = " ";
       if (attr) {
         if (attr.averageRange) {
-          range = attr.averageRange;
+          range = attr.averageRange + "<br/>";
         }
         if (attr.maleRange) {
           range += "Male: " + attr.maleRange + "<br/>";
@@ -321,33 +321,28 @@ export default {
     onSubmit() {
       const updateDetails = [];
       this.$store.commit("start");
-        this.service.labTestAttributes.map((a) => {
-          
-          if (!a.group) {
-            if(this.form.id>0){
-             
-              this.form.details.map(m=>{
-                if(m.labTestAttribute.id == a.id){
-                  updateDetails.push({
-                    id: m.id,
-                    labTestAttribute:{id:m.labTestAttribute.id},
-                    result:a.result
-                  })
-                }
-                
-              });
-            }else{
-               console.log('there')
-              this.form.details.push({
-                labTestAttribute: { id: a.id },
-                result: a.result,
-              });
-            }
-            
-            
+      this.service.labTestAttributes.map((a) => {
+        if (!a.group) {
+          if (this.form.id > 0) {
+            this.form.details.map((m) => {
+              if (m.labTestAttribute.id == a.id) {
+                updateDetails.push({
+                  id: m.id,
+                  labTestAttribute: { id: m.labTestAttribute.id },
+                  result: a.result,
+                });
+              }
+            });
+          } else {
+            console.log("there");
+            this.form.details.push({
+              labTestAttribute: { id: a.id },
+              result: a.result,
+            });
           }
-        });
-      if(this.form.id>0){
+        }
+      });
+      if (this.form.id > 0) {
         this.form.details = updateDetails;
       }
       this.form.service = { serviceId: this.service.serviceId };
@@ -357,7 +352,7 @@ export default {
 
       console.log(this.form.details);
 
-      (new LabTestService()).saveLabTest(this.form).then((result) => {
+      new LabTestService().saveLabTest(this.form).then((result) => {
         if (this.form.id != null) {
           this.$store.commit("setSuccessMsg", "Lab Report Updated Sucessfully");
           const navigationService = new NavigationService();
