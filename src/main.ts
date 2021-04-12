@@ -23,7 +23,7 @@ import Keycloak from 'keycloak-js'
 import { UserService } from './services/UserService';
 import { ApiRoutes } from './helpers/ApiRoutes';
 import { hasRole, Role } from './helpers/Roles';
-import { EmployeeService, MenuService } from './services';
+import { CenterService, EmployeeService, MenuService } from './services';
 // import axios from 'axios';
 
 Vue.config.productionTip = false
@@ -128,14 +128,12 @@ function initKeycloak (){
         },
         }).then(result=>result.json()).then(result=>{
           const _result = result.Result;
-          console.log(_result.OfficeId)
-          store.commit('setCurrentCenter',{
-            id:_result.OfficeId,
-            centerCode:_result.Office.OfficeCode,
-            name:`${_result.Office.OfficeName} (${_result.Office.OfficeCode})`,
-            officeTypeId:_result.Office.OfficeTypeId,
-            officeLevel: _result.Office.OfficeLevel
+          console.log(_result.OfficeId);
+          (new CenterService()).getCenterByApiId(_result.OfficeId).then(result=>{
+            store.commit('setCurrentCenter',result);
           });
+
+          
           
           (new EmployeeService()).getEmployeeByApiId(_result.EmployeeId).then(result=>{
             // console.log('here', result)

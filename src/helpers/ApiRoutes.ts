@@ -14,6 +14,7 @@ export enum ApiRoutes{
     ALL_CENTERS = '/health-center',
     ADD_CENTER  = '/health-center/add',
     GET_CENTERS_BY_KEYWORD = '/health-center/by-keyword/:id',
+    CENTER_BY_API_ID = '/health-center/api-id/:id',
 
     ALL_EMPLOYEES = '/employee',
     ALL_REMOTE_EMPLOYEES = '/employee/remote-employees',
