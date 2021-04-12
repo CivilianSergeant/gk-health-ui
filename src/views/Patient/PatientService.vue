@@ -59,7 +59,7 @@
             <span v-if="patient.gender">, Sex: {{patient.gender}} </span>
             <span v-if="patient.age">, Age: {{patient.age}}</span>
             </div>
-            <div> IS GB?: <Status :data="form.cardRegistration.gb"/> </div>
+            <div> IS GB?: <Status :data="form.cardRegistration && form.cardRegistration.gb"/> </div>
             <div> Card Registered?:  <Status :data="patient.registration && patient.registration.id"/> 
             
             </div>
@@ -67,10 +67,10 @@
             <div v-if="form.cardRegistration && form.cardRegistration.members.length>0">
               Family Members
             <ul>
-              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button v-if="form.cardRegistration.active" class="btn btn-info btn-sm" type="button" @click="selectPatient(member,m)">{{member.patient? 'Select Patient': 'Create Patient'}}</button></li>
+              <li v-for="(member,m) in form.cardRegistration.members" :key="m">{{member.fullName}} <button v-if="form.cardRegistration && form.cardRegistration.active" class="btn btn-info btn-sm" type="button" @click="selectPatient(member,m)">{{member.patient? 'Select Patient': 'Create Patient'}}</button></li>
             </ul>
             </div>
-            <span v-if="!form.cardRegistration.active" class="badge badge-danger">Registration Expired</span>
+            <span v-if="form.cardRegistration && form.cardRegistration.id>0 && !form.cardRegistration.active" class="badge badge-danger">Registration Expired</span>
             <p v-if="form.cardRegistration && form.cardRegistration.validityDuration>0"> Registration Valid for ({{form.cardRegistration.validityDuration}}) Months From {{getDate(form.cardRegistration.startDate)}} 
              - {{getDate(form.cardRegistration.expiredDate)}}  </p>
              <p v-if="!hasActiveCard" class="mt-2">
@@ -212,8 +212,9 @@
               :unchecked-value="false"
               ></b-form-checkbox> </div>
 
-          <div class="col-md-4 mt-2">
+          <div class="col-md-4 mt-2" v-if="form.cardRegistration">
                           <b-form-group
+
                               id="input-group-validity"
                               label="Validity :"
                               label-for="validity"
@@ -382,7 +383,7 @@ export default {
         },
         form:{
           
-          cardRegistration:{members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0}
+          cardRegistration:{members:[],gb:false,id:null,startDate:'',expiredDate:'',validityDuration:0}
         },
         bloodGroups:[
             {value:null, text:'Select'},
@@ -690,8 +691,8 @@ export default {
         this.form.cardRegistration.members.splice(i,1);
     },
     gotoPatientCreateView(){
-      this.$router.push({name:'patient-create',params:{referrer:"Home"}});
-      (new LocalStorageService()).set('referrer','Home');
+      this.$router.push({name:'patient-create',params:{referrer:"patient-service-add"}});
+      (new LocalStorageService()).set('referrer','patient-service-add');
     },
     getDate(dateStr){
       return (new Date(dateStr)).toLocaleDateString()
@@ -779,12 +780,10 @@ export default {
           this.patient = result.patient;
           this.consumer = this.patient;
 
-          this.form.cardRegistration = this.patient.registration;
-          // if((this.patient.registration == null) || (this.patient.registration && this.patient.registration.active == false)){
-          //   this.form.cardRegistration = {members:[],gb:false,startDate:'',expiredDate:'',validityDuration:0};
-          // }else{
-          //   this.form.cardRegistration = this.patient.registration;
-          // }
+          if(this.patient.registration){
+            this.form.cardRegistration = this.patient.registration;
+          }
+          
           
             this.patientInvoice = {id:null,discountAmount:0,payableAmount:0,paidAmount:0,serviceAmount:0,
               patientServiceDetails:[]}//this.patient.patientInvoices[this.patient.patientInvoices.length-1];
