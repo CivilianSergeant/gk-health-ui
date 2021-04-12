@@ -128,7 +128,9 @@ function initKeycloak (){
         },
         }).then(result=>result.json()).then(result=>{
           const _result = result.Result;
-          store.commit('setCurrentCenter',{id:_result.Office.OfficeId,
+          console.log(_result.OfficeId)
+          store.commit('setCurrentCenter',{
+            id:_result.OfficeId,
             centerCode:_result.Office.OfficeCode,
             name:`${_result.Office.OfficeName} (${_result.Office.OfficeCode})`,
             officeTypeId:_result.Office.OfficeTypeId,

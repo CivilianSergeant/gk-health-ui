@@ -9,7 +9,7 @@
       >
     </h5>
     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-3">
           <b-form-group
             id="input-group-0"
@@ -25,7 +25,7 @@
             ></b-form-select>
           </b-form-group>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-md-3">
           <b-form-group
@@ -498,10 +498,13 @@ export default {
       this.fetchPatient(this.$route.params.id);
     }
     this.fetchCenters(() => {
-      //this.form.center = this.centers[1];
-      this.form.center = this.$store.getters.center;
-      console.log("here", this.centers[1]);
+      
+      console.log("here",  this.$store.getters.center );
     });
+  },
+  mounted(){
+    console.log(this.$store.getters);
+    
   },
   created() {
     new LocalStorageService().getReferrer((r) => (this.referrer = r), this);
@@ -528,6 +531,7 @@ export default {
         formRequest.cardRegistration = null;
       }
 
+       formRequest.center.id = this.$store.getters.center.id;
       // if(formRequest.dateOfBirth){
       //     formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
       // }else{
@@ -543,22 +547,22 @@ export default {
         "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
         "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
       };
-
-      try {
-        const response = await new PatientService().addPatient(formRequest);
-        console.log(response);
-        if (response.status == 200) {
-          this.$store.commit("setSuccessMsg", "New Patient profile Created");
-          this.form.pid = response.data.patient.pid;
-          const navigationService = new NavigationService();
-          navigationService.setLocalStorageService(new LocalStorageService());
-          navigationService.redirect(this, "patients");
-        } else {
-          this.$store.commit("setErrorMsg", response);
-        }
-      } catch (e) {
-        this.$store.commit("setErrorMsg", e);
-      }
+      console.log(formRequest);
+      // try {
+      //   const response = await new PatientService().addPatient(formRequest);
+      //   console.log(response);
+      //   if (response.status == 200) {
+      //     this.$store.commit("setSuccessMsg", "New Patient profile Created");
+      //     this.form.pid = response.data.patient.pid;
+      //     const navigationService = new NavigationService();
+      //     navigationService.setLocalStorageService(new LocalStorageService());
+      //     navigationService.redirect(this, "patients");
+      //   } else {
+      //     this.$store.commit("setErrorMsg", response);
+      //   }
+      // } catch (e) {
+      //   this.$store.commit("setErrorMsg", e);
+      // }
     },
     onReset() {
       const navigationService = new NavigationService();
