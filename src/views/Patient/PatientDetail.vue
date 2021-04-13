@@ -475,7 +475,7 @@ export default {
         pdf.cell(x, y, 110, 10, ps.service.name.toString(), index, "center");
         pdf.cell(x, y, 25, 10, ps.payableAmount.toString(), index, "right");
         pdf.cell(x, y, 25, 10, ps.payableAmount.toString(), index, "right");
-        y = y + 5;
+        y = y + 10;
         paidAmount += ps.payableAmount;
       });
 
