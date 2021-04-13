@@ -181,10 +181,10 @@ export default {
         service: { serviceId: null },
         patient: { id: null },
         patientInvoice: { id: null },
-        specimen: { id: null },
+        specimen: { id: 21 },
         labTestGroup: { id: null },
         details: [],
-        status: null,
+        status: "processing",
         testDate: new Date(),
       },
       labTestStatus: [
