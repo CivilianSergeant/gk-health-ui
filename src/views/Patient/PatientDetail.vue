@@ -220,6 +220,51 @@
         </b-card-body>
       </b-card>
       <br class="mb-3" />
+      <h5>Patient Invoices</h5>
+      <!-- <b-card v-if="patient"> -->
+      <b-card-body v-for="(pi, i) in form.patientInvoices" :key="i">
+        <h5>
+          Invoice No # {{ pi.invoiceNumber }}
+          <a @click="showReport(i)" class="cursor-pointer btn btn-info btn-sm"
+            ><b-icon-printer></b-icon-printer> Print</a
+          >
+        </h5>
+        <h6>Date: {{ getDate(pi.createdAt) }}</h6>
+        <table class="table table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th>Sl</th>
+              <th>Service Name</th>
+              <th>Room No</th>
+              <th>Amount</th>
+              <th>Discount</th>
+              <th>Payable</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="(ps, i) in pi.patientServiceDetails" :key="i">
+              <td>{{ i + 1 }}</td>
+              <td>{{ ps.service.name }}</td>
+              <td>{{ ps.roomNumber }}</td>
+              <td>{{ ps.serviceAmount }}</td>
+              <td>{{ ps.discountAmount }}</td>
+              <td>{{ ps.payableAmount }}</td>
+              <td>
+                <router-link
+                  v-if="hasReportButton(ps)"
+                  :to="showReportButton(ps.service, form.id, pi.id)"
+                  >{{
+                    ps.service.labTest ? "Lab Report" : "Prescription"
+                  }}</router-link
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </b-card-body>
+      <!-- </b-card> -->
     </div>
   </div>
 </template>
@@ -228,6 +273,7 @@
 import { CenterService } from "@/services/CenterService";
 import axios from "axios";
 import { GetApiRoute, ApiRoutes } from "@/helpers/ApiRoutes";
+import jspdf, { jsPDF } from "jspdf";
 
 export default {
   name: "PatientDetail",
@@ -385,6 +431,90 @@ export default {
             this.$store.commit("setErrorMsg", error);
           }
         });
+    },
+    showReport(i) {
+      const invoice = this.form.patientInvoices[i];
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        format: "A4",
+      });
+      let x = 80;
+      let y = 30;
+      pdf.text("Money Receipt", x, y);
+      pdf.line(x, y + 1, 120, y + 1);
+
+      x = 15;
+      y = y + 20;
+      pdf.setFontSize(11);
+      pdf.text("Patient Reg.", x, y);
+      pdf.text(": " + this.form.id, x + 40, y);
+      y = y + 5;
+      pdf.text("Patient Name", x, y);
+      pdf.text(": " + this.form.fullName, x + 40, y);
+      y = y + 5;
+      pdf.text("Patient Type", x + 100, y - 10);
+      pdf.text(": " + this.showPatientType(), x + 140, y - 10);
+      pdf.text("Date", x + 100, y - 5);
+
+      pdf.text(": " + new Date().toLocaleString(), x + 140, y - 5);
+      y = y + 5;
+      const headers = ["Sl# ", "Particulars", "Rate ", "Amount"];
+      let paidAmount = 0;
+      const invoiceItems = [];
+      let index = 1;
+      pdf.cell(x, y, 20, 10, "SL#", index, "center");
+      pdf.cell(x, y, 110, 10, "Particulars", index, "center");
+      pdf.cell(x, y, 25, 10, "Rate", index, "center");
+      pdf.cell(x, y, 25, 10, "Amount", index, "right");
+      y = y + 5;
+
+      invoice.patientServiceDetails.forEach((ps, i) => {
+        console.log(i);
+        index++;
+        pdf.cell(x, y, 20, 10, (i + 1).toString(), index, "center");
+        pdf.cell(x, y, 110, 10, ps.service.name.toString(), index, "center");
+        pdf.cell(x, y, 25, 10, ps.payableAmount.toString(), index, "right");
+        pdf.cell(x, y, 25, 10, ps.payableAmount.toString(), index, "right");
+        y = y + 5;
+        paidAmount += ps.payableAmount;
+      });
+
+      pdf.text("Total : ", x + 140, y + 20);
+      pdf.text(paidAmount.toString(), x + 170, y + 20);
+
+      pdf.output("dataurlnewwindow");
+    },
+    getDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString();
+    },
+    hasReportButton(patientServiceDetail) {
+      if (
+        patientServiceDetail.reportGenerated &&
+        (patientServiceDetail.service.labTest == true ||
+          patientServiceDetail.service.prescription == true)
+      ) {
+        return true;
+      }
+
+      return false;
+    },
+    showReportButton(service, patientId, invoiceId) {
+      if (service.labTest == true) {
+        return `/lab-tests/${patientId}/${invoiceId}/${service.serviceId}`;
+      }
+      if (service.prescription == true) {
+        return `/prescriptions/${patientId}/${invoiceId}`;
+      }
+      return null;
+    },
+    showPatientType() {
+      if (this.form.registration) {
+        if (this.form.registration.gb) {
+          return "CH-GB";
+        }
+        return "CH-NGB";
+      }
+      return "NCH";
     },
   },
 };
