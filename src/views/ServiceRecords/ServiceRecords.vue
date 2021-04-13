@@ -15,35 +15,47 @@
             </div>
         </div>
         </b-form>
-        <table class="table table-bordered">
-              <thead class="thead-light">
-                <tr>
-                    <th>Date</th>
-                    <th>Invoice No</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Receivable</th>
-                    <th>Paid</th>
-                </tr>
-              </thead>
-              <tbody>
-                   <tr v-for="(ps,i) in serviceRecords" :key="i">
-                    <td>{{ps.date}}</td>
-                    <td>{{ps.invoiceNumber}}</td>
-                    <td>{{ps.name}}</td>
-                    <td>{{ps.address}}</td>
-                    <td>{{ps.receivableAmount}}</td>
-                    <td>{{ps.paid}}</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                  <tr>
-                      <th colspan="4">Total</th>
-                      <th>{{totalReceivable}}</th>
-                      <th>{{totalPaid}}</th>
-                  </tr>
-              </tfoot>
-        </table>
+        <Loader :isBusy="isBusy" />
+        <div v-if="!isBusy">
+
+        
+        <div v-for="sr in serviceRecords" :key="sr.center.id">
+            <h6>{{sr.center.name}}</h6>
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Invoice No</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Receivable</th>
+                        <th>Paid</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(ps,i) in sr.serviceRecords" :key="i">
+                        <td>{{ps.date}}</td>
+                        <td>{{ps.invoiceNumber}}</td>
+                        <td><router-link :to="'/patients/'+ps.patientId">{{ps.name}}</router-link></td>
+                        <td>{{ps.address}}</td>
+                        <td>{{ps.receivableAmount}}</td>
+                        <td>{{ps.paid}}</td>
+                        <td><b-button type="button">Detail</b-button></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="4">Total</th>
+                        <th>{{sr.totalReceivable}}</th>
+                        <th>{{sr.totalPaid}}</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        </div>
+        
         <!-- <b-table :fields="fields" :per-page="perPage" :current-page="currentPage" :items="serviceRecords">
               <template>
                     
@@ -61,20 +73,31 @@ export default {
          rows() {
             return this.totalRows;
         },
+        isBusy(){
+            return this.$store.state.isBusy;
+        },
+        center(){
+            return this.$store.getters.center;
+        }
     },
     watch:{
-        serviceRecords: {
-        handler(serviceRecords){
-            this.totalReceivable=0;
-            this.totalPaid = 0;
-            serviceRecords.map(r=>{
-            this.totalReceivable+= r.receivableAmount;
-            this.totalPaid+= r.paid;
-            });
-            
+        center(newLen,oldLen){
+            if(newLen.id != undefined){
+                this.fetchServiceRecords();
+            }
         },
-        deep:true
-        }
+        // serviceRecords: {
+        // handler(serviceRecords){
+        //     this.totalReceivable=0;
+        //     this.totalPaid = 0;
+        //     serviceRecords.map(r=>{
+        //     this.totalReceivable+= r.receivableAmount;
+        //     this.totalPaid+= r.paid;
+        //     });
+            
+        // },
+        // deep:true
+        // }
   },
     data(){
         return{
@@ -91,25 +114,60 @@ export default {
         
     },
     mounted(){
-        this.fetchServiceRecords();
+        if(this.$store.getters.center.id != undefined){
+             this.fetchServiceRecords();
+         }
+        
         
     },
     methods:{
-            fetchServiceRecords(){
-               (new ServiceRecordService()).getServiceRecords().then((result)=>{
-                   this.serviceRecords = result;
-                   this.totalRows = this.serviceRecords.length;
-               })
-            },
-            onSearch(){
-                console.log("test");
+        formatDate(date,start) {
+            const d = new Date(date);
+            let    month = '' + (d.getMonth() + 1);
+            let    day = '' + d.getDate();
+            const    year = d.getFullYear();
 
-                (new ServiceRecordService()).getServiceRecords(this.form.from_date,this.form.to_date).then((result)=>{
+            if (month.length < 2) 
+                month = '0' + month;
+            if (day.length < 2) 
+                day = '0' + day;
+
+            const formatedDate = [year, month, day].join('-');
+            console.log(formatedDate)
+            return formatedDate.toString()+ ((start)? ' 00:00:00': ' 23:59:59') ;
+        } ,
+        fetchServiceRecords(){
+            this.$store.commit('start');
+            const center = this.$store.getters.center;
+            
+            
+
+            const fromDateObj = new Date();
+            fromDateObj.setDate(fromDateObj.getDate() - 7);
+
+            const toDate = (this.form.to_date)? this.form.to_date+' 23:59:59' : this.formatDate(new Date());
+            const fromDate = (this.form.from_date)? this.form.from_date+ ' 00:00:00' : this.formatDate(fromDateObj,true);
+            
+            (new ServiceRecordService()).getServiceRecords(center.id,center.centerCode,center.officeTypeId,fromDate,toDate).then((result)=>{
+                result.forEach(r=>{
+                    r.totalReceivable = 0;
+                    r.totalPaid = 0;
+                    r.serviceRecords.forEach(sr=>{
+                        r.totalReceivable += parseFloat(sr.receivableAmount);
+                        r.totalPaid += parseFloat(sr.paid);
+                    });
+                })
                 this.serviceRecords = result;
-                   this.totalRows = this.serviceRecords.length;
-               })
-            }
+                this.totalRows = this.serviceRecords.length;
+                this.$store.commit('finish');
+            })
+        },
+        onSearch(){
+            console.log("test");
+
+            this.fetchServiceRecords();
         }
+    }
     
 }
 </script>
