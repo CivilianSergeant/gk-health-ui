@@ -54,7 +54,8 @@
             </div>
         </b-form>
         
-        <div class="row py-5">
+        <Loader :isBusy="isBusy" />
+        <div class="row py-5" v-if="!isBusy">
             <div class="col-md-3">
                 <b-card
                     header="Total GB Patient"
@@ -161,17 +162,23 @@ import { CenterService } from '@/services'
     computed:{
         center(){
             return this.$store.getters.center;
+        },
+        isBusy(){
+        return this.$store.state.isBusy;
         }
     },
     watch:{
         center(newLen,oldLen){
-            console.log(newLen,oldLen)
             if(newLen.id != undefined){
                 this.fetchStats();
             }
         }
     },
-    
+     mounted(){
+         if(this.$store.getters.center.id != undefined){
+             this.fetchStats();
+         }
+     },
      methods: {
          handleOfficeChange(val){
              console.log(val);
@@ -179,6 +186,12 @@ import { CenterService } from '@/services'
             this.selectedCenter = centers[0];
          },
          handleOfficeTypeChange(val){
+             
+             this.selectedCenter = null;
+             this.form.centerId=null;
+             if(val==null){
+                 return;
+             }
              console.log('office-type',val)
              this.optionOffices=[];
              if(val==0){
@@ -217,6 +230,7 @@ import { CenterService } from '@/services'
             this.fetchStats(this.selectedCenter);
         },
         fetchStats(center){
+            this.$store.commit('start');
             const _center = (center)? center : this.$store.getters.center;
             console.log(center);
             const toDate = new Date();
@@ -226,9 +240,12 @@ import { CenterService } from '@/services'
                 id:_center.id,
                 officeTypeId:_center.officeTypeId,
                 centerCode: _center.centerCode,
-                fromDate:this.formatDate(toDate,false),
-                toDate:this.formatDate(new Date(),true)
-            }).then(res=>this.stats = res.data);
+                fromDate:(this.fromDate)? this.fromDate+' 00:00:00' : this.formatDate(toDate,false),
+                toDate:(this.toDate)? this.toDate+ ' 23:59:59':this.formatDate(new Date(),true)
+            }).then(res=>{
+                this.stats = res.data
+                this.$store.commit('finish');
+            });
       },
       onContext(ctx) {
         // The date formatted in the locale, or the `label-no-date-selected` string
