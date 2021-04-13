@@ -30,10 +30,10 @@
         <div class="col-md-3">
           <b-form-group
             id="input-group-1"
-            label="Full Name:"
             label-for="input-1"
             description="Patient's full name"
           >
+            <template> Full Name: <span class="text-danger">*</span> </template>
             <b-form-input
               id="input-1"
               v-model="form.fullName"
@@ -46,10 +46,12 @@
         <div class="col-md-3">
           <b-form-group
             id="input-group-2"
-            label="Guardian Name:"
             label-for="input-2"
             description="Patient's Guardian name"
           >
+            <template>
+              Guardian Name: <span class="text-danger">*</span>
+            </template>
             <b-form-input
               id="input-2"
               v-model="form.guardianName"
@@ -62,10 +64,12 @@
         <div class="col-md-3">
           <b-form-group
             id="input-group-3"
-            label="Mother Name:"
             label-for="input-3"
             description="Patient's Mother name"
           >
+            <template>
+              Mother Name: <span class="text-danger">*</span>
+            </template>
             <b-form-input
               id="input-3"
               v-model="form.motherName"
@@ -119,10 +123,10 @@
         <div class="col-md-4">
           <b-form-group
             id="input-group-6"
-            label="Age:"
             label-for="patient-age"
             description="Patient's Age"
           >
+            <template> Age: <span class="text-danger">*</span> </template>
             <b-form-input
               :required="true"
               id="patient-age"
