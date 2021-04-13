@@ -150,7 +150,7 @@ import { CenterService } from '@/services'
         formatted: '',
         optionOfficeTypes: [
           { value: null, text: 'Select Office Type' },
-          { value: '0', text: 'All Office' },
+          { value: '1', text: 'All Office' },
           { value: '4', text: 'Zonal Office' },
           { value: '5', text: 'Regional Office' },
           { value: '6', text: 'Health Center' }
