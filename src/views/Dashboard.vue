@@ -224,7 +224,7 @@ import { CenterService } from '@/services'
 
             const formatedDate = [year, month, day].join('-');
             console.log(formatedDate)
-            return formatedDate.toString()+ ((start)? ' 00:00:00': ' 23:59:59') ;
+            return formatedDate.toString()+ ((start)? ' 23:59:59': ' 23:59:59') ;
         }  ,
         onSearch(){
             this.fetchStats(this.selectedCenter);
