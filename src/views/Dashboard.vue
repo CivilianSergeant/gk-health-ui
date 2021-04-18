@@ -1,6 +1,8 @@
 <template>
     <div>
         <h3 class="my-3 mb-5">Dashboard</h3>
+        <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
+        <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
         <b-form @submit.prevent="onSearch">
             <div class="row">
                 <div class="col-md-2">
@@ -135,9 +137,9 @@
 </template>
 
 <script>
-import { ApiRoutes, GetApiRoute } from '@/helpers/ApiRoutes'
+import { ApiRoutes, GetApiRoute, handleCatch } from '@/helpers/ApiRoutes'
 import axios from 'axios'
-import { CenterService } from '@/services'
+import { CenterService, StatsService } from '@/services'
 
   export default {
     data() {
@@ -164,7 +166,16 @@ import { CenterService } from '@/services'
             return this.$store.getters.center;
         },
         isBusy(){
-        return this.$store.state.isBusy;
+            return this.$store.state.isBusy;
+        },
+        isError(){
+            return this.$store.state.isError;
+        },
+        isSuccess(){
+            return this.$store.state.isSuccess;
+        },
+        message(){
+            return this.$store.state.message;
         }
     },
     watch:{
@@ -181,7 +192,7 @@ import { CenterService } from '@/services'
      },
      methods: {
          handleOfficeChange(val){
-             console.log(val);
+            console.log(val);
             const centers = this.centers.filter(o=>o.id==val);
             this.selectedCenter = centers[0];
          },
@@ -236,15 +247,18 @@ import { CenterService } from '@/services'
             const toDate = new Date();
             toDate.setDate(toDate.getDate() - 7);
 
-            axios.post(GetApiRoute(ApiRoutes.GET_STATS),{
+            const payload = {
                 id:_center.id,
                 officeTypeId:_center.officeTypeId,
                 centerCode: _center.centerCode,
                 fromDate:(this.fromDate)? this.fromDate+' 00:00:00' : this.formatDate(toDate,false),
                 toDate:(this.toDate)? this.toDate+ ' 23:59:59':this.formatDate(new Date(),true)
-            }).then(res=>{
-                this.stats = res.data
+            };
+            (new StatsService()).getDashBoardStats(payload).then(result=>{
                 this.$store.commit('finish');
+                if(result!=undefined){
+                    this.stats=result;
+                }
             });
       },
       onContext(ctx) {

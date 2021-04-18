@@ -1,3 +1,5 @@
+import store from "@/store";
+
 export enum ApiRoutes{
     DOMAIN = 'http://localhost:8081',
     BASE_PATH = 'http://localhost:8282/api/',
@@ -119,4 +121,44 @@ export function GetApiRoute(route: string,value=""){
     }
     console.log(ApiRoutes.BASE_PATH+ApiRoutes.VERSION+_route);
     return ApiRoutes.BASE_PATH+ApiRoutes.VERSION+_route;
+}
+
+export function setAuthorizationToken(token: string){
+    return {
+        headers: {
+            'Authorization':`Bearer ${token}`
+        }
+    };
+
+}
+
+export function handleCatch(){
+    return function(error: any){
+        console.log(error.toString());
+        store.commit('finish');
+        if(error.toString().includes('Network Error')){
+            store.commit('setErrorMsg','Opps! Network Error, Please try again later');
+        
+        }else if(error.toString().length>0){
+            if(error.toString().includes("401")){
+                store.commit('setErrorMsg',"Sorry! Request not Authorized");
+            }
+        
+        }
+    }
+}
+
+export function handleException(error: any){
+    
+    store.commit('finish');
+    if(error.toString().includes('Network Error')){
+        store.commit('setErrorMsg','Opps! Network Error, Please try again later');
+    
+    }else if(error.toString().length>0){
+        if(error.toString().includes("401")){
+            store.commit('setErrorMsg',"Sorry! Request not Authorized");
+        }
+    
+    }
+    
 }

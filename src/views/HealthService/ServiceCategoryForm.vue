@@ -6,7 +6,7 @@
     <h5>Add Service Category
         <router-link to="/service-categories" class=" btn btn-info btn-sm float-right">Service Category List</router-link >
     </h5>
-    <b-form  @submit.prevent="onSubmit" @reset.prevent="onReset">
+    <b-form v-if="!isError"  @submit.prevent="onSubmit" @reset.prevent="onReset">
         <div class="row">
           <div class="col-md-4">
         <b-form-group

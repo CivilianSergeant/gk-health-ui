@@ -65,7 +65,7 @@ export default {
     },
     data(){
         return{
-            title:"Medicine",
+            title:"Medicines",
             fields:['name',{key:'medicineBrand.name',label:"Medicine Brand"},
             {key:'medicineGroup.name',label:"Medicine Group"}, "active",
             'action'],

@@ -1,10 +1,12 @@
 import { Menu } from '@/entity/Menu'
-import { ApiRoutes, GetApiRoute } from '@/helpers/ApiRoutes';
+import { ApiRoutes, GetApiRoute, setAuthorizationToken } from '@/helpers/ApiRoutes';
 import { hasRole, Role } from '@/helpers/Roles';
 import store from '@/store';
 import axios from 'axios';
+// import axios from 'axios';
 
 export class MenuService {
+
    static async getMenus (userRole?: string) {
 
     const auth: any = store.getters.auth;
@@ -16,8 +18,9 @@ export class MenuService {
       return menus;
     }
 
-    
-    const response = await axios.get(GetApiRoute(ApiRoutes.GET_AVAILABLE_MENUS+`/${encodeURI(role)}`));
+   
+    const response = await axios.get(GetApiRoute(ApiRoutes.GET_AVAILABLE_MENUS+`/${encodeURI(role)}`),
+      setAuthorizationToken(auth.token));
     if(response.status == 200){
       menus = response.data.collection;
     }
@@ -30,8 +33,8 @@ export class MenuService {
     
     
     let menus: Menu[] = [];
-
-    const response = await axios.get(GetApiRoute(ApiRoutes.GET_AVAILABLE_MENUS));
+    const auth: any = store.getters.auth;
+    const response = await axios.get(GetApiRoute(ApiRoutes.GET_AVAILABLE_MENUS),setAuthorizationToken(auth.token));
     if(response.status == 200){
       menus = response.data.collection;
     }

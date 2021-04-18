@@ -24,9 +24,10 @@ import { UserService } from './services/UserService';
 import { ApiRoutes } from './helpers/ApiRoutes';
 import { hasRole, Role } from './helpers/Roles';
 import { CenterService, EmployeeService, MenuService } from './services';
-// import axios from 'axios';
+
 
 Vue.config.productionTip = false
+
 
 enum ENV_MODE {
   DEV_MODE = 'dev',
@@ -58,6 +59,7 @@ const MyMixin = {
 }
 
 declare global{
+  
   interface Window{
     uploadedFiles: [];
   }

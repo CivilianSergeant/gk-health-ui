@@ -1,31 +1,51 @@
 import { Patient } from '@/entity/Patient';
-import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
+import { GetApiRoute, ApiRoutes, setAuthorizationToken, handleException } from '@/helpers/ApiRoutes';
+import store from '@/store';
 import axios from 'axios';
 
 export class PatientInvoiceService{
     private response: any;
 
-    async saveInvoice(payload: Record<string, any>): Promise<Patient>{
-        const response = await axios.post(GetApiRoute(ApiRoutes.PATIENT_INVOICE_CREATE),payload);
-        if(response.status == 200){
-            this.response = response.data;
-         }
-        return this.response;
+    async saveInvoice(payload: Record<string, any>): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.post(GetApiRoute(ApiRoutes.PATIENT_INVOICE_CREATE),payload,
+            setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.response = response.data;
+            }
+            return this.response;
+        }catch(error){
+            handleException(error);
+        }
     }
 
     async getInvoiceNumbers(searchText: string): Promise<any>{
-        const response = await axios.get(GetApiRoute(ApiRoutes.PATIENT_INVOICE_NUMBERS_BY_KEYWORD,searchText));
-        if(response.status == 200){
-            this.response = response.data;
-         }
-        return this.response;
+
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.PATIENT_INVOICE_NUMBERS_BY_KEYWORD,
+                searchText),setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.response = response.data;
+            }
+            return this.response;
+        }catch(error){  
+            handleException(error);
+        }
     }
 
     async getInvoiceById(id: string): Promise<any>{
-        const response = await axios.get(GetApiRoute(ApiRoutes.PATIENT_INVOICE_BY_ID,id));
-        if(response.status == 200){
-            this.response = response.data;
-         }
-        return this.response;
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.PATIENT_INVOICE_BY_ID,id),
+            setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.response = response.data;
+            }
+            return this.response;
+        }catch(error){
+            handleException(error);
+        }
     }
 }
