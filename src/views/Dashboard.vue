@@ -137,8 +137,6 @@
 </template>
 
 <script>
-import { ApiRoutes, GetApiRoute, handleCatch } from '@/helpers/ApiRoutes'
-import axios from 'axios'
 import { CenterService, StatsService } from '@/services'
 
   export default {

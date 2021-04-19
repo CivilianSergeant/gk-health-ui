@@ -84,6 +84,53 @@ export class HealthService{
         }
     }
 
+    async deleteServiceAttribute(attr: Record<string,any>): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.delete(GetApiRoute(ApiRoutes.SERVICE_ATTRIBUTE_BY_ID,attr.id),
+            setAuthorizationToken(auth.token));
+            if(response.status==200){
+                store.commit('setSuccessMsg',response.data.message);
+            }   
+        }catch(error){
+            handleException(error);
+        }
+    }
+
+    async updateService(payload: Record<string,any>, callback: Function): Promise<any> {
+        
+        const auth = store.getters.auth;
+
+        try{
+
+            const response = await axios.put(GetApiRoute(ApiRoutes.UPDATE_SERVICE),payload,
+            setAuthorizationToken(auth.token));
+        
+            if(response.status==200){
+                callback();
+            }
+            
+        }catch(error){
+            handleException(error);
+        }
+    }
+
+    async addService(payload: Record<string,any>, callback: Function): Promise<any>{
+        
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.post(GetApiRoute(ApiRoutes.ADD_SERVICE),payload,
+            setAuthorizationToken(auth.token));
+            if(response.status==200){
+                callback();
+            }
+        }catch(error){
+            handleException(error);
+        }
+            
+        
+    }
+
 
     
 }

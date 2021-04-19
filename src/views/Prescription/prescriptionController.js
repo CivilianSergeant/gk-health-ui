@@ -184,7 +184,7 @@ import {
         this.fetchServiceDetail();
       },
       handleInvoiceNumberAutocomplete(invoice, autocomplete) {
-        new PatientInvoiceService().getInvoiceById(invoice.id).then(result => {
+        (new PatientInvoiceService()).getInvoiceById(invoice.id).then(result => {
           this.invoice = result;
           this.patient = this.invoice.patient;
           this.prescription.doctor = this.$store.getters.employee;

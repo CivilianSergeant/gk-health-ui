@@ -23,6 +23,22 @@ export class PatientService{
         }
     }
 
+    async getPatientById(id: number, callback: Function): Promise<any>{
+        
+        const auth = store.getters.auth;
+        
+        try{
+        const response = await axios.get(
+            GetApiRoute(ApiRoutes.GET_PATIENT_BY_ID, id.toString()),setAuthorizationToken(auth.token));
+          if (response.status == 200) {
+            callback(response.data);
+          }
+          console.log(response);
+        }catch(error){
+            handleException(error);
+        }
+    }
+
     async getPatientByPid(pid: string): Promise<any>{
         const auth = store.getters.auth;
         try{

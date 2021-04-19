@@ -1,6 +1,7 @@
 <template>
   <div>
     <ContentBar :PageTitle="title" />
+    <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <h5>
       Patient Info #{{ form.pid }}
@@ -271,9 +272,8 @@
 
 <script>
 import { CenterService } from "@/services/CenterService";
-import axios from "axios";
-import { GetApiRoute, ApiRoutes } from "@/helpers/ApiRoutes";
-import jspdf, { jsPDF } from "jspdf";
+import { jsPDF } from "jspdf";
+import { PatientService } from '@/services';
 
 export default {
   name: "PatientDetail",
@@ -344,70 +344,73 @@ export default {
     this.fetchPatient(this.$route.params.id);
   },
   methods: {
-    async onSubmit() {
-      const formRequest = Object.assign({}, this.form);
-      console.log(this.form);
+    // async onSubmit() {
+    //   const formRequest = Object.assign({}, this.form);
+    //   console.log(this.form);
 
-      if (
-        (this.form.detail.bloodGroup == null ||
-          this.form.detail.bloodGroup == "") &&
-        (this.form.detail.nationality == null ||
-          this.form.detail.nationality == "") &&
-        (this.form.detail.nationalId == null ||
-          this.form.detail.nationalId == "") &&
-        (this.form.detail.occupation == null ||
-          this.form.detail.occupation == "")
-      ) {
-        console.log(this.form.detail.bloodGroup, 2);
-        formRequest.detail = null;
-      }
-      if (!this.cardRegistrationAccepted) {
-        formRequest.cardRegistration = null;
-      }
-      console.log(formRequest);
-      // formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
-      axios.defaults.headers.common = {
-        "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-      };
-      const response = await axios.post(
-        GetApiRoute(ApiRoutes.ADD_PATIENT),
-        formRequest
-      );
-      console.log(response);
-      if (response.status == 200) {
-        this.$store.commit("setSuccessMsg", "New Patient profile Created");
-        this.$router.push("/patients");
-      } else {
-        console.log(response);
-      }
-    },
-    onReset() {
-      this.$router.push("/patients");
-      console.log("");
-    },
-    addMember() {
-      this.form.cardRegistration.members.push({
-        fullName: "",
-        age: "",
-        gender: "",
-        bloodGroup: "",
-        nationality: "",
-        nationalId: "",
-        relationWithPatient: "",
+    //   if (
+    //     (this.form.detail.bloodGroup == null ||
+    //       this.form.detail.bloodGroup == "") &&
+    //     (this.form.detail.nationality == null ||
+    //       this.form.detail.nationality == "") &&
+    //     (this.form.detail.nationalId == null ||
+    //       this.form.detail.nationalId == "") &&
+    //     (this.form.detail.occupation == null ||
+    //       this.form.detail.occupation == "")
+    //   ) {
+    //     console.log(this.form.detail.bloodGroup, 2);
+    //     formRequest.detail = null;
+    //   }
+    //   if (!this.cardRegistrationAccepted) {
+    //     formRequest.cardRegistration = null;
+    //   }
+    //   console.log(formRequest);
+    //   // formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
+    //   // axios.defaults.headers.common = {
+    //   //   "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
+    //   //   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    //   // };
+    //   const response = await axios.post(
+    //     GetApiRoute(ApiRoutes.ADD_PATIENT),
+    //     formRequest
+    //   );
+    //   console.log(response);
+    //   if (response.status == 200) {
+    //     this.$store.commit("setSuccessMsg", "New Patient profile Created");
+    //     this.$router.push("/patients");
+    //   } else {
+    //     console.log(response);
+    //   }
+    // },
+    // onReset() {
+    //   this.$router.push("/patients");
+    //   console.log("");
+    // },
+    // addMember() {
+    //   this.form.cardRegistration.members.push({
+    //     fullName: "",
+    //     age: "",
+    //     gender: "",
+    //     bloodGroup: "",
+    //     nationality: "",
+    //     nationalId: "",
+    //     relationWithPatient: "",
+    //   });
+    // },
+    // delMember(i) {
+    //   this.form.cardRegistration.members.splice(i, 1);
+    // },
+    fetchPatient(id) {
+      (new PatientService()).getPatientById(id,(data)=>{
+        this.form = data;
       });
-    },
-    delMember(i) {
-      this.form.cardRegistration.members.splice(i, 1);
-    },
-    async fetchPatient(id) {
-      const response = await axios.get(
-        GetApiRoute(ApiRoutes.GET_PATIENT_BY_ID, id)
-      );
-      if (response.status == 200) {
-        this.form = response.data;
-      }
-      console.log(response);
+      // const response = await axios.get(
+      //   GetApiRoute(ApiRoutes.GET_PATIENT_BY_ID, id)
+      // );
+      // if (response.status == 200) {
+        
+      // }
+      // console.log(response);
     },
     fetchCenters() {
       this.isBusy = true;
@@ -419,17 +422,6 @@ export default {
             this.centers.push({ value: center.id, text: center.name })
           );
           this.isBusy = false;
-        })
-        .catch((error) => {
-          this.isBusy = false;
-          if (error.toString().match("Error: Network Error") != null) {
-            this.$store.commit(
-              "setErrorMsg",
-              "Opps! Network Error, Please try again later"
-            );
-          } else if (error.toString.length > 0) {
-            this.$store.commit("setErrorMsg", error);
-          }
         });
     },
     showReport(i) {

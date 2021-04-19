@@ -86,18 +86,7 @@ export default {
                 this.fetchServiceRecords();
             }
         },
-        // serviceRecords: {
-        // handler(serviceRecords){
-        //     this.totalReceivable=0;
-        //     this.totalPaid = 0;
-        //     serviceRecords.map(r=>{
-        //     this.totalReceivable+= r.receivableAmount;
-        //     this.totalPaid+= r.paid;
-        //     });
-            
-        // },
-        // deep:true
-        // }
+
   },
     data(){
         return{
@@ -160,11 +149,9 @@ export default {
                 this.serviceRecords = result;
                 this.totalRows = this.serviceRecords.length;
                 this.$store.commit('finish');
-            })
+            });
         },
         onSearch(){
-            console.log("test");
-
             this.fetchServiceRecords();
         }
     }

@@ -88,14 +88,13 @@ export default {
         this.centers = result; 
         this.totalRows=this.centers.length;
         this.$store.commit('finish');
-      })
-      .catch(handleCatch());  
+      });  
     },
-         onFiltered(filteredItems) {
+    onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length
             this.currentPage = 1
-      }
+    }
 
   }
 }

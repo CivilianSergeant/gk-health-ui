@@ -138,8 +138,6 @@
 </template>
 <script>
 import {CategoryService,HealthService, LabTestGroupService,NavigationService} from '@/services'
-import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
-import axios from 'axios';
 
 export default {
   name: 'Services',
@@ -204,13 +202,6 @@ export default {
                 this.labTestGroups.push({value:group.id,text:group.name,id:group.id})
             });
             this.$store.commit('finish');
-        }).catch(error=>{
-            this.$store.commit('finish');
-            if(error.toString().match('Error: Network Error') !=null){
-            this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-            }else if(error.toString.length>0){
-            this.$store.commit('setErrorMsg',error);
-            }
         });
     },
     fetchServiceCategories(){
@@ -221,15 +212,7 @@ export default {
               this.categories.push({labTest:category.labTest,value:category.id,text:category.name,id:category.id})
             });
           this.$store.commit('finish');
-        })
-      .catch(error=>{
-        this.$store.commit('finish');
-        if(error.toString().match('Error: Network Error') !=null){
-          this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-        }else if(error.toString.length>0){
-          this.$store.commit('setErrorMsg',error);
-        }
-      });
+        });
     },
     onSubmit(){
         
@@ -239,16 +222,13 @@ export default {
       }else{
           this.form.labTestGroup = null;
       }
-      axios.post(GetApiRoute(ApiRoutes.ADD_SERVICE),this.form).then(response=>{
+      
+      (new HealthService()).addServiceAttributes(this.form,()=>{
         this.$store.commit('finish');
-
-        if(response.status==200){
-          
-          this.$store.commit('setSuccessMsg','New Service Created');
-          this._redirectToServices();
-        }
-        
+        this.$store.commit('setSuccessMsg','New Service Created');
+        this._redirectToServices();
       });
+
     },
 
     onReset(){

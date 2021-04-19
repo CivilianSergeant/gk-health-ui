@@ -82,8 +82,8 @@
 
 
 import {CategoryService} from '@/services'
-import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
-import axios from 'axios';
+import { handleCatch } from '@/helpers/ApiRoutes';
+
 export default {
   name: 'ServiceCategories',
   computed: {
@@ -121,14 +121,11 @@ export default {
   methods:{
     onSubmit(){
       this.$store.commit('start');
-      axios.post(GetApiRoute(ApiRoutes.ADD_CATEGORY),this.form).then(response=>{
-        if(response.status==200){
-          this.fetchServiceCategories();
-          this.toggleView();
-          this.$store.commit('setSuccessMsg','New Service Category Created');
-        }
-        this.$store.commit('finish');
-      });
+      (new CategoryService()).addServiceCategory(this.form,()=>{
+        this.fetchServiceCategories();
+        this.toggleView();
+        this.$store.commit('setSuccessMsg','New Service Category Created');
+      })
     },
     onReset(){
       this.$store.commit('clearMessage');
@@ -145,14 +142,7 @@ export default {
           this.categories=result; 
           this.$store.commit('finish');
         })
-      .catch(error=>{
-        this.$store.commit('finish');
-        if(error.toString().match('Error: Network Error') !=null){
-          this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-        }else if(error.toString.length>0){
-          this.$store.commit('setErrorMsg',error);
-        }
-      });
+      .catch(handleCatch());
     }
   }
 }

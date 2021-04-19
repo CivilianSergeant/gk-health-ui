@@ -8,6 +8,23 @@ export class CategoryService{
     private categories: Category[] = [];
     private serviceCategory = {}
 
+    async addServiceCategory(payload: Record<string,any>, callback: Function): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.post(GetApiRoute(ApiRoutes.ADD_CATEGORY),payload,
+            setAuthorizationToken(auth.token));
+            
+            if(response.status==200){
+                callback();
+            }
+            
+            store.commit('finish');
+            
+        }catch(error){
+            handleException(error);
+        }
+    }
+
     async getCategories(): Promise<any>{
         const auth = store.getters.auth;
         try{

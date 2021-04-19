@@ -60,8 +60,6 @@
 <script>
 import {CategoryService} from '@/services/CategoryService'
 import { HealthService } from '@/services/HealthService'
-import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
-import axios from 'axios';
 
 export default {
   name: 'Services',
@@ -135,54 +133,16 @@ export default {
               this.categories.push({value:category.id,text:category.name,id:category.id})
             });
           this.$store.commit('finish');
-        })
-      .catch(error=>{
-        this.$store.commit('finish');
-        if(error.toString().match('Error: Network Error') !=null){
-          this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-        }else if(error.toString.length>0){
-          this.$store.commit('setErrorMsg',error);
-        }
-      });
+        });
     },
-    onSubmit(){
-      this.$store.commit('start');
-      axios.post(GetApiRoute(ApiRoutes.ADD_SERVICE),this.form).then(response=>{
-        if(response.status==200){
-          this.fetchServices();
-          this.toggleView();
-          this.$store.commit('setSuccessMsg','New Service Created');
-        }
-        this.$store.commit('finish');
-      });
-    },
-    onReset(){
-      this.$store.commit('clearMessage');
-      this.toggleView();
-    },
-    toggleView(){
-      this.$store.commit('clearMessage');
-      this.showForm=!this.showForm
-      if(this.showForm){
-        this.categories = [];
-        this.fetchServiceCategories();
-      }
-    },
+    
     fetchServices(){
       this.$store.commit('start');
       (new HealthService()).getServices().then(result=>{
         this.services=result; 
         this.totalRows=this.services.length;
         this.$store.commit('finish');
-        })
-      .catch(error=> {
-        this.$store.commit('finish');
-        if(error.toString().match('Error: Network Error') !=null){
-          this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-        }else if(error.toString.length>0){
-          this.$store.commit('setErrorMsg',error);
-        }
-      });
+        });
     },
     onFiltered(filteredItems) {
         // Trigger pagination to update the number of buttons/pages due to filtering

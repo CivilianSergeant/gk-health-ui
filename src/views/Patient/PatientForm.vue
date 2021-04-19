@@ -1,6 +1,7 @@
 <template>
   <div>
     <ContentBar :PageTitle="title" />
+    <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <h5>
       Add Patient
@@ -415,8 +416,6 @@
 
 <script>
 import { CenterService } from "@/services/CenterService";
-import axios from "axios";
-import { GetApiRoute, ApiRoutes } from "@/helpers/ApiRoutes";
 import { LocalStorageService } from "@/services/LocalStorageService";
 import { NavigationService } from "@/services/NavigationService";
 import { PatientService } from "@/services";
@@ -534,21 +533,11 @@ export default {
       }
 
       formRequest.center.id = this.$store.getters.center.id;
-      // if(formRequest.dateOfBirth){
-      //     formRequest.dateOfBirth = formRequest.dateOfBirth+' 00:00:00';
-      // }else{
-      //     formRequest.dateOfBirth = null;
-      // }
 
-      // if(!formRequest.dateOfBirth){
-      //     this.$store.commit('setErrorMsg','Date Of Birth required');
-      //     return;
-      // }
-
-      axios.defaults.headers.common = {
-        "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
-        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-      };
+      // axios.defaults.headers.common = {
+      //   "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
+      //   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+      // };
       console.log(formRequest);
       try {
         const response = await new PatientService().addPatient(formRequest);
@@ -587,22 +576,18 @@ export default {
     delMember(i) {
       this.form.cardRegistration.members.splice(i, 1);
     },
-    async fetchPatient(id) {
-      const response = await axios.get(
-        GetApiRoute(ApiRoutes.GET_PATIENT_BY_ID, id)
-      );
-      if (response.status == 200) {
-        this.form = response.data;
-        if (response.data.detail == null) {
-          this.form.detail = {
-            bloodGroup: null,
-            nationality: null,
-            nationalId: null,
-            occupation: null,
-          };
-        }
-      }
-      console.log(response);
+    fetchPatient(id) {
+      (new PatientService()).getPatientById(id,(data)=>{
+            this.form = data;
+            if (data.detail == null) {
+              this.form.detail = {
+                bloodGroup: null,
+                nationality: null,
+                nationalId: null,
+                occupation: null,
+              };
+            }
+      });
     },
     fetchCenters(callback) {
       this.$store.commit("start");
@@ -623,17 +608,6 @@ export default {
           }
 
           this.$store.commit("finish");
-        })
-        .catch((error) => {
-          this.$store.commit("finish");
-          if (error.toString().match("Error: Network Error") != null) {
-            this.$store.commit(
-              "setErrorMsg",
-              "Opps! Network Error, Please try again later"
-            );
-          } else if (error.toString.length > 0) {
-            this.$store.commit("setErrorMsg", error);
-          }
         });
     },
   },

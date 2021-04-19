@@ -66,8 +66,6 @@
 </template>
 <script>
 import {HealthService, NavigationService} from '@/services'
-import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
-import axios from 'axios';
 
 export default {
   name: 'Services',
@@ -165,15 +163,9 @@ export default {
     deleteRow(i){
         this.$store.commit('clearMessage')
         const attr = this.form.labTestAttributes[i];
-        console.log(attr)
+        
         if(attr!=undefined && attr.id != undefined && attr.id > 0){
-            axios.delete(GetApiRoute(ApiRoutes.SERVICE_ATTRIBUTE_BY_ID,attr.id)).then(
-                res=> {
-                    if(res.status==200){
-                        this.$store.commit('setSuccessMsg',res.data.message);
-                    }
-                }
-            )
+            (new HealthService()).deleteServiceAttribute(attr);
         }
         this.form.labTestAttributes.splice(i,1);
     },
