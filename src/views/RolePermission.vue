@@ -40,7 +40,7 @@ import { MenuService, RolePermissionService } from '@/services';
 export default {
     data(){
         return {
-            title: "Role Permission",
+            title: "Role and Permission",
             role:{id:null},
             roles:[],
             menus:[],

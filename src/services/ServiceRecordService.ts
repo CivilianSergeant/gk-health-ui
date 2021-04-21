@@ -1,4 +1,5 @@
-import {ApiRoutes, GetApiRoute} from "@/helpers/ApiRoutes";
+import {ApiRoutes, GetApiRoute, setAuthorizationToken} from "@/helpers/ApiRoutes";
+import store from "@/store";
 import axios from "axios";
 
 export class ServiceRecordService{
@@ -6,9 +7,11 @@ export class ServiceRecordService{
     private serviceRecords: Record<string, any>[] = [];
 
      async getServiceRecords(centerId: number, centerCode: string, officeTypeId: number,
-          fromDate: Date,toDate: Date): Promise<Record<string, any>[]>{
+          fromDate: Date,toDate: Date): Promise<any>{
        
         let response: any = '';
+
+        const auth = store.getters.auth;
 
         const route = ApiRoutes.ALL_SERVICE_RECORD;
         if(fromDate!=undefined && toDate!=undefined){
@@ -17,10 +20,10 @@ export class ServiceRecordService{
                centerCode:centerCode,
                centerId:centerId,
                officeTypeId:officeTypeId,
-               toDate:toDate,fromDate:fromDate});
+               toDate:toDate,fromDate:fromDate},setAuthorizationToken(auth.token));
              
         }else{
-             response = await axios.get(GetApiRoute(route));
+             response = await axios.get(GetApiRoute(route),setAuthorizationToken(auth.token));
             
         }
 
@@ -29,11 +32,6 @@ export class ServiceRecordService{
         }
         return this.serviceRecords;
 
-        // return [
-        //     {id:1,name:"Tonima Hamid (003-202103102)",invoiceNumber:"INV-003-20210362-52",address:"test address",receivableAmount:1500,paid:500,createdAt:'2021-03-22'},
-        //     {id:2,name:"Tonima Hamid (003-202103102)",invoiceNumber:"INV-003-20210362-52",address:"test address",receivableAmount:1500,paid:500,createdAt:'2021-03-22'},
-        //     {id:3,name:"Tonima Hamid (003-202103102)",invoiceNumber:"INV-003-20210362-52",address:"test address",receivableAmount:1500,paid:500,createdAt:'2021-03-22'},
-        //     {id:4,name:"Tonima Hamid (003-202103102)",invoiceNumber:"INV-003-20210362-52",address:"test address",receivableAmount:1500,paid:500,createdAt:'2021-03-22'},
-        // ]
+        
      }
 }

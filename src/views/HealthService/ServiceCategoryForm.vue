@@ -6,7 +6,7 @@
     <h5>Add Service Category
         <router-link to="/service-categories" class=" btn btn-info btn-sm float-right">Service Category List</router-link >
     </h5>
-    <b-form  @submit.prevent="onSubmit" @reset.prevent="onReset">
+    <b-form v-if="!isError"  @submit.prevent="onSubmit" @reset.prevent="onReset">
         <div class="row">
           <div class="col-md-4">
         <b-form-group
@@ -60,8 +60,7 @@
 <script>
 
 import {CategoryService,NavigationService} from '@/services'
-import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
-import axios from 'axios';
+
 export default {
   name: 'ServiceCategories',
   computed: {
@@ -84,7 +83,6 @@ export default {
   },
  mounted() {
     this.id = this.$route.params.id;
-    // console.log("test",this.id);
     if(this.id!=undefined){
         this.fetchServiceCategoryById(this.id);
     }
@@ -99,15 +97,13 @@ export default {
     },
     onSubmit(){
       this.$store.commit('start');
-      axios.post(GetApiRoute(ApiRoutes.ADD_CATEGORY),this.form).then(response=>{
-        const message = (this.id!=undefined)? "Service Category Updated":"New Service Category Created";
-        if(response.status==200){
-            this.$store.commit('setSuccessMsg',message);
-            const navigationService =new NavigationService();
-            navigationService.redirect(this,"service-categories");
-        }
-        this.$store.commit('finish');
-      });
+      (new CategoryService()).addServiceCategory(this.form,()=>{
+          const message = (this.id!=undefined)? "Service Category Updated":"New Service Category Created";
+          this.$store.commit('setSuccessMsg',message);
+          const navigationService =new NavigationService();
+          navigationService.redirect(this,"service-categories");
+      })
+      
     },
     onReset(){
         this.$store.commit('clearMessage');

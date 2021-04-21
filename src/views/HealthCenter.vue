@@ -1,7 +1,8 @@
 <template>
     <div>
       <ContentBar :PageTitle="title"/>
-       <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
+       <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
+        <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
       <h5>All Centers</h5>
       <b-form-group
           label="Filter"
@@ -40,6 +41,7 @@
 
 <script>
 import { CenterService } from '@/services/CenterService';
+import { handleCatch } from '@/helpers/ApiRoutes';
 
 export default {
   name: 'HealthCenter',
@@ -86,21 +88,13 @@ export default {
         this.centers = result; 
         this.totalRows=this.centers.length;
         this.$store.commit('finish');
-      })
-      .catch(error=>{
-        this.$store.commit('finish');
-        if(error.toString().match('Error: Network Error') !=null){
-          this.$store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-        }else if(error.toString.length>0){
-          this.$store.commit('setErrorMsg',error);
-        }
       });  
     },
-         onFiltered(filteredItems) {
+    onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length
             this.currentPage = 1
-      }
+    }
 
   }
 }

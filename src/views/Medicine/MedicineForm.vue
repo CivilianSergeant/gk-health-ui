@@ -72,10 +72,6 @@
 import {MedicineGroupService, MedicineService, NavigationService} from '@/services'
 import {MedicineBrandService} from '@/services'
 
-import { GetApiRoute, ApiRoutes } from '@/helpers/ApiRoutes';
-import axios from 'axios';
-
-
 export default {
     computed: {
         isError(){
@@ -99,7 +95,7 @@ export default {
     },
      mounted(){
         this.id = this.$route.params.id;
-        // console.log("test",this.id);
+
         if(this.id!=undefined){
             this.fetchMedicineById(this.id);
         }
@@ -137,16 +133,14 @@ export default {
         },
         onSubmit(){
             this.$store.commit('start');
-            axios.post(GetApiRoute(ApiRoutes.ADD_MEDICINE),this.form).then(response=>{
+            (new MedicineService()).addMedicine(this.form,()=>{
                 const message = (this.id!=undefined)? "Medicine Updated":"Medicine Created";
-                if(response.status==200){
                 this.$store.commit('setSuccessMsg',message);
+                this.$store.commit('finish');
                 const navigationService =new NavigationService();
                 navigationService.redirect(this,"medicines");
-                }
-                this.$store.commit('finish');
             });
-            },
+        },
         onReset(){
                 this.$store.commit('clearMessage');
                 const navigationService =new NavigationService();

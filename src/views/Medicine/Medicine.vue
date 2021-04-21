@@ -27,6 +27,7 @@
             </b-input-group-append>
           </b-input-group>
         </b-form-group>
+        
         <b-table id="medicine-table" :fields="fields" 
         @filtered="onFiltered" :per-page="perPage" :busy.sync="isBusy" 
         :filter="filter"
@@ -40,6 +41,7 @@
             <router-link class="btn btn-primary btn-sm " :to="'/medicines/'+row.item.id+'/detail'">Edit</router-link>
         </template>
       </b-table>
+      <Loader :isBusy="isBusy"/>
     </div>
 </template>
 <script>
@@ -65,7 +67,7 @@ export default {
     },
     data(){
         return{
-            title:"Medicine",
+            title:"Medicines",
             fields:['name',{key:'medicineBrand.name',label:"Medicine Brand"},
             {key:'medicineGroup.name',label:"Medicine Group"}, "active",
             'action'],
@@ -85,9 +87,11 @@ export default {
     },
     methods:{
         fetcheMedicines (){
+           this.$store.commit('start');
            (new MedicineService()).getMedicines().then((result)=>{
                this.medicines = result;
                this.totalRows=this.medicines.length;
+               this.$store.commit('finish');
            })
         },
          onFiltered(filteredItems) {
