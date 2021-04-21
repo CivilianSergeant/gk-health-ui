@@ -354,7 +354,7 @@ import {PatientService} from '@/services/PatientService'
 import {LocalStorageService} from '@/services/LocalStorageService'
 import {HealthService} from '@/services/HealthService'
 import { PatientInvoiceService } from '@/services';
-import jspdf,{ jsPDF } from 'jspdf';
+import { jsPDF } from 'jspdf';
 
 export default {
   name: 'Home',
