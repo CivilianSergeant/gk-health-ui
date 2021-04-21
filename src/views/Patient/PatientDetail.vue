@@ -161,17 +161,20 @@
         </div>
       </div>
       <hr />
-      <h5>
-        Registrations
-        <b-button
-          class="float-right"
-          v-if="
-            form.registrations != undefined && form.registrations.length == 0
-          "
-          >Registration</b-button
-        >
-      </h5>
-      <!-- <p
+      <div class="row">
+        <div class="col-md-4">
+          <h5>
+            Registrations
+            <b-button
+              class="float-right"
+              v-if="
+                form.registrations != undefined &&
+                form.registrations.length == 0
+              "
+              >Registration</b-button
+            >
+          </h5>
+          <!-- <p
         v-if="form.registrations != undefined && form.registrations.length == 0"
       >
         This patient did not registered yet
@@ -196,75 +199,85 @@
           <p>Expire Date: {{ card.expiredDate }}</p>
         </b-card-body>
       </b-card> -->
-      <!---->
-      <p v-if="form.registration == null">
-        This patient did not registered yet
-      </p>
-      <b-card class="col-md-4 px-0 py-0" v-if="form.registration != null">
-        <b-card-title>
-          <h6>Card No: {{ form.registration.cardNumber }}</h6>
-        </b-card-title>
-        <b-card-body class="px-0 py-0">
-          <p>
-            <span v-if="form.registration.active" class="badge badge-success"
-              >Active</span
-            >
-            <span v-if="!form.registration.active" class="badge badge-danger"
-              >Inactive</span
-            >
+          <!---->
+          <p v-if="form.registration == null">
+            This patient did not registered yet
           </p>
-          <p>IS GB: ({{ form.registration.gb ? "Yes" : "No" }})</p>
-          <p>Card Members ({{ form.registration.members.length }})</p>
-          <p>Start Date: {{ form.registration.startDate }}</p>
-          <p>Expire Date: {{ form.registration.expiredDate }}</p>
-        </b-card-body>
-      </b-card>
-      <br class="mb-3" />
-      <h5>Patient Invoices</h5>
-      <!-- <b-card v-if="patient"> -->
-      <b-card-body v-for="(pi, i) in form.patientInvoices" :key="i">
-        <h5>
-          Invoice No # {{ pi.invoiceNumber }}
-          <a @click="showReport(i)" class="cursor-pointer btn btn-info btn-sm"
-            ><b-icon-printer></b-icon-printer> Print</a
-          >
-        </h5>
-        <h6>Date: {{ getDate(pi.createdAt) }}</h6>
-        <table class="table table-bordered">
-          <thead class="thead-light">
-            <tr>
-              <th>Sl</th>
-              <th>Service Name</th>
-              <th>Room No</th>
-              <th>Amount</th>
-              <th>Discount</th>
-              <th>Payable</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr v-for="(ps, i) in pi.patientServiceDetails" :key="i">
-              <td>{{ i + 1 }}</td>
-              <td>{{ ps.service.name }}</td>
-              <td>{{ ps.roomNumber }}</td>
-              <td>{{ ps.serviceAmount }}</td>
-              <td>{{ ps.discountAmount }}</td>
-              <td>{{ ps.payableAmount }}</td>
-              <td>
-                <router-link
-                  v-if="hasReportButton(ps)"
-                  :to="showReportButton(ps.service, form.id, pi.id)"
-                  >{{
-                    ps.service.labTest ? "Lab Report" : "Prescription"
-                  }}</router-link
+          <b-card class="col-md-12 px-0 py-0" v-if="form.registration != null">
+            <b-card-title>
+              <h6>Card No: {{ form.registration.cardNumber }}</h6>
+            </b-card-title>
+            <b-card-body class="px-0 py-0">
+              <p>
+                <span
+                  v-if="form.registration.active"
+                  class="badge badge-success"
+                  >Active</span
                 >
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </b-card-body>
-      <!-- </b-card> -->
+                <span
+                  v-if="!form.registration.active"
+                  class="badge badge-danger"
+                  >Inactive</span
+                >
+              </p>
+              <p>IS GB: ({{ form.registration.gb ? "Yes" : "No" }})</p>
+              <p>Card Members ({{ form.registration.members.length }})</p>
+              <p>Start Date: {{ form.registration.startDate }}</p>
+              <p>Expire Date: {{ form.registration.expiredDate }}</p>
+            </b-card-body>
+          </b-card>
+        </div>
+        <div class="col-md-8">
+          <!-- <br class="mb-3" /> -->
+          <h5 style="padding-left: 15px">Patient Invoices</h5>
+          <!-- <b-card v-if="patient"> -->
+          <b-card-body v-for="(pi, i) in form.patientInvoices" :key="i">
+            <h5>
+              Invoice No # {{ pi.invoiceNumber }}
+              <a
+                @click="showReport(i)"
+                class="cursor-pointer btn btn-info btn-sm"
+                ><b-icon-printer></b-icon-printer> Print</a
+              >
+            </h5>
+            <h6>Date: {{ getDate(pi.createdAt) }}</h6>
+            <table class="table table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th>Sl</th>
+                  <th>Service Name</th>
+                  <th>Room No</th>
+                  <th>Amount</th>
+                  <th>Discount</th>
+                  <th>Payable</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr v-for="(ps, i) in pi.patientServiceDetails" :key="i">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ ps.service.name }}</td>
+                  <td>{{ ps.roomNumber }}</td>
+                  <td>{{ ps.serviceAmount }}</td>
+                  <td>{{ ps.discountAmount }}</td>
+                  <td>{{ ps.payableAmount }}</td>
+                  <td>
+                    <router-link
+                      v-if="hasReportButton(ps)"
+                      :to="showReportButton(ps.service, form.id, pi.id)"
+                      >{{
+                        ps.service.labTest ? "Lab Report" : "Prescription"
+                      }}</router-link
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </b-card-body>
+          <!-- </b-card> -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
