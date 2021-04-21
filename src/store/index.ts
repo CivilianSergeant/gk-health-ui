@@ -15,7 +15,9 @@ export default new Vuex.Store({
     center:{},
     employee:{},
     message:'',
-    menus:[]
+    menus:[],
+    sidebarShow: true, //'responsive',
+    sidebarMinimize: false
   },
   mutations: {
     startLoadingMenu(state){
@@ -67,6 +69,17 @@ export default new Vuex.Store({
     },
     setRoutePermissionStatus(state,checking){
       state.isRouteCheckingPermission = checking
+    },
+    toggleSidebarDesktop (state) {
+      const sidebarOpened = [true, 'responsive'].includes(state.sidebarShow)
+      state.sidebarShow = sidebarOpened ? false : true // 'responsive'
+    },
+    toggleSidebarMobile (state) {
+      const sidebarClosed = [false, 'responsive'].includes(state.sidebarShow)
+      state.sidebarShow = sidebarClosed ? true : false // 'responsive'
+    },
+    set (state: any, [variable, value]) {
+      state[variable] = value
     }
   },
   getters:{

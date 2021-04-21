@@ -1,18 +1,28 @@
 import Vue from 'vue'
 import {BootstrapVue , IconsPlugin } from 'bootstrap-vue'
 
-import FileUploder from '@/plugin/file-uploader/index.ts'
+import FileUploder from '@/plugin/file-uploader/index'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import './assets/dashboard.css'
 
+// Core UI 
+import 'core-js/stable'
+import CoreuiVue from '@coreui/vue'
+// import {iconsSet as icons} from '@/assets/icons/icons';
+// Vue.use(icons);
+// End Core UI
+
 Vue.use(BootstrapVue)
 
 Vue.use(IconsPlugin)
 
+
+
 Vue.use(FileUploder)
+Vue.use(CoreuiVue)
 
 import App from './App.vue'
 import Error from './Error.vue'
