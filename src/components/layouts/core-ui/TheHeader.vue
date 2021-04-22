@@ -11,17 +11,18 @@
       @click="$store.commit('toggleSidebarDesktop')"
     />
     <CHeaderBrand class="mx-auto d-lg-none" to="/">
-      <CIcon name="logo" height="48" alt="Logo" />
+      <!-- <CIcon name="logo" height="48" alt="Logo" /> -->
+      <img src="assets/gk-logo.png" alt="Logo" class="c-avatar-img" />
     </CHeaderBrand>
     <CHeaderNav class="d-md-down-none mr-auto">
-      <CHeaderNavItem class="px-3">
+      <!-- <CHeaderNavItem class="px-3">
         <CHeaderNavLink to="/dashboard"> Dashboard </CHeaderNavLink>
-      </CHeaderNavItem>
-      <CHeaderNavItem class="px-3">
+      </CHeaderNavItem> -->
+      <!-- <CHeaderNavItem class="px-3">
         <CHeaderNavLink to="/users" exact> Users </CHeaderNavLink>
-      </CHeaderNavItem>
+      </CHeaderNavItem> -->
       <CHeaderNavItem class="px-3">
-        <CHeaderNavLink> Settings </CHeaderNavLink>
+        {{ "Office/Center: " + HealthCenter }}
       </CHeaderNavItem>
     </CHeaderNav>
     <CHeaderNav class="mr-4">
@@ -48,13 +49,25 @@
   </CHeader>
 </template>
 
-<script>
-import TheHeaderDropdownAccnt from "./TheHeaderDropdownAccnt";
+<script lang="ts">
+//import Vue from "*.vue";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { ApiRoutes } from "@/helpers/ApiRoutes";
+import TheHeaderDropdownAccnt from "@/components/layouts/core-ui/TheHeaderDropdownAccnt.vue";
 
-export default {
-  name: "TheHeader",
+@Component({
   components: {
     TheHeaderDropdownAccnt,
   },
-};
+})
+export default class AppHeader extends Vue {
+  name = "TheHeader";
+
+  get HealthCenter() {
+    return this.$store.state.center.name;
+  }
+  showAccount() {
+    return ApiRoutes.USER_ACCOUNT_PATH;
+  }
+}
 </script>

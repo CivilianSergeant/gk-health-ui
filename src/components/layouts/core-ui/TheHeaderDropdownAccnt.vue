@@ -11,13 +11,16 @@
         <!-- <div class="c-avatar">
           <img src="img/avatars/6.jpg" class="c-avatar-img" />
         </div> -->
-        <CLink :href="showAccount()">{{
-          "Office/Center: " + HealthCenter
-        }}</CLink>
+        {{ "Welcome " + username }}
       </CHeaderNavLink>
     </template>
     <CDropdownHeader tag="div" class="text-center" color="light">
-      <strong>{{ "Welcome " + username }}</strong>
+      <strong
+        ><CLink :href="showAccount()">{{
+          "Office/Center: " + HealthCenter
+        }}</CLink></strong
+      >
+      <!-- <strong>{{ "Welcome " + username }}</strong> -->
     </CDropdownHeader>
     <CDropdownItem :href="showAccount()">
       <CIcon name="cil-user" />Profile
