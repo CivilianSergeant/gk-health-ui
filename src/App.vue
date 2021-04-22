@@ -15,8 +15,9 @@
         </main>
       </div>
       <TheFooter/>
+    </CWrapper>  
 
-      <!-- Basic Theme code -->
+    <!-- Basic Theme code -->
       <!-- <div class="container-fluid">
         <div class="row">
           <SideMenu/>
@@ -31,7 +32,6 @@
           
         </div>
       </div> -->
-    </CWrapper>  
   </div>
 </template>
 

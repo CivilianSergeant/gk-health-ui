@@ -16,6 +16,7 @@ export default new Vuex.Store({
     employee:{},
     message:'',
     menus:[],
+    navs:[],
     sidebarShow: true, //'responsive',
     sidebarMinimize: false
   },
@@ -67,6 +68,9 @@ export default new Vuex.Store({
     setMenus(state,menus){
       state.menus = menus;
     },
+    setNavs(state,navs){
+      state.navs = navs;
+    },
     setRoutePermissionStatus(state,checking){
       state.isRouteCheckingPermission = checking
     },
@@ -87,6 +91,7 @@ export default new Vuex.Store({
     employee: state=>  {return state.employee} ,
     auth: state=> {return state.auth},
     menus: state=> {return state.menus},
+    navs: state=> {return state.navs},
     routeChecking: state=> {return state.isRouteCheckingPermission}
   },
   actions: {

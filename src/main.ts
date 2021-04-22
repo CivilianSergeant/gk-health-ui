@@ -60,6 +60,23 @@ let authServerStatus = false;
 const MyMixin = {
   created(){
     MenuService.getMenus().then(result=>{
+      
+      const _navs: Array<any>= [];
+
+      result.map((m: any)=>{
+        
+        if(m.permissions[0].read){
+          const menu = {
+            _name:'CSidebarNavItem',
+            name:m.name,
+            to:m.route,
+            icon:m.icon
+          }
+          _navs.push(menu)
+        }
+      });
+      console.log({_name: 'CSidebarNav',_children:_navs})
+      store.commit('setNavs',[{_name: 'CSidebarNav',_children:_navs}]);
       store.commit('setMenus',result);
       store.commit('menuLoaded');
     });
@@ -96,7 +113,7 @@ function checkRoutePermission(route: any,writePath: boolean,next: any){
 //Route Guard
 router.beforeEach((to,from,next)=>{
   store.commit('setRoutePermissionStatus',true);
-  console.log(to,from,'here menus undefined',store.getters.menus);
+  // console.log(to,from,'here menus undefined',store.getters.menus);
   const segments = to.path.split("/");
   const route = "/"+segments[1];
   const writePath = (to.path.includes('add') || to.path.includes('edit'));

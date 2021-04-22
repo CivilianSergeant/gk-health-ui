@@ -18,8 +18,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { Menu } from '@/entity/Menu.ts'
-import { MenuService } from '@/services'
+import { Menu } from '@/entity/Menu'
 
 @Component
 export default class Sidebar extends Vue {
