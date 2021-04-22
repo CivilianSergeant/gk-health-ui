@@ -22,7 +22,7 @@
       />
     </CSidebarBrand>
 
-    <CRenderFunction flat :content-to-render="$options.nav"/>
+    <CRenderFunction flat :content-to-render="nav"/>
     <CSidebarMinimizer
       class="d-md-down-none"
       @click.native="$store.commit('set', ['sidebarMinimize', !minimize])"
@@ -30,19 +30,27 @@
   </CSidebar>
 </template>
 
-<script>
-import nav from './_nav'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
 
-export default {
-  name: 'TheSidebar',
-  nav,
-  computed: {
-    show () {
-      return this.$store.state.sidebarShow 
-    },
-    minimize () {
-      return this.$store.state.sidebarMinimize 
-    }
+@Component
+export default class Sidebar extends Vue{
+  name ='TheSidebar';
+  
+
+  get nav(){
+     
+      return  this.$store.getters.navs;
+      
   }
+  
+  get show () {
+      return this.$store.state.sidebarShow 
+  }
+  
+  get minimize () {
+      return this.$store.state.sidebarMinimize 
+  }
+  
 }
 </script>
