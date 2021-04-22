@@ -24,7 +24,8 @@
       <span class="c-sidebar-brand-minimized">GK</span>
     </CSidebarBrand>
 
-    <CRenderFunction flat :content-to-render="nav" />
+    <CRenderFunction v-if="!isBusy" flat :content-to-render="nav" />
+    <Loader :isBusy="isBusy" />
     <CSidebarMinimizer
       class="d-md-down-none"
       @click.native="$store.commit('set', ['sidebarMinimize', !minimize])"
@@ -38,6 +39,10 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class Sidebar extends Vue {
   name = "TheSidebar";
+
+  get isBusy() {
+    return this.$store.state.isMenuLoading;
+  }
 
   get nav() {
     return this.$store.getters.navs;

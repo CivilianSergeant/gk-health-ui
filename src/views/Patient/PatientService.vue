@@ -692,8 +692,8 @@ export default {
         this.form.cardRegistration.members.splice(i,1);
     },
     gotoPatientCreateView(){
-      this.$router.push({name:'patient-create',params:{referrer:"patient-service-add"}});
-      (new LocalStorageService()).set('referrer','patient-service-add');
+      this.$router.push({name:'Create Patient',params:{referrer:"Patient Service Add"}});
+      (new LocalStorageService()).set('referrer','Patient Service Add');
     },
     getDate(dateStr){
       return (new Date(dateStr)).toLocaleDateString()

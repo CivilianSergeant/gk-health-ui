@@ -4,17 +4,17 @@ import ServiceCategoryForm from '../views/HealthService/ServiceCategoryForm.vue'
 
 const serviceCategoryRoutes: Array<RouteConfig> = [
     {
-        name:'edit-service-category',
-        path: '/service-category/:id/detail',
+        name:'Edit Service Category',
+        path: '/service-categories/:id/detail',
         component: ServiceCategoryForm
     },
     {
-        name:'create-service-category',
-        path: '/service-category/add',
+        name:'Create Service Category',
+        path: '/service-categories/add',
         component: ServiceCategoryForm
     },
     {
-        name:'service-categories',
+        name:'Service Categories',
         path: '/service-categories',
         component: ServiceCategories
     }

@@ -78,7 +78,6 @@ import {
     cilUserFollow,
     cilXCircle,
     cilMedicalCross,
-    cilAccessibility,
     cilDisabled
 
 } from '@coreui/icons'
@@ -131,7 +130,6 @@ export const iconsSet = Object.assign({}, { logo }, {
     cilUserFollow,
     cilXCircle,
     cilMedicalCross,
-    cilAccessibility,
     cilDisabled
 }, {
     cifUs,

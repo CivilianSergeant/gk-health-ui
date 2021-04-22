@@ -4,17 +4,17 @@ import MedicineForm from '../views/Medicine/MedicineForm.vue'
 
 const medicineRoutes: Array<RouteConfig> = [
     {
-        name:'edit-medicine',
+        name:'Edit Medicine',
         path: '/medicines/:id/detail',
         component: MedicineForm
       },
       {
-        name:'create-medicine',
+        name:'Create Medicine',
         path: '/medicines/add',
         component: MedicineForm
       },
       {
-        name:'medicines',
+        name:'Medicines',
         path: '/medicines',
         component: Medicine
       },

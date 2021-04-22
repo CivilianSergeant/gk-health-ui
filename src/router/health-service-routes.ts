@@ -3,22 +3,22 @@ import {Services,ServiceForm, ServiceDetail, ServiceAttribute }from '../views/He
 
 const healthServiceRoutes: Array<RouteConfig> = [
     {
-        name:'service-attribute',
+        name:'Service Attribute',
         path: '/services/:id/attribute',
         component: ServiceAttribute
       },
       {
-        name:'service-detail',
+        name:'Service Detail',
         path: '/services/:id/detail',
         component: ServiceDetail
       },
       {
-        name:'create-service',
+        name:'Create Service',
         path: '/services/add',
         component: ServiceForm
       },
       {
-        name:'services',
+        name:'Services',
         path: '/services',
         component: Services
       }

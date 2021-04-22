@@ -4,7 +4,7 @@
     <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
     <h5>All Service Categories 
-      <router-link to="/service-category/add" class=" btn btn-primary btn-sm float-right">Add Service Category</router-link >
+      <router-link to="/service-categories/add" class=" btn btn-primary btn-sm float-right">Add Service Category</router-link >
     </h5>
     <b-form v-if="showForm" @submit.prevent="onSubmit" @reset.prevent="onReset">
         <div class="row">
@@ -65,7 +65,7 @@
           <span v-if="!row.item.active" class="badge badge-danger">Inactive </span>
         </template>
          <template #cell(action)="row">
-            <router-link class="btn btn-primary btn-sm " :to="'/service-category/'+row.item.id+'/detail'">Edit</router-link>
+            <router-link class="btn btn-primary btn-sm " :to="'/service-categories/'+row.item.id+'/detail'">Edit</router-link>
         </template>
       </b-table>
       <Loader :isBusy="isBusy"/>

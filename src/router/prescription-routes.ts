@@ -5,23 +5,23 @@ import PrescriptionView from '../views/Prescription/PrescriptionView.vue'
 
 const prescriptionRoutes: Array<RouteConfig> = [
     {
-        name:'view-prescription-by-patient-invoice',
+        name:'Prescriiption Detail',
         path: '/prescriptions/:patientId/:invoiceId',
         component: PrescriptionView
     },
     
     {
-        name:'view-prescription',
+        name:'Prescription Detail',
         path: '/prescriptions/:id',
         component: PrescriptionView
     },
     {
-        name:'create-prescription',
+        name:'Create Prescription',
         path: '/prescription',
         component: PrescriptionForm
     },
     {
-        name:'prescriptions',
+        name:'Prescriptions',
         path: '/prescriptions',
         component: Prescription
     }

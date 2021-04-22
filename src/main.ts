@@ -12,7 +12,7 @@ import './assets/dashboard.css'
 // Core UI
 import 'core-js/stable'
 import CoreuiVue from '@coreui/vue'
-import { iconsSet as icons } from '@/assets/icons/icons.js';
+import { iconsSet as icons } from '@/assets/icons/icons.ts';
 
 // End Core UI
 
@@ -71,7 +71,13 @@ const MyMixin = {
             _name:'CSidebarNavItem',
             name:m.name,
             to:m.route,
-            icon:m.icon
+            icon:m.icon,
+            // attributes: {
+            //   onClick: e => {
+            //     console.log('here')
+            //     store.commit('clearMessage');
+            //   }
+            // }
           }
           _navs.push(menu)
         }
