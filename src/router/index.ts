@@ -16,22 +16,23 @@ import MedicineRoutes from "@/router/medicine-routes";
 import PrescriptionRoutes from "@/router/prescription-routes";
 import HealthServiceRoutes from "@/router/health-service-routes";
 import ServiceCategoryRoutes from './service-category-routes';
-import { component } from 'vue/types/umd'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   
   {
+    name:'Health Centers',
     path: '/health-centers',
     component: HealthCenter
   },
   {
+    name:'Employees',
     path: '/employees',
     component: Employees
   },
   {
-    name:'serviceRecords',
+    name:'Service Records',
     path: '/service-records',
     component: ServiceRecords
   },
@@ -48,16 +49,16 @@ const routes: Array<RouteConfig> = [
   ...LabTestRoutes,
   {
     path:'/role-permissions',
-    name:'role-permissions',
+    name:'Role and Permissions',
     component:RolePermission
   },
   {
     path: '/',
-    name: 'dashboard',
+    name: 'Dashboard',
     component: Dashboard
   },
   {
-    name: 'access-denied',
+    name: 'Access Denied',
     path:'/access-denied',
     component: AccessDenied
   },
