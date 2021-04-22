@@ -138,13 +138,13 @@ export default {
                 this.$store.commit('setSuccessMsg',message);
                 this.$store.commit('finish');
                 const navigationService =new NavigationService();
-                navigationService.redirect(this,"medicines");
+                navigationService.redirect(this,"Medicines");
             });
         },
         onReset(){
                 this.$store.commit('clearMessage');
                 const navigationService =new NavigationService();
-                navigationService.redirect(this,"medicines");
+                navigationService.redirect(this,"Medicines");
         },
     },
 }
