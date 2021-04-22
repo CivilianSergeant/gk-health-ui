@@ -77,15 +77,15 @@ export default class App extends Vue {
   // Import Main styles for this application
   @import 'assets/scss/style';
 
-// .fade-enter-active,
-// .fade-leave-active {
-//   transition-duration: 0.09s;
-//   transition-property: opacity;
-//   transition-timing-function: ease;
-// }
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.09s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
 
-// .fade-enter,
-// .fade-leave-active {
-//   opacity: 0
-// }
+.fade-enter,
+.fade-leave-active {
+  opacity: 0
+}
 </style>
