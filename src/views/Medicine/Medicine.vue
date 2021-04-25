@@ -54,6 +54,10 @@
           :filter-included-fields="filterOn"
           :current-page="currentPage"
           :items="medicines"
+          bordered="true"
+          hover="true"
+          striped="true"
+          small="true"
         >
           <template #cell(active)="row">
             <span v-if="row.item.active" class="badge badge-success"
@@ -64,11 +68,13 @@
             </span>
           </template>
           <template #cell(action)="row">
-            <router-link
-              class="btn btn-primary btn-sm"
-              :to="'/medicines/' + row.item.id + '/detail'"
-              >Edit</router-link
-            >
+            <div class="text-center">
+              <router-link
+                class="btn btn-primary btn-sm"
+                :to="'/medicines/' + row.item.id + '/detail'"
+                >Edit</router-link
+              >
+            </div>
           </template>
         </b-table>
       </CCardBody>
