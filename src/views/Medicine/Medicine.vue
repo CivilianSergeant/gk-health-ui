@@ -33,16 +33,20 @@
           </div>
           <div class="col-md-7 text-right">
             <!-- All Medicines -->
-            <router-link to="/medicines/add" class="btn btn-primary btn-sm my-3"
-              >Add Medicine</router-link
-            >
           </div>
         </div>
       </CCardBody>
     </cCard>
 
     <CCard>
-      <CCardHeader> Medicines</CCardHeader>
+      <CCardHeader>
+        Medicines
+        <router-link
+          to="/medicines/add"
+          class="btn btn-primary btn-sm float-right"
+          >Add Medicine</router-link
+        ></CCardHeader
+      >
       <CCardBody>
         <b-table
           id="medicine-table"
@@ -54,10 +58,10 @@
           :filter-included-fields="filterOn"
           :current-page="currentPage"
           :items="medicines"
-          bordered="true"
-          hover="true"
-          striped="true"
-          small="true"
+          bordered
+          hover
+          striped
+          small
         >
           <template #cell(active)="row">
             <span v-if="row.item.active" class="badge badge-success"
@@ -77,9 +81,9 @@
             </div>
           </template>
         </b-table>
+        <Loader :isBusy="isBusy" />
       </CCardBody>
     </CCard>
-    <Loader :isBusy="isBusy" />
   </div>
 </template>
 <script>

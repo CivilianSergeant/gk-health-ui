@@ -144,10 +144,12 @@
       </table>
       <div v-if="service" class="col-md-12 d-flex justify-content-between">
         <div>
-          <b-button type="submit" class="ml-2" variant="success"
-            >Submit</b-button
+          <b-button type="submit" class="ml-2" variant="info"
+            ><CIcon name="cil-check-circle" /> Submit</b-button
           >
-          <b-button type="reset" class="ml-2" variant="danger">Cancel</b-button>
+          <b-button type="reset" class="ml-2" variant="danger"
+            ><CIcon name="cil-x-circle" /> Cancel</b-button
+          >
         </div>
       </div>
     </b-form>

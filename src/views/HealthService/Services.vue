@@ -1,18 +1,21 @@
 <template>
   <div id="service-list">
-    
-    <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
-    <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
+    <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
+    <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <CCard>
       <CCardHeader>
-    <h5 class="clearfix">All Services
-      
-      <router-link to="/services/add" class=" btn btn-primary btn-sm float-right">Add Service</router-link >
+        <h5 class="clearfix">
+          All Services
 
-    </h5>
+          <router-link
+            to="/services/add"
+            class="btn btn-primary btn-sm float-right"
+            >Add Service</router-link
+          >
+        </h5>
       </CCardHeader>
       <CCardBody>
-    <b-form-group
+        <b-form-group
           label="Filter"
           label-for="filter-input"
           label-cols-sm="1"
@@ -29,7 +32,9 @@
             ></b-form-input>
 
             <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+              <b-button :disabled="!filter" @click="filter = ''"
+                >Clear</b-button
+              >
             </b-input-group-append>
           </b-input-group>
         </b-form-group>
@@ -37,131 +42,167 @@
     </CCard>
     <CCard>
       <CCardBody>
-    <b-table id="service-table" v-if="!showForm" :fields="fields" 
-        @filtered="onFiltered" :per-page="perPage" :busy.sync="isBusy" bordered="true" striped="true" small="true"
-        :filter="filter"
-      :filter-included-fields="filterOn"
-        :current-page="currentPage" :items="services">
-        <template #cell(active)="row">
-          <span v-if="row.item.active" class="badge badge-success">Active </span>
-          <span v-if="!row.item.active" class="badge badge-danger">Inactive </span>
-        </template>
-        <template #cell(labTestGroup)="row">
-         
-          <span v-if="row.item.labTestGroup" :class="'badge badge-'+ getColor(row.item.labTestGroup.name)">{{row.item.labTestGroup.name}} </span>
-          <span v-if="!row.item.labTestGroup" >N/A </span>
-        </template>
-        <template #cell(action)="row">
-            <router-link class="btn btn-primary btn-sm " :to="'/services/'+row.item.serviceId+'/detail'">Edit</router-link>
-        </template>
-      </b-table>
-      <Loader :isBusy="isBusy"/>
-      <b-pagination v-if="!showForm"
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        aria-controls="service-table"
-      ></b-pagination>
+        <b-table
+          id="service-table"
+          v-if="!showForm"
+          :fields="fields"
+          @filtered="onFiltered"
+          :per-page="perPage"
+          :busy.sync="isBusy"
+          bordered
+          striped
+          small
+          :filter="filter"
+          :filter-included-fields="filterOn"
+          :current-page="currentPage"
+          :items="services"
+        >
+          <template #cell(active)="row">
+            <span v-if="row.item.active" class="badge badge-success"
+              >Active
+            </span>
+            <span v-if="!row.item.active" class="badge badge-danger"
+              >Inactive
+            </span>
+          </template>
+          <template #cell(labTestGroup)="row">
+            <span
+              v-if="row.item.labTestGroup"
+              :class="'badge badge-' + getColor(row.item.labTestGroup.name)"
+              >{{ row.item.labTestGroup.name }}
+            </span>
+            <span v-if="!row.item.labTestGroup">N/A </span>
+          </template>
+          <template #cell(action)="row">
+            <router-link
+              class="btn btn-primary btn-sm"
+              :to="'/services/' + row.item.serviceId + '/detail'"
+              >Edit</router-link
+            >
+          </template>
+        </b-table>
+        <Loader :isBusy="isBusy" />
+        <b-pagination
+          v-if="!showForm"
+          v-model="currentPage"
+          :total-rows="rows"
+          :per-page="perPage"
+          aria-controls="service-table"
+        ></b-pagination>
       </CCardBody>
     </CCard>
   </div>
 </template>
 
 <script>
-import {CategoryService} from '@/services/CategoryService'
-import { HealthService } from '@/services/HealthService'
+import { CategoryService } from "@/services/CategoryService";
+import { HealthService } from "@/services/HealthService";
 
 export default {
-  name: 'Services',
+  name: "Services",
   computed: {
-    isCategoryPathology(){
-      let _isCategoryPathology=false;
-      this.categories.forEach(c=>{
-        if(c.id==this.form.serviceCategory.id && c.text.toString().toLowerCase().match('pathology')){
-          _isCategoryPathology=true;
+    isCategoryPathology() {
+      let _isCategoryPathology = false;
+      this.categories.forEach((c) => {
+        if (
+          c.id == this.form.serviceCategory.id &&
+          c.text.toString().toLowerCase().match("pathology")
+        ) {
+          _isCategoryPathology = true;
         }
       });
-     
+
       return _isCategoryPathology;
     },
     rows() {
-      return this.totalRows //this.services.length
+      return this.totalRows; //this.services.length
     },
-    isBusy(){
+    isBusy() {
       return this.$store.state.isBusy;
     },
-    isError(){
+    isError() {
       return this.$store.state.isError;
     },
-    isSuccess(){
+    isSuccess() {
       return this.$store.state.isSuccess;
     },
-    message(){
+    message() {
       return this.$store.state.message;
-    }
+    },
   },
-  data(){
-      return {
-        title: "Services",
-        services:[],
-        fields:[{key:'serviceCategory.name',label:'Service Category'},'name',
-        {'key':'currentGbCost','label':'GB Cost'}, 
-        {'key':'currentCost','label':'Non CH-GB Cost'},
-        {'key':'labTestGroup','label':'Lab Test Group'},'active','action'],
-        perPage: 20,
-        currentPage: 1,
-        showForm:false,
-        categories:[],
-        labTestGroups:[],
-        form:{name:'',active:true,serviceCategory:{id:null}},
-        filter: null,
-        filterOn: [],
-        totalRows:0
-      }
+  data() {
+    return {
+      title: "Services",
+      services: [],
+      fields: [
+        { key: "serviceCategory.name", label: "Service Category" },
+        "name",
+        { key: "currentGbCost", label: "GB Cost" },
+        { key: "currentCost", label: "Non CH-GB Cost" },
+        { key: "labTestGroup", label: "Lab Test Group" },
+        "active",
+        "action",
+      ],
+      perPage: 20,
+      currentPage: 1,
+      showForm: false,
+      categories: [],
+      labTestGroups: [],
+      form: { name: "", active: true, serviceCategory: { id: null } },
+      filter: null,
+      filterOn: [],
+      totalRows: 0,
+    };
   },
-  beforeMount(){
-    this.$store.commit('clearErrorMsg');
+  beforeMount() {
+    this.$store.commit("clearErrorMsg");
     this.fetchServices();
   },
-  methods:{
-    getColor(name){
-      console.log(name.toString().toLowerCase().charAt(0))
-      if(name.toString().toLowerCase().charAt(0)=='b'){
-        return 'warning'
-      }else if(name.toString().toLowerCase().charAt(0)=='h'){
-        return 'danger';
-      }else{
-        return 'info'
+  methods: {
+    getColor(name) {
+      console.log(name.toString().toLowerCase().charAt(0));
+      if (name.toString().toLowerCase().charAt(0) == "b") {
+        return "warning";
+      } else if (name.toString().toLowerCase().charAt(0) == "h") {
+        return "danger";
+      } else {
+        return "info";
       }
+    },
+    fetchServiceCategories() {
+      this.$store.commit("start");
+      new CategoryService().getCategories().then((result) => {
+        this.categories.push({ value: null, text: "Select Category" });
+        result.forEach((category) => {
+          this.categories.push({
+            value: category.id,
+            text: category.name,
+            id: category.id,
+          });
+        });
+        this.$store.commit("finish");
+      });
+    },
 
-    },
-    fetchServiceCategories(){
-      this.$store.commit('start');
-      (new CategoryService()).getCategories().then(result=>{
-          this.categories.push({value:null,text:'Select Category'});
-          result.forEach(category=>{
-              this.categories.push({value:category.id,text:category.name,id:category.id})
-            });
-          this.$store.commit('finish');
-        });
-    },
-    
-    fetchServices(){
-      this.$store.commit('start');
-      (new HealthService()).getServices().then(result=>{
-        this.services=result; 
-        this.totalRows=this.services.length;
-        this.$store.commit('finish');
-        });
+    fetchServices() {
+      this.$store.commit("start");
+      new HealthService().getServices().then((result) => {
+        this.services = result;
+        this.totalRows = this.services.length;
+        this.$store.commit("finish");
+      });
     },
     onFiltered(filteredItems) {
-        // Trigger pagination to update the number of buttons/pages due to filtering
-        this.totalRows = filteredItems.length
-        this.currentPage = 1
-      }
-  }
-}
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
+  },
+};
 </script>
 <style scoped>
-#service-table .btn-sm, .btn-group-sm > .btn{ padding: 0.05rem 0.5rem;}
+#service-table .btn-sm,
+.btn-group-sm > .btn {
+  padding: 0.05rem 0.5rem;
+}
 </style>

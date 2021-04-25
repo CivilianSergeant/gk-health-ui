@@ -20,10 +20,12 @@
             <div class="col-md-4">
               <b-form-group
                 id="input-group-1"
-                label="Name:"
                 label-for="input-1"
                 description="Name (Required)"
               >
+                <!-- <template> -->
+                <label> Name: <span class="text-danger">*</span></label>
+                <!-- </template> -->
                 <b-form-input
                   id="input-1"
                   v-model="form.name"
@@ -37,10 +39,10 @@
             <div class="col-md-4">
               <b-form-group
                 id="input-group-1"
-                label="Brand:"
                 label-for="input-1"
                 description="Brand (Required)"
               >
+                <label> Brand: <span class="text-danger">*</span></label>
                 <b-form-select
                   required
                   :disabled="medicineBrands.length == 0 || isError"
@@ -53,10 +55,10 @@
             <div class="col-md-4">
               <b-form-group
                 id="input-group-1"
-                label="Group:"
                 label-for="input-1"
                 description="Group (Required)"
               >
+                <label> Group: <span class="text-danger">*</span></label>
                 <b-form-select
                   required
                   :disabled="medicineGroups.length == 0 || isError"
@@ -76,10 +78,12 @@
         </CCardBody>
         <CCardFooter>
           <div class="row mt-2 mb-2">
-            <div class="col-md-2 d-flex justify-content-between">
-              <b-button type="submit" variant="success">Submit</b-button>
-              <b-button type="reset" class="ml-2" variant="danger"
-                >Cancel</b-button
+            <div class="col-md-3 d-flex justify-content-between">
+              <b-button type="submit" variant="info"
+                ><CIcon name="cil-check-circle" /> Submit</b-button
+              >
+              <b-button type="reset" class="ml-2" variant="danger">
+                <CIcon name="cil-x-circle" /> Cancel</b-button
               >
             </div>
           </div>
