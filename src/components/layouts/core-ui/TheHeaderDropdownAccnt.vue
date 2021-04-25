@@ -22,10 +22,10 @@
       >
       <!-- <strong>{{ "Welcome " + username }}</strong> -->
     </CDropdownHeader>
-    <CDropdownItem :href="showAccount()">
+    <CDropdownItem :href="showAccount()" target="_blank">
       <CIcon name="cil-user" />Profile
     </CDropdownItem>
-    <CDropdownItem href="http://training.ghrmplus.com">
+    <CDropdownItem href="http://training.ghrmplus.com" target="_blank">
       <CIcon name="cil-settings" />HRM
     </CDropdownItem>
     <CDropdownDivider />

@@ -1,18 +1,21 @@
 <template>
   <div id="service-list">
-    
-    <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
-    <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
+    <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
+    <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <CCard>
       <CCardHeader>
-    <h5 class="clearfix">All Services
-      
-      <router-link to="/services/add" class=" btn btn-primary btn-sm float-right">Add Service</router-link >
+        
+          All Services
 
-    </h5>
+          <router-link
+            to="/services/add"
+            class="btn btn-primary btn-sm float-right"
+            >Add Service</router-link
+          >
+        
       </CCardHeader>
       <CCardBody>
-    <b-form-group
+        <b-form-group
           label="Filter"
           label-for="filter-input"
           label-cols-sm="1"
@@ -29,7 +32,9 @@
             ></b-form-input>
 
             <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+              <b-button :disabled="!filter" @click="filter = ''"
+                >Clear</b-button
+              >
             </b-input-group-append>
           </b-input-group>
         </b-form-group>
@@ -76,37 +81,40 @@
 </template>
 
 <script>
-import {CategoryService} from '@/services/CategoryService'
-import { HealthService } from '@/services/HealthService'
+import { CategoryService } from "@/services/CategoryService";
+import { HealthService } from "@/services/HealthService";
 
 export default {
-  name: 'Services',
+  name: "Services",
   computed: {
-    isCategoryPathology(){
-      let _isCategoryPathology=false;
-      this.categories.forEach(c=>{
-        if(c.id==this.form.serviceCategory.id && c.text.toString().toLowerCase().match('pathology')){
-          _isCategoryPathology=true;
+    isCategoryPathology() {
+      let _isCategoryPathology = false;
+      this.categories.forEach((c) => {
+        if (
+          c.id == this.form.serviceCategory.id &&
+          c.text.toString().toLowerCase().match("pathology")
+        ) {
+          _isCategoryPathology = true;
         }
       });
-     
+
       return _isCategoryPathology;
     },
     rows() {
-      return this.totalRows //this.services.length
+      return this.totalRows; //this.services.length
     },
-    isBusy(){
+    isBusy() {
       return this.$store.state.isBusy;
     },
-    isError(){
+    isError() {
       return this.$store.state.isError;
     },
-    isSuccess(){
+    isSuccess() {
       return this.$store.state.isSuccess;
     },
-    message(){
+    message() {
       return this.$store.state.message;
-    }
+    },
   },
   data(){
       return {
@@ -140,31 +148,34 @@ export default {
       }
     }
   },
-  beforeMount(){
-    this.$store.commit('clearErrorMsg');
+  beforeMount() {
+    this.$store.commit("clearErrorMsg");
     this.fetchServices();
   },
-  methods:{
-    getColor(name){
-      console.log(name.toString().toLowerCase().charAt(0))
-      if(name.toString().toLowerCase().charAt(0)=='b'){
-        return 'warning'
-      }else if(name.toString().toLowerCase().charAt(0)=='h'){
-        return 'danger';
-      }else{
-        return 'info'
+  methods: {
+    getColor(name) {
+      console.log(name.toString().toLowerCase().charAt(0));
+      if (name.toString().toLowerCase().charAt(0) == "b") {
+        return "warning";
+      } else if (name.toString().toLowerCase().charAt(0) == "h") {
+        return "danger";
+      } else {
+        return "info";
       }
-
     },
-    fetchServiceCategories(){
-      this.$store.commit('start');
-      (new CategoryService()).getCategories().then(result=>{
-          this.categories.push({value:null,text:'Select Category'});
-          result.forEach(category=>{
-              this.categories.push({value:category.id,text:category.name,id:category.id})
-            });
-          this.$store.commit('finish');
+    fetchServiceCategories() {
+      this.$store.commit("start");
+      new CategoryService().getCategories().then((result) => {
+        this.categories.push({ value: null, text: "Select Category" });
+        result.forEach((category) => {
+          this.categories.push({
+            value: category.id,
+            text: category.name,
+            id: category.id,
+          });
         });
+        this.$store.commit("finish");
+      });
     },
     handleSort(ctx){
       this.sortBy = ctx.sortBy;
@@ -188,13 +199,16 @@ export default {
         });
     },
     onFiltered(filteredItems) {
-        // Trigger pagination to update the number of buttons/pages due to filtering
-        this.totalRows = filteredItems.length
-        this.currentPage = 1
-      }
-  }
-}
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
+  },
+};
 </script>
 <style scoped>
-#service-table .btn-sm, .btn-group-sm > .btn{ padding: 0.05rem 0.5rem;}
+#service-table .btn-sm,
+.btn-group-sm > .btn {
+  padding: 0.05rem 0.5rem;
+}
 </style>

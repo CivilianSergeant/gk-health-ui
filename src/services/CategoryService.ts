@@ -25,15 +25,15 @@ export class CategoryService{
         }
     }
 
-    async getCategories(): Promise<any>{
+    async getCategories(q: any): Promise<any>{
         const auth = store.getters.auth;
         try{
-            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_CATEGORIES),
+            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_CATEGORIES)
+            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
+
             if(response.status == 200){
-                response.data.map((obj: Category)=>{
-                    this.categories.push(obj)
-                });
+                this.categories = response.data.object;
             }
             return this.categories;
         }catch(error){

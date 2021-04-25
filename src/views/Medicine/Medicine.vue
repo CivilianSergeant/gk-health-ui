@@ -33,16 +33,20 @@
           </div>
           <div class="col-md-7 text-right">
             <!-- All Medicines -->
-            <router-link to="/medicines/add" class="btn btn-primary btn-sm my-3"
-              >Add Medicine</router-link
-            >
           </div>
         </div>
       </CCardBody>
     </cCard>
 
     <CCard>
-      <CCardHeader> Medicines</CCardHeader>
+      <CCardHeader>
+        Medicines
+        <router-link
+          to="/medicines/add"
+          class="btn btn-primary btn-sm float-right"
+          >Add Medicine</router-link
+        ></CCardHeader
+      >
       <CCardBody>
         <b-table
           id="medicine-table"
@@ -84,9 +88,9 @@
         :per-page="perPage"
         aria-controls="medicine-table"
       ></b-pagination>
+        <Loader :isBusy="isBusy" />
       </CCardBody>
     </CCard>
-    <Loader :isBusy="isBusy" />
   </div>
 </template>
 <script>
