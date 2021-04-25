@@ -12,10 +12,10 @@
     </CCardHeader>
     
     <b-table v-if="!showForm" id="category-table" :fields="fields" :per-page="perPage" :busy.sync="isBusy"
-        :current-page="currentPage" :items="categories" bordered="true"
-          hover="true"
-          striped="true"
-          small="true">
+        :current-page="currentPage" :items="categories" :bordered="true"
+          :hover="true"
+          :striped="true"
+          :small="true">
          <template #cell(labTest)="row">
           <span v-if="row.item.labTest" class="badge badge-success">Yes </span>
           <span v-if="!row.item.labTest" class="badge badge-danger">No </span>

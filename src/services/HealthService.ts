@@ -8,13 +8,14 @@ export class HealthService{
 
     private services: Service[] = [];
 
-    async getServices(): Promise<any> {
+    async getServices(q: any): Promise<any> {
         const auth = store.getters.auth;
         try{
-            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_SERVICES),
+            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_SERVICES)
+            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
             if(response.status == 200){
-                response.data.map((obj: Service) => this.services.push(obj));
+                this.services = response.data.object;
             }
             return this.services;
         }catch(error){

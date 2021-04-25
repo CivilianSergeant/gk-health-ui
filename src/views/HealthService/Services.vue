@@ -38,10 +38,18 @@
     <CCard>
       <CCardBody>
     <b-table id="service-table" v-if="!showForm" :fields="fields" 
-        @filtered="onFiltered" :per-page="perPage" :busy.sync="isBusy" bordered="true" striped="true" small="true"
+        @filtered="onFiltered"
+        @sort-changed="handleSort"
+        :per-page="0" 
+        :busy.sync="isBusy" 
+        :bordered="true" 
+        :striped="true" 
+        :small="true"
         :filter="filter"
-      :filter-included-fields="filterOn"
-        :current-page="currentPage" :items="services">
+        :filter-included-fields="filterOn"
+        :current-page="currentPage" 
+        :items="services">
+
         <template #cell(active)="row">
           <span v-if="row.item.active" class="badge badge-success">Active </span>
           <span v-if="!row.item.active" class="badge badge-danger">Inactive </span>
@@ -104,11 +112,14 @@ export default {
       return {
         title: "Services",
         services:[],
-        fields:[{key:'serviceCategory.name',label:'Service Category'},'name',
-        {'key':'currentGbCost','label':'GB Cost'}, 
-        {'key':'currentCost','label':'Non CH-GB Cost'},
-        {'key':'labTestGroup','label':'Lab Test Group'},'active','action'],
-        perPage: 20,
+        fields:[
+        {key:'serviceCategory.name',label:'Service Category', sortable:true},
+        {key:'name',sortable:true},
+        {key:'currentGbCost','label':'GB Cost', sortable:true}, 
+        {key:'currentCost','label':'Non CH-GB Cost', sortable:true},
+        {key:'labTestGroup','label':'Lab Test Group', sortable:true},
+        {key:'active',sortable:true},'action'],
+        perPage: 10,
         currentPage: 1,
         showForm:false,
         categories:[],
@@ -116,8 +127,18 @@ export default {
         form:{name:'',active:true,serviceCategory:{id:null}},
         filter: null,
         filterOn: [],
-        totalRows:0
+        totalRows:0,
+        totalPages:0,
+        sortBy:"",
+        sortDesc:false
       }
+  },
+  watch: {
+    currentPage: {
+      handler: function() {
+        this.fetchServices();
+      }
+    }
   },
   beforeMount(){
     this.$store.commit('clearErrorMsg');
@@ -145,12 +166,24 @@ export default {
           this.$store.commit('finish');
         });
     },
-    
+    handleSort(ctx){
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
+      this.currentPage = 1;
+      this.fetchServices();
+    },
     fetchServices(){
       this.$store.commit('start');
-      (new HealthService()).getServices().then(result=>{
-        this.services=result; 
-        this.totalRows=this.services.length;
+      const searchablePagable = {
+        sortBy: this.sortBy,
+        sortDesc: this.sortDesc,
+        page: (this.currentPage -1 ),
+        size: this.perPage
+      };
+      (new HealthService()).getServices(searchablePagable).then(result=>{
+        this.services=result.content;
+        this.totalPages = result.totalPages;
+        this.totalRows = result.totalElements;
         this.$store.commit('finish');
         });
     },

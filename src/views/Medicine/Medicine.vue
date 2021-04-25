@@ -48,16 +48,17 @@
           id="medicine-table"
           :fields="fields"
           @filtered="onFiltered"
-          :per-page="perPage"
+          @sort-changed="handleSort"
+          :per-page="0"
           :busy.sync="isBusy"
           :filter="filter"
           :filter-included-fields="filterOn"
           :current-page="currentPage"
           :items="medicines"
-          bordered="true"
-          hover="true"
-          striped="true"
-          small="true"
+          :bordered="true"
+          :hover="true"
+          :striped="true"
+          :small="true"
         >
           <template #cell(active)="row">
             <span v-if="row.item.active" class="badge badge-success"
@@ -77,6 +78,12 @@
             </div>
           </template>
         </b-table>
+        <b-pagination
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="medicine-table"
+      ></b-pagination>
       </CCardBody>
     </CCard>
     <Loader :isBusy="isBusy" />
@@ -107,13 +114,13 @@ export default {
     return {
       title: "Medicines",
       fields: [
-        "name",
-        { key: "medicineBrand.name", label: "Medicine Brand" },
-        { key: "medicineGroup.name", label: "Medicine Group" },
-        "active",
+        { key:"name", sortable: true},
+        { key: "medicineBrand.name", label: "Medicine Brand", sortable: true},
+        { key: "medicineGroup.name", label: "Medicine Group", sortable: true},
+        { key:"active", sortable:true},
         "action",
       ],
-      perPage: 20,
+      perPage: 10,
       currentPage: 1,
       medicines: [],
       medicineGroups: [],
@@ -126,18 +133,44 @@ export default {
       },
       filter: null,
       filterOn: [],
+      totalPages:0,
       totalRows: 0,
+      sortBy:"",
+      sortDesc:false
     };
+  },
+  watch: {
+    currentPage: {
+      handler: function() {
+        this.fetcheMedicines();
+      }
+    }
   },
   mounted() {
     this.fetcheMedicines();
   },
   methods: {
+    handleSort(ctx){
+      console.log(ctx)
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
+      this.currentPage = 1;
+      this.fetcheMedicines();
+    },
     fetcheMedicines() {
       this.$store.commit("start");
-      new MedicineService().getMedicines().then((result) => {
-        this.medicines = result;
-        this.totalRows = this.medicines.length;
+      const searchablePagable = {
+        sortBy: this.sortBy,
+        sortDesc: this.sortDesc,
+        page: (this.currentPage-1),
+        size: this.perPage
+      }
+      new MedicineService().getMedicines(searchablePagable).then((result) => {
+        console.log(result)
+        this.medicines = result.content;
+        this.totalPages = result.totalPages;
+        this.totalRows = result.totalElements;
+        // this.totalRows = this.medicines.length;
         this.$store.commit("finish");
       });
     },
