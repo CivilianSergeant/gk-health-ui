@@ -4,9 +4,16 @@
         <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
         <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
         <Loader :isBusy="isBusy" />
-        <div>
-            <b-form @submit.prevent="onSave" >
+         <b-form @submit.prevent="onSave" >
+        <CCard>
+            <CCardBody>
+           
             <b-form-select @change="handleSelection" :options="roles" v-model="role.id"></b-form-select>
+            
+            </CCardBody>
+        </CCard>
+        <CCard>
+            <CCardBody>
             <table class="table">
                 <thead>
                     <tr>
@@ -29,9 +36,9 @@
                     <!-- <b-button type="reset" class="ml-4" variant="danger" :disabled="isBusy">Cancel</b-button> -->
                 </div>
             </div>
-            </b-form>
-        </div>
-
+            </CCardBody>
+        </CCard>
+        </b-form>
     </div>
 </template>
 <script>
