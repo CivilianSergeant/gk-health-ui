@@ -1,13 +1,17 @@
 <template>
     <div>
-        <ContentBar :PageTitle="title"/>
+        
         <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
         <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
+        <CCard>
+            <CCardHeader>
         <h5>Add Service
       
-        <router-link to="/services" class=" btn btn-info btn-sm float-right">Service List</router-link >
+        <router-link to="/services" class=" btn btn-primary btn-sm float-right">Service List</router-link >
 
         </h5>
+            </CCardHeader>
+        <CCardBody>
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
         <div class="row">
             <div class="col-md-3">
@@ -134,6 +138,8 @@
                 </div>
             </div>
         </b-form>
+        </CCardBody>
+        </CCard>
     </div>
 </template>
 <script>
@@ -237,7 +243,7 @@ export default {
     },
     _redirectToServices(){
         const navigationService =new NavigationService();
-        navigationService.redirect(this,"services");
+        navigationService.redirect(this,"Services");
     }
     
   }
