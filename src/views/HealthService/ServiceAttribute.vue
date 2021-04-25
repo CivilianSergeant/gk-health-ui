@@ -1,23 +1,27 @@
 <template>
     <div>
-        <ContentBar :PageTitle="title"/>
+        
         <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
         <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
-        <h5>Service Attributes for {{form.name}}
-      
-        <router-link to="/services" class=" btn btn-info btn-sm float-right ml-2">Service List</router-link>
-        <router-link :to="'/services/'+form.serviceId+'/detail'" class=" btn btn-info btn-sm float-right">Service Detail</router-link>
-
-        </h5>
         
+        <CCard>
+            <CCardHeader>
+                <h5>Service Attributes for {{form.name}}
+            
+                    <router-link to="/services" class=" btn btn-primary btn-sm float-right ml-2">Service List</router-link>
+                    <router-link :to="'/services/'+form.serviceId+'/detail'" class=" btn btn-primary btn-sm float-right">Service Detail</router-link>
+
+                </h5>
+            </CCardHeader>
+        <CCardBody>
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
             <table class="table">
                 <thead>
                     <tr>
                         <th>Attribute List</th>
                         <th colspan="6">
-                            <button type="button" @click="addAttributeGroup" class="btn btn-secondary btn-sm float-right ml-2">Add Attribute Group</button>
-                            <button type="button" @click="addAttribute" class="btn btn-secondary btn-sm float-right">Add Attribute</button>
+                            <button type="button" @click="addAttributeGroup" class="btn btn-info btn-sm float-right ml-2">Add Attribute Group</button>
+                            <button type="button" @click="addAttribute" class="btn btn-info btn-sm float-right">Add Attribute</button>
                         </th>
                         
                     </tr>
@@ -62,6 +66,8 @@
                 </div>
             </div>
         </b-form>
+        </CCardBody>
+        </CCard>
     </div>
 </template>
 <script>
@@ -215,7 +221,7 @@ export default {
     },
     onReset(){
         this.$store.commit('clearMessage');
-        (new NavigationService()).redirect(this,'services')
+        (new NavigationService()).redirect(this,'Services')
     }
   }
 }

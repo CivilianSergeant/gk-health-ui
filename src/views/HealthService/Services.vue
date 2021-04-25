@@ -1,13 +1,17 @@
 <template>
   <div id="service-list">
-    <ContentBar :PageTitle="title"/>
+    
     <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
+    <CCard>
+      <CCardHeader>
     <h5 class="clearfix">All Services
       
       <router-link to="/services/add" class=" btn btn-primary btn-sm float-right">Add Service</router-link >
 
     </h5>
+      </CCardHeader>
+      <CCardBody>
     <b-form-group
           label="Filter"
           label-for="filter-input"
@@ -29,8 +33,12 @@
             </b-input-group-append>
           </b-input-group>
         </b-form-group>
+      </CCardBody>
+    </CCard>
+    <CCard>
+      <CCardBody>
     <b-table id="service-table" v-if="!showForm" :fields="fields" 
-        @filtered="onFiltered" :per-page="perPage" :busy.sync="isBusy" 
+        @filtered="onFiltered" :per-page="perPage" :busy.sync="isBusy" bordered="true" striped="true" small="true"
         :filter="filter"
       :filter-included-fields="filterOn"
         :current-page="currentPage" :items="services">
@@ -54,6 +62,8 @@
         :per-page="perPage"
         aria-controls="service-table"
       ></b-pagination>
+      </CCardBody>
+    </CCard>
   </div>
 </template>
 

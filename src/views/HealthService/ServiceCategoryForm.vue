@@ -1,11 +1,15 @@
 <template>
     <div>
-        <ContentBar :PageTitle="title"/>
+        
           <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
     <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
+    <CCard>
+      <CCardHeader>
     <h5>Add Service Category
-        <router-link to="/service-categories" class=" btn btn-info btn-sm float-right">Service Category List</router-link >
+        <router-link to="/service-categories" class=" btn btn-primary btn-sm float-right">Service Category List</router-link >
     </h5>
+      </CCardHeader>
+    <CCardBody>
     <b-form v-if="!isError"  @submit.prevent="onSubmit" @reset.prevent="onReset">
         <div class="row">
           <div class="col-md-4">
@@ -54,6 +58,8 @@
             </div>
         </div>
     </b-form>
+    </CCardBody>
+    </CCard>
     </div>
 </template>
 
@@ -101,14 +107,14 @@ export default {
           const message = (this.id!=undefined)? "Service Category Updated":"New Service Category Created";
           this.$store.commit('setSuccessMsg',message);
           const navigationService =new NavigationService();
-          navigationService.redirect(this,"service-categories");
+          navigationService.redirect(this,"Service Categories");
       })
       
     },
     onReset(){
         this.$store.commit('clearMessage');
         const navigationService =new NavigationService();
-        navigationService.redirect(this,"service-categories");
+        navigationService.redirect(this,"Service Categories");
     },
     
   }
