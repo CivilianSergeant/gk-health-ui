@@ -13,8 +13,9 @@
         >
         <!-- </h5> -->
       </CCardHeader>
-      <CCardBody>
-        <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
+
+      <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
+        <CCardBody>
           <div class="row">
             <div class="col-md-4">
               <b-form-group
@@ -72,17 +73,18 @@
               >
             </div>
           </div>
-
+        </CCardBody>
+        <CCardFooter>
           <div class="row mt-2 mb-2">
             <div class="col-md-2 d-flex justify-content-between">
               <b-button type="submit" variant="success">Submit</b-button>
-              <b-button type="reset" class="ml-4" variant="danger"
+              <b-button type="reset" class="ml-2" variant="danger"
                 >Cancel</b-button
               >
             </div>
           </div>
-        </b-form>
-      </CCardBody>
+        </CCardFooter>
+      </b-form>
     </cCard>
   </div>
 </template>
