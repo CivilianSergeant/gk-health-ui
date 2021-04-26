@@ -1,8 +1,41 @@
 <template>
     <div>
-        <h3 class="my-3 mb-5">Dashboard</h3>
+        
         <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
         <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
+        <CRow>
+            <CCol sm="6" lg="3">
+                <CWidgetDropdown color="primary" header="100" text="Total Patient">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+
+            <CCol sm="6" lg="3">
+                <CWidgetDropdown color="info" header="80" text="Total GB">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+
+            <CCol sm="6" lg="3">
+                <CWidgetDropdown color="warning" header="20" text="Total Non-GB">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+
+            <CCol sm="6" lg="3">
+                <CWidgetDropdown color="danger" :header="stats.totalAmountUptoLastDay" text="Total Amount">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+        </CRow>
         <b-form @submit.prevent="onSearch">
             <div class="row">
                 <div class="col-md-2">
@@ -156,7 +189,8 @@ import { CenterService, StatsService } from '@/services'
           { value: '6', text: 'Health Center' }
         ],
         optionOffices: [],
-        stats:{totalNonGbPatient:0,totalGbPatient:0,totalPatient:0,totalAmount:0}
+        stats:{totalNonGbPatient:0,totalGbPatient:0,totalPatient:0,totalAmount:0,
+        totalAmountUptoLastDay:'0'}
       }
     },
     computed:{
