@@ -30,7 +30,7 @@
             </CCol>
 
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="danger" :header="stats.totalAmountUptoLastDay" text="Total Amount">
+                <CWidgetDropdown color="danger" :header="stats.totalAmountUptoLastDay" text="Total Amount Received">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
