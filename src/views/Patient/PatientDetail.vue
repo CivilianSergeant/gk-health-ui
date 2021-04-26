@@ -27,7 +27,7 @@
                 label="Center:"
                 label-for="centers"
               >
-                <strong class="text-secondary">{{
+                <strong>{{
                   form.center != null && form.center.name
                     ? form.center.name
                     : "N/A"
@@ -42,9 +42,7 @@
                 label="Full Name:"
                 label-for="input-1"
               >
-                <strong class="text-secondary">{{
-                  form.fullName ? form.fullName : "N/A"
-                }}</strong>
+                <strong>{{ form.fullName ? form.fullName : "N/A" }}</strong>
               </b-form-group>
             </div>
             <div class="col-md-3">
@@ -53,7 +51,7 @@
                 label="Guardian Name:"
                 label-for="input-2"
               >
-                <strong class="text-secondary">{{
+                <strong>{{
                   form.guardianName ? form.guardianName : "N/A"
                 }}</strong>
               </b-form-group>
@@ -64,9 +62,7 @@
                 label="Mother Name:"
                 label-for="input-3"
               >
-                <strong class="text-secondary">{{
-                  form.motherName ? form.motherName : "N/A"
-                }}</strong>
+                <strong>{{ form.motherName ? form.motherName : "N/A" }}</strong>
               </b-form-group>
             </div>
           </div>
@@ -79,9 +75,7 @@
                 label-for="gender"
                 description="Patient's Gender"
               >
-                <strong class="text-secondary">{{
-                  form.gender ? form.gender : "N/A"
-                }}</strong>
+                <strong>{{ form.gender ? form.gender : "N/A" }}</strong>
               </b-form-group>
             </div>
             <div class="col-md-3">
@@ -90,7 +84,7 @@
                 label="Marital Status:"
                 label-for="marital-status"
               >
-                <strong class="text-secondary">{{
+                <strong>{{
                   form.maritalStatus ? form.maritalStatus : "N/A"
                 }}</strong>
               </b-form-group>
