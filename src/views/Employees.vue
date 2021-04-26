@@ -8,9 +8,10 @@
         <b-table
           id="employee-table"
           :fields="fields"
-          :per-page="perPage"
+          :per-page="0"
           :current-page="currentPage"
           :items="employees"
+          @sort-changed="handleSort"
           bordered
           hover
           striped
@@ -34,7 +35,7 @@ export default {
   name: "Employees",
   computed: {
     rows() {
-      return this.employees.length;
+      return this.totalRows;
     },
     isBusy() {
       return this.$store.state.isBusy;
@@ -54,29 +55,54 @@ export default {
       title: "Employees",
       employees: [],
       fields: [
-        { apiEmployeeId: "Employee ID" },
-        { key: "employeeCode", label: "Employee Code" },
-        { "center.name": "Center" },
-        "fullName",
-        "designation",
-        "contactNumber",
-        "email",
+        { apiEmployeeId: "Employee ID", sortable: true },
+        { key: "employeeCode", label: "Employee Code", sortable: true },
+        { key:"center.name", label: "Center", sortable: true },
+        {key:"fullName", sortable: true},
+        {key:"designation",sortable: true},
+        {key:"contactNumber", sortable:true},
+        {key:"email", sortable: true},
       ],
       currentPage: 1,
       perPage: 20,
+      totalRows:0,
+      totalPages:0,
+      sortBy:'',
+      sortDesc:false
     };
+  },
+  watch: {
+    currentPage: {
+      handler: function() {
+        this.fetchEmployees();
+      }
+    }
   },
   beforeMount() {
     this.$store.commit("clearErrorMsg");
     this.fetchEmployees();
   },
   methods: {
+    handleSort(ctx){
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
+      this.currentPage = 1;
+      this.fetchEmployees();
+    },
     fetchEmployees() {
       this.$store.commit("start");
+      const q = {
+        page: (this.currentPage-1),
+        size: this.perPage,
+        sortBy: this.sortBy,
+        sortDesc: this.sortDesc
+      }
       new EmployeeService()
-        .getEmployees()
+        .getEmployees(q)
         .then((result) => {
-          this.employees = result;
+          this.employees = result.content;
+          this.totalRows = result.totalElements;
+          this.totalPages = result.totalPages;
           this.$store.commit("finish");
         })
         .catch((error) => {
