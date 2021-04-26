@@ -1,10 +1,10 @@
 <template>
   <div>
-    <ContentBar :PageTitle="title" />
+    
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
 
-    <h5>
+    <h5 class="pb-2">
       Patient Info #{{ form.pid }}
       <router-link
         to="/patients"
