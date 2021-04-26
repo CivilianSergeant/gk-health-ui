@@ -3,6 +3,7 @@
     <ContentBar :PageTitle="title" />
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
+
     <h5>
       Patient Info #{{ form.pid }}
       <router-link
@@ -17,150 +18,168 @@
       >
     </h5>
     <div>
-      <div class="row">
-        <div class="col-md-3">
-          <b-form-group id="input-group-0" label="Center:" label-for="centers">
-            <strong class="text-secondary">{{
-              form.center != null && form.center.name ? form.center.name : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-1"
-            label="Full Name:"
-            label-for="input-1"
-          >
-            <strong class="text-secondary">{{
-              form.fullName ? form.fullName : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-2"
-            label="Guardian Name:"
-            label-for="input-2"
-          >
-            <strong class="text-secondary">{{
-              form.guardianName ? form.guardianName : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-3"
-            label="Mother Name:"
-            label-for="input-3"
-          >
-            <strong class="text-secondary">{{
-              form.motherName ? form.motherName : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-      </div>
+      <b-card>
+        <b-card-body>
+          <div class="row">
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-0"
+                label="Center:"
+                label-for="centers"
+              >
+                <strong class="text-secondary">{{
+                  form.center != null && form.center.name
+                    ? form.center.name
+                    : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-1"
+                label="Full Name:"
+                label-for="input-1"
+              >
+                <strong class="text-secondary">{{
+                  form.fullName ? form.fullName : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-2"
+                label="Guardian Name:"
+                label-for="input-2"
+              >
+                <strong class="text-secondary">{{
+                  form.guardianName ? form.guardianName : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-3"
+                label="Mother Name:"
+                label-for="input-3"
+              >
+                <strong class="text-secondary">{{
+                  form.motherName ? form.motherName : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+          </div>
 
-      <div class="row">
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-4"
-            label="Gender:"
-            label-for="gender"
-            description="Patient's Gender"
-          >
-            <strong class="text-secondary">{{
-              form.gender ? form.gender : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-6"
-            label="Marital Status:"
-            label-for="marital-status"
-          >
-            <strong class="text-secondary">{{
-              form.maritalStatus ? form.maritalStatus : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-        <div class="col-md-4">
-          <b-form-group id="input-group-6" label="Age:" label-for="patient-age">
-            <strong class="text-secondary">{{
-              form.age ? form.age : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-      </div>
+          <div class="row">
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-4"
+                label="Gender:"
+                label-for="gender"
+                description="Patient's Gender"
+              >
+                <strong class="text-secondary">{{
+                  form.gender ? form.gender : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-6"
+                label="Marital Status:"
+                label-for="marital-status"
+              >
+                <strong class="text-secondary">{{
+                  form.maritalStatus ? form.maritalStatus : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+            <div class="col-md-4">
+              <b-form-group
+                id="input-group-6"
+                label="Age:"
+                label-for="patient-age"
+              >
+                <strong class="text-secondary">{{
+                  form.age ? form.age : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+          </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <b-form-group id="input-group-7" label="Village" label-for="vilage">
-            <strong class="text-secondary">{{
-              form.village ? form.village : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-8"
-            label="Mobile Number:"
-            label-for="mobileNumber"
-          >
-            <strong class="text-secondary">{{
-              form.mobileNumber ? form.mobileNumber : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          <b-form-group
-            id="input-group-9"
-            label="Blood Group"
-            label-for="bloodGroup"
-          >
-            <strong class="text-secondary">{{
-              form.detail ? form.detail.bloodGroup : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-10"
-            label="Nationality:"
-            label-for="nationality"
-          >
-            <strong class="text-secondary">{{
-              form.detail ? form.detail.nationality : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-10"
-            label="National ID:"
-            label-for="nationalId"
-          >
-            <strong class="text-secondary">{{
-              form.detail ? form.detail.nationalId : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-10"
-            label="Occupation:"
-            label-for="occupation"
-          >
-            <strong class="text-secondary">{{
-              form.detail ? form.detail.occupation : "N/A"
-            }}</strong>
-          </b-form-group>
-        </div>
-      </div>
+          <div class="row">
+            <div class="col-md-6">
+              <b-form-group
+                id="input-group-7"
+                label="Village"
+                label-for="vilage"
+              >
+                <strong class="text-secondary">{{
+                  form.village ? form.village : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-8"
+                label="Mobile Number:"
+                label-for="mobileNumber"
+              >
+                <strong class="text-secondary">{{
+                  form.mobileNumber ? form.mobileNumber : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <b-form-group
+                id="input-group-9"
+                label="Blood Group"
+                label-for="bloodGroup"
+              >
+                <strong class="text-secondary">{{
+                  form.detail ? form.detail.bloodGroup : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-10"
+                label="Nationality:"
+                label-for="nationality"
+              >
+                <strong class="text-secondary">{{
+                  form.detail ? form.detail.nationality : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-10"
+                label="National ID:"
+                label-for="nationalId"
+              >
+                <strong class="text-secondary">{{
+                  form.detail ? form.detail.nationalId : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-10"
+                label="Occupation:"
+                label-for="occupation"
+              >
+                <strong class="text-secondary">{{
+                  form.detail ? form.detail.occupation : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+          </div>
+        </b-card-body></b-card
+      >
       <hr />
       <div class="row">
         <div class="col-md-4">
@@ -231,52 +250,53 @@
         <div class="col-md-8">
           <!-- <br class="mb-3" /> -->
           <h5 style="padding-left: 15px">Patient Invoices</h5>
-          <!-- <b-card v-if="patient"> -->
-          <b-card-body v-for="(pi, i) in form.patientInvoices" :key="i">
-            <h5>
-              Invoice No # {{ pi.invoiceNumber }}
-              <a
-                @click="showReport(i)"
-                class="cursor-pointer btn btn-info btn-sm"
-                ><b-icon-printer></b-icon-printer> Print</a
-              >
-            </h5>
-            <h6>Date: {{ getDate(pi.createdAt) }}</h6>
-            <table class="table table-bordered">
-              <thead class="thead-light">
-                <tr>
-                  <th>Sl</th>
-                  <th>Service Name</th>
-                  <th>Room No</th>
-                  <th>Amount</th>
-                  <th>Discount</th>
-                  <th>Payable</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
+          <b-card>
+            <!-- v-if="patient"-->
+            <b-card-body v-for="(pi, i) in form.patientInvoices" :key="i">
+              <h5>
+                Invoice No # {{ pi.invoiceNumber }}
+                <a
+                  @click="showReport(i)"
+                  class="cursor-pointer btn btn-info btn-sm"
+                  ><b-icon-printer></b-icon-printer> Print</a
+                >
+              </h5>
+              <h6>Date: {{ getDate(pi.createdAt) }}</h6>
+              <table class="table table-bordered">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Sl</th>
+                    <th>Service Name</th>
+                    <th>Room No</th>
+                    <th>Amount</th>
+                    <th>Discount</th>
+                    <th>Payable</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
 
-              <tbody>
-                <tr v-for="(ps, i) in pi.patientServiceDetails" :key="i">
-                  <td>{{ i + 1 }}</td>
-                  <td>{{ ps.service.name }}</td>
-                  <td>{{ ps.roomNumber }}</td>
-                  <td>{{ ps.serviceAmount }}</td>
-                  <td>{{ ps.discountAmount }}</td>
-                  <td>{{ ps.payableAmount }}</td>
-                  <td>
-                    <router-link
-                      v-if="hasReportButton(ps)"
-                      :to="showReportButton(ps.service, form.id, pi.id)"
-                      >{{
-                        ps.service.labTest ? "Lab Report" : "Prescription"
-                      }}</router-link
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </b-card-body>
-          <!-- </b-card> -->
+                <tbody>
+                  <tr v-for="(ps, i) in pi.patientServiceDetails" :key="i">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ ps.service.name }}</td>
+                    <td>{{ ps.roomNumber }}</td>
+                    <td>{{ ps.serviceAmount }}</td>
+                    <td>{{ ps.discountAmount }}</td>
+                    <td>{{ ps.payableAmount }}</td>
+                    <td>
+                      <router-link
+                        v-if="hasReportButton(ps)"
+                        :to="showReportButton(ps.service, form.id, pi.id)"
+                        >{{
+                          ps.service.labTest ? "Lab Report" : "Prescription"
+                        }}</router-link
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </b-card-body>
+          </b-card>
         </div>
       </div>
     </div>
@@ -286,7 +306,7 @@
 <script>
 import { CenterService } from "@/services/CenterService";
 import { jsPDF } from "jspdf";
-import { PatientService } from '@/services';
+import { PatientService } from "@/services";
 
 export default {
   name: "PatientDetail",
@@ -414,28 +434,26 @@ export default {
     //   this.form.cardRegistration.members.splice(i, 1);
     // },
     fetchPatient(id) {
-      (new PatientService()).getPatientById(id,(data)=>{
+      new PatientService().getPatientById(id, (data) => {
         this.form = data;
       });
       // const response = await axios.get(
       //   GetApiRoute(ApiRoutes.GET_PATIENT_BY_ID, id)
       // );
       // if (response.status == 200) {
-        
+
       // }
       // console.log(response);
     },
     fetchCenters() {
       this.isBusy = true;
-      new CenterService()
-        .getCenters()
-        .then((result) => {
-          this.centers.push({ value: null, text: "Select Center" });
-          result.map((center) =>
-            this.centers.push({ value: center.id, text: center.name })
-          );
-          this.isBusy = false;
-        });
+      new CenterService().getCenters().then((result) => {
+        this.centers.push({ value: null, text: "Select Center" });
+        result.map((center) =>
+          this.centers.push({ value: center.id, text: center.name })
+        );
+        this.isBusy = false;
+      });
     },
     showReport(i) {
       const invoice = this.form.patientInvoices[i];
