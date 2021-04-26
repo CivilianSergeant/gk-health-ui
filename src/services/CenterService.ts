@@ -9,6 +9,21 @@ export class CenterService {
     private centers: Center[] = [];
     private center!: Center;
 
+    async getCentersWithPagination(q: any): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const result = await axios.get(GetApiRoute(ApiRoutes.CENTER_LIST)
+            + `?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+            setAuthorizationToken(auth.token));
+            if(result.status == 200){
+                this.centers = result.data.object;
+            }
+            return this.centers;
+        }catch(error){
+            handleException(error);
+        }
+    }
+
     async getCenters(): Promise<any>{
         const auth = store.getters.auth;
         try{

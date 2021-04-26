@@ -10,13 +10,14 @@ export class EmployeeService{
     private employees: Employee[] = [];
     private employee!: Employee;
 
-    async getEmployees(): Promise<any>{
+    async getEmployees(q: any): Promise<any>{
         const auth = store.getters.auth;
         try{
-            const result = await axios.get(GetApiRoute(ApiRoutes.ALL_EMPLOYEES),
+            const result = await axios.get(GetApiRoute(ApiRoutes.ALL_EMPLOYEES)
+            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
             if(result.status==200){
-                result.data.map((obj: Employee) => {obj._showDetails=true; this.employees.push(obj)});
+                this.employees = result.data.object;
             }
 
             return this.employees;

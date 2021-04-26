@@ -39,7 +39,8 @@
           id="center-table"
           :fields="fields"
           @filtered="onFiltered"
-          :per-page="perPage"
+          @sort-changed="handleSort"
+          :per-page="0"
           :filter="filter"
           :filter-included-fields="filterOn"
           :current-page="currentPage"
@@ -69,7 +70,7 @@ export default {
   name: "HealthCenter",
   computed: {
     rows() {
-      return this.centers.length;
+      return this.totalRows;
     },
     isBusy() {
       return this.$store.state.isBusy;
@@ -89,22 +90,32 @@ export default {
       title: "Health Center",
       centers: [],
       fields: [
-        "name",
-        "apiOfficeId",
-        "centerCode",
-        "officeLevel",
-        "officeTypeId",
-        "firstLevel",
-        "secondLevel",
-        "thirdLevel",
-        "fourthLevel",
+        {key: "name",sortable: true},
+        {key: "apiOfficeId", sortable: true},
+        {key: "centerCode", sortable: true},
+        {key: "officeLevel", sortable: true},
+        {key: "officeTypeId", sortable: true},
+        {key: "firstLevel", sortable: true},
+        {key: "secondLevel", sortable: true},
+        {key: "thirdLevel", sortable: true},
+        {key: "fourthLevel", sortable: true},
       ],
       currentPage: 1,
-      perPage: 20,
+      perPage: 10,
       filter: null,
       filterOn: [],
       totalRows: 0,
+      totalPages:0,
+      sortBy:'',
+      sortDesc:false
     };
+  },
+  watch: {
+    currentPage: {
+      handler: function() {
+        this.fetchCenters();
+      }
+    }
   },
   beforeMount() {
     this.$store.commit("clearErrorMsg");
@@ -112,11 +123,24 @@ export default {
   },
 
   methods: {
+    handleSort(ctx){
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
+      this.currentPage = 1;
+      this.fetchCenters();
+    },
     fetchCenters() {
       this.$store.commit("start");
-      new CenterService().getCenters().then((result) => {
-        this.centers = result;
-        this.totalRows = this.centers.length;
+      const q = {
+        page: (this.currentPage -1 ),
+        size: this.perPage,
+        sortBy: this.sortBy,
+        sortDesc: this.sortDesc
+      }
+      new CenterService().getCentersWithPagination(q).then((result) => {
+        this.centers = result.content;
+        this.totalRows = result.totalElements;
+        this.totalPages = result.totalPages;
         this.$store.commit("finish");
       });
     },
