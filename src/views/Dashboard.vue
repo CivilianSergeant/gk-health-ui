@@ -3,9 +3,10 @@
         
         <b-alert v-model="isSuccess" variant="success">{{message}}</b-alert>
         <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
+        
         <CRow>
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="primary" header="100" text="Total Patient">
+                <CWidgetDropdown color="primary" :header="stats.totalPatientUptoLastDay" text="Total Patient">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
@@ -13,7 +14,7 @@
             </CCol>
 
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="info" header="80" text="Total GB">
+                <CWidgetDropdown color="info" :header="stats.totalGbPatientUptoLastDay" text="Total GB">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
@@ -21,7 +22,7 @@
             </CCol>
 
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="warning" header="20" text="Total Non-GB">
+                <CWidgetDropdown color="warning" :header="stats.totalNonGbPatientUptoLastDay" text="Total Non-GB">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
@@ -36,137 +37,12 @@
                 </CWidgetDropdown>
             </CCol>
         </CRow>
-        <b-form @submit.prevent="onSearch">
-            <div class="row">
-                <div class="col-md-2">
-                    <b-form-select v-model="form.officeTypeId" @change="handleOfficeTypeChange" :options="optionOfficeTypes"></b-form-select>
-                </div>
-                <div class="col-md-2">
-                    <b-form-select v-model="form.centerId" @change="handleOfficeChange"  :options="optionOffices"></b-form-select>
-                </div> 
-                <div class="col-md-3">
-                    <b-input-group class="mb-3">
-                        <!-- <b-form-input
-                            id="example-input"
-                            v-model="value"
-                            type="text"
-                            placeholder="YYYY-MM-DD"
-                            autocomplete="off"
-                        ></b-form-input> -->
-                        <b-input-group-append>
-                            <b-form-datepicker
-                            placeholder="From Date"
-                            right
-                            locale="en-US"
-                            aria-controls="example-input"
-                            @context="onContext"
-                            ></b-form-datepicker>
-                        </b-input-group-append>
-                    </b-input-group>
-                    
-                </div>
-                <div class="col-md-3">
-                     <b-input-group class="mb-3">
-                        <!-- <b-form-input
-                            id="example-input"
-                            v-model="value2"
-                            type="text"
-                            placeholder="YYYY-MM-DD"
-                            autocomplete="off"
-                        ></b-form-input> -->
-                        <b-input-group-append>
-                            <b-form-datepicker
-                            placeholder="To Date"
-                            right
-                            locale="en-US"
-                            aria-controls="example-input"
-                            @context="onContext2"
-                            ></b-form-datepicker>
-                        </b-input-group-append>
-                    </b-input-group>
-                </div>
-                <div class="col-md-2"><b-button type="submit" variant="info">Search</b-button></div>
-            </div>
-        </b-form>
+        <Loader :isBusy="isBusy" class="pt-3"/>
         
-        <Loader :isBusy="isBusy" />
-        <div class="row py-5" v-if="!isBusy">
-            <div class="col-md-3">
-                <b-card
-                    header="Total GB Patient"
-                    header-tag="header"
-                    footer=""
-                    footer-tag="footer"
-                    :title="stats.totalGbPatient.toString()"
-                    >
-                    <!-- <b-card-text>5288</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button> -->
-                    </b-card>
-            </div>
-             <div class="col-md-3">
-                <b-card
-                    header="Non GB Patient"
-                    header-tag="header"
-                    footer=""
-                    footer-tag="footer"
-                    :title="stats.totalNonGbPatient.toString()"
-                    >
-                    <!-- <b-card-text>5288</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button> -->
-                    </b-card>
-            </div>
-             <div class="col-md-3">
-                <b-card
-                    header="Total Patient"
-                    header-tag="header"
-                    footer=""
-                    footer-tag="footer"
-                    :title="stats.totalPatient.toString()"
-                    >
-                    <!-- <b-card-text>5288</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button> -->
-                    </b-card>
-            </div>
-             <div class="col-md-3">
-                <b-card
-                    header="Total Amount"
-                    header-tag="header"
-                    footer=""
-                    footer-tag="footer"
-                    :title="stats.totalAmount.toString()"
-                    >
-                    <!-- <b-card-text>5288</b-card-text>
-                    <b-button href="#" variant="primary">Go somewhere</b-button> -->
-                    </b-card>
-            </div>
-            <div class="col-md-12" style="display:none">
-                   
-                <div class="card">
-                    <div class="card-header">Summery</div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                               <strong class="d-block"> GB Patient</strong>
-                               {{stats.totalGbPatient}}
-                            </div>
-                            <div class="col-md-3">
-                               <strong class="d-block">Non GB Patient</strong>
-                               {{stats.totalNonGbPatient}}
-                            </div>
-                            <div class="col-md-3">
-                               <strong class="d-block"> Total Patient</strong>
-                               {{stats.totalPatient}}
-                            </div>
-                             <div class="col-md-3">
-                               <strong class="d-block"> Total Amount(Tk)</strong>
-                               {{stats.totalAmount}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
+        
     </div>
+    
 </template>
 
 <script>
@@ -190,7 +66,8 @@ import { CenterService, StatsService } from '@/services'
         ],
         optionOffices: [],
         stats:{totalNonGbPatient:0,totalGbPatient:0,totalPatient:0,totalAmount:0,
-        totalAmountUptoLastDay:'0'}
+        totalAmountUptoLastDay:'0',totalPatientUptoLastDay:'0',
+        totalGbPatientUptoLastDay:'0',totalNonGbPatientUptoLastDay:'0'}
       }
     },
     computed:{

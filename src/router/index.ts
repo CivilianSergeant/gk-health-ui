@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
+import MonitorDashboard from '../views/Reports/MonitorDashboard.vue'
 import HealthCenter from '../views/HealthCenter.vue'
 import Employees from '../views/Employees.vue'
 
@@ -56,6 +57,11 @@ const routes: Array<RouteConfig> = [
     path: '/',
     name: 'Dashboard',
     component: Dashboard
+  },
+  {
+    path: '/monitor-dashboard',
+    name: 'Monitor Dashboard',
+    component: MonitorDashboard
   },
   {
     name: 'Access Denied',
