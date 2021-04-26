@@ -14,6 +14,7 @@ export enum ApiRoutes{
 
     // Centers
     ALL_CENTERS = '/health-center',
+    CENTER_LIST = '/health-center/list',
     ADD_CENTER  = '/health-center/add',
     GET_CENTERS_BY_KEYWORD = '/health-center/by-keyword/:id',
     CENTER_BY_API_ID = '/health-center/api-id/:id',
