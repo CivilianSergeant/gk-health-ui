@@ -6,7 +6,7 @@
         
         <CRow>
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="primary" :header="stats.totalPatientUptoLastDay" text="Total Patient">
+                <CWidgetDropdown color="primary" :header="stats.totalPatientUptoLastDay.toString()" text="Total Patient">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
@@ -14,7 +14,7 @@
             </CCol>
 
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="info" :header="stats.totalGbPatientUptoLastDay" text="Total GB">
+                <CWidgetDropdown color="info" :header="stats.totalGbPatientUptoLastDay.toString()" text="Total GB">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
@@ -22,7 +22,7 @@
             </CCol>
 
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="warning" :header="stats.totalNonGbPatientUptoLastDay" text="Total Non-GB">
+                <CWidgetDropdown color="warning" :header="stats.totalNonGbPatientUptoLastDay.toString()" text="Total Non-GB">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
@@ -30,7 +30,7 @@
             </CCol>
 
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="danger" :header="stats.totalAmountUptoLastDay" text="Total Amount Received">
+                <CWidgetDropdown color="danger" :header="stats.totalAmountUptoLastDay.toString()" text="Total Amount Received">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
@@ -38,8 +38,13 @@
             </CCol>
         </CRow>
         <Loader :isBusy="isBusy" class="pt-3"/>
-        
-        
+        <CCard>
+        <CCardHeader>Month Wise Received Amount</CCardHeader>
+        <CChartBar
+            :datasets="monthWiseReceiveds"
+            labels="months"
+        />
+        </CCard>
         
     </div>
     
@@ -47,8 +52,10 @@
 
 <script>
 import { CenterService, StatsService } from '@/services'
+import { CChartBar } from '@coreui/vue-chartjs'
 
   export default {
+    components: { CChartBar },
     data() {
       return {
         form: {officeTypeId:null, centerId:null},
@@ -67,7 +74,14 @@ import { CenterService, StatsService } from '@/services'
         optionOffices: [],
         stats:{totalNonGbPatient:0,totalGbPatient:0,totalPatient:0,totalAmount:0,
         totalAmountUptoLastDay:'0',totalPatientUptoLastDay:'0',
-        totalGbPatientUptoLastDay:'0',totalNonGbPatientUptoLastDay:'0'}
+        totalGbPatientUptoLastDay:'0',totalNonGbPatientUptoLastDay:'0'},
+        monthWiseReceiveds: [
+        {
+          label: 'Amount',
+          backgroundColor: '#f87979',
+          data: []
+        }
+      ]
       }
     },
     computed:{
@@ -169,6 +183,23 @@ import { CenterService, StatsService } from '@/services'
                     this.stats=result;
                 }
             });
+            (new StatsService()).getMonthWiseReceivedStats().then(result=>{
+                this.$store.commit('finish');
+                if(result!=undefined){
+                    this.monthWiseReceiveds[0].data.push(result.jan);
+                    this.monthWiseReceiveds[0].data.push(result.feb);
+                    this.monthWiseReceiveds[0].data.push(result.mar);
+                    this.monthWiseReceiveds[0].data.push(result.apr);
+                    this.monthWiseReceiveds[0].data.push(result.may);
+                    this.monthWiseReceiveds[0].data.push(result.jun);
+                    this.monthWiseReceiveds[0].data.push(result.jul);
+                    this.monthWiseReceiveds[0].data.push(result.aug);
+                    this.monthWiseReceiveds[0].data.push(result.sep);
+                    this.monthWiseReceiveds[0].data.push(result.oct);
+                    this.monthWiseReceiveds[0].data.push(result.nov);
+                    this.monthWiseReceiveds[0].data.push(result.dec);
+                }
+            })
       },
       onContext(ctx) {
         // The date formatted in the locale, or the `label-no-date-selected` string

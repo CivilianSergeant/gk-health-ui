@@ -88,7 +88,8 @@ export enum ApiRoutes{
     GET_ROLES = '/roles',
     ADD_ROLE_PERMISSION = '/roles/permissions',
 
-    GET_STATS='/report/stats'
+    GET_STATS='/report/stats',
+    GET_MONTH_WISE_RECEIVED_STATS='/report/month-wise-received'
 }
 
 export function GetApiRoute(route: string,value=""){
