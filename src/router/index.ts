@@ -59,8 +59,8 @@ const routes: Array<RouteConfig> = [
     component: Dashboard
   },
   {
-    path: '/monitor-dashboard',
-    name: 'Monitor Dashboard',
+    path: '/monitor-statistics',
+    name: 'Monitor Statistics',
     component: MonitorDashboard
   },
   {
