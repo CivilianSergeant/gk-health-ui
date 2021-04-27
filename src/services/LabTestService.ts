@@ -29,14 +29,16 @@ export class LabTestService {
         }
     }
 
-    async getLabTests(): Promise<any> {
+    async getLabTests(q: any): Promise<any> {
         
         const auth = store.getters.auth;
         try{
-            const response = await axios.get(GetApiRoute(ApiRoutes.GET_LAB_TEST_ALL),
+            const response = await axios.get(GetApiRoute(ApiRoutes.GET_LAB_TEST_ALL)
+            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
+
             if (response.status == 200) {
-                this.labTests = response.data.collection;
+                this.labTests = response.data.object;
             }
 
             return this.labTests;

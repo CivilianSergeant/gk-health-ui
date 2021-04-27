@@ -23,6 +23,10 @@
           id="lab-tests"
           :fields="fields"
           :items="labTests"
+          :per-page="0"
+          :busy.sync="isBusy"
+          :current-page="currentPage"
+          @sort-changed="handleSort"
         >
           <template #cell(status)="row">
             <span
@@ -45,6 +49,12 @@
           </template>
         </b-table>
         <Loader :isBusy="isBusy" />
+        <b-pagination
+          v-model="currentPage"
+          :total-rows="rows"
+          :per-page="perPage"
+          aria-controls="prescription-table"
+        ></b-pagination>
       </CCardBody>
     </cCard>
   </div>
@@ -57,21 +67,27 @@ export default {
     return {
       title: "Lab Test Reports",
       fields: [
-        "invoiceNumber",
-        "serviceName",
-        "fullName",
-        "pid",
-        "createdAt",
-        "status",
+        {key: "invoiceNumber", sortable: true},
+        {key: "serviceName", sortable: true},
+        {key: "fullName", sortable: true},
+        {key: "pid", sortable: true},
+        {key: "createdAt", sortable: true},
+        {key: "status", sortable: true},
         "action",
       ],
-      perPage: 20,
+      perPage: 5,
       currentPage: 1,
       labTests: [],
       totalRows: 0,
+      totalPages:0,
+      sortBy:'',
+      sortDesc: false
     };
   },
   computed: {
+    rows(){
+      return this.totalRows;
+    },
     isBusy() {
       return this.$store.state.isBusy;
     },
@@ -88,12 +104,34 @@ export default {
   mounted() {
     this.fetchLabtests();
   },
+  watch: {
+    currentPage: {
+      handler: function () {
+        this.fetchLabtests();
+      },
+    },
+  },
   methods: {
+    handleSort(ctx){
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
+      this.currentPage = 1;
+      this.fetchLabtests();
+    },
     fetchLabtests() {
-      new LabTestService().getLabTests().then((result) => {
-        this.labTests = result;
+      this.$store.commit('start');
+      const q = {
+        page: (this.currentPage-1),
+        size: this.perPage,
+        sortBy: this.sortBy,
+        sortDesc: this.sortDesc
+      };
+      new LabTestService().getLabTests(q).then((result) => {
+        this.labTests = result.content;
+        this.totalRows = result.totalElements;
+        this.totalPages = result.totalPages;
         console.log(this.labTests);
-        this.totalRows = this.labTests.length;
+        this.$store.commit('finish')
       });
     },
     viewDetail(id) {
