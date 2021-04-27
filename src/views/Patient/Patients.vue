@@ -57,6 +57,7 @@
       <CCardBody>
         <b-table
           id="patient-table"
+          @sort-changed="handleSort"
           :fields="fields"
           :per-page="0"
           :busy.sync="isBusy"
@@ -134,12 +135,12 @@ export default {
       perPage: 20,
       currentPage: 1,
       fields: [
-        { key: "pid", label: "Patient ID" },
-        { key: "center", label: "Center Name" },
-        "fullName",
-        "guardianName",
-        "gender",
-        "mobileNumber",
+        { key: "pid", label: "Patient ID",sortable:true },
+        { key: "center", label: "Center Name",sortable:true },
+        {key:"fullName", sortable:true},
+        {key:"guardianName",sortable:true},
+        {key:"gender", sortable:true},
+        {key:"mobileNumber", sortable:true},
         "action",
       ],
       keywordTypes: [
@@ -147,8 +148,11 @@ export default {
         { value: "fullName", text: "Name" },
         { value: "pid", text: "PID" },
         { value: "mobileNumber", text: "Mobile No" },
+        { value: "guardianName", text: "Guardian Name" }
       ],
       search: { keywordType: null, keyword: "" },
+      sortBy:'',
+      sortDesc:false
     };
   },
 
@@ -164,6 +168,12 @@ export default {
     this.fetchPatients();
   },
   methods: {
+    handleSort(ctx){
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
+      this.currentPage = 1;
+      this.fetchPatients();
+    },
     onSearch() {
       this.fetchPatients();
     },
@@ -190,28 +200,20 @@ export default {
       this.$router.push("/patients/" + id);
     },
     fetchPatients() {
+      if(this.$store.state.isBusy){
+        return;
+      }
       this.$store.commit("start");
       const centerId = this.center ? this.center.id : "";
       const field = this.search.keywordType ? this.search.keywordType : "";
       const value = this.search.keyword ? this.search.keyword : "";
       new PatientService()
-        .getPatients(centerId, field, value, this.currentPage - 1, this.perPage)
+        .getPatients(centerId, field, value, this.currentPage - 1, this.perPage,this.sortBy,this.sortDesc)
         .then((result) => {
           this.$store.commit("finish");
           this.totalPages = result.totalPages;
           this.totalRows = result.totalElements;
           this.patients = result.content;
-        })
-        .catch((error) => {
-          this.$store.commit("finish");
-          if (error.toString().match("Error: Network Error") != null) {
-            this.$store.commit(
-              "setErrorMsg",
-              "Opps! Network Error, Please try again later"
-            );
-          } else if (error.toString.length > 0) {
-            this.$store.commit("setErrorMsg", error);
-          }
         });
     },
   },

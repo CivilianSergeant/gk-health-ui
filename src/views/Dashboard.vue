@@ -5,16 +5,10 @@
         <b-alert v-model="isError" variant="danger">{{message}}</b-alert>
         
         <CRow>
-            <CCol sm="6" lg="3">
-                <CWidgetDropdown color="primary" :header="stats.totalPatientUptoLastDay.toString()" text="Total Patient">
-                    <template #footer>
-                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
-                    </template>
-                </CWidgetDropdown>
-            </CCol>
+            
 
             <CCol sm="6" lg="3">
-                <CWidgetDropdown color="info" :header="stats.totalGbPatientUptoLastDay.toString()" text="Total GB">
+                <CWidgetDropdown color="primary" :header="stats.totalGbPatientUptoLastDay.toString()" text="Total GB">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
                     </template>
@@ -30,9 +24,50 @@
             </CCol>
 
             <CCol sm="6" lg="3">
+                <CWidgetDropdown color="info" :header="stats.totalPatientUptoLastDay.toString()" text="Total Patient">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+
+            <CCol sm="6" lg="3">
                 <CWidgetDropdown color="danger" :header="stats.totalAmountUptoLastDay.toString()" text="Total Amount Received">
                     <template #footer>
                         <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Up to last day</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+        </CRow>
+        <CRow>
+            
+
+            <CCol sm="6" lg="3">
+                <CWidgetDropdown color="primary" :header="stats.totalGbPatient.toString()" text="Total GB">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Today</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+
+            <CCol sm="6" lg="3">
+                <CWidgetDropdown color="warning" :header="stats.totalNonGbPatient.toString()" text="Total Non-GB">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Today</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+            <CCol sm="6" lg="3">
+                <CWidgetDropdown color="info" :header="stats.totalPatient.toString()" text="Total Patient">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Today</small></div>
+                    </template>
+                </CWidgetDropdown>
+            </CCol>
+            <CCol sm="6" lg="3">
+                <CWidgetDropdown color="danger" :header="stats.totalAmount.toString()" text="Total Amount Received">
+                    <template #footer>
+                        <div class="card-body pb-3 pt-3 d-flex justify-content-between"><small>Today</small></div>
                     </template>
                 </CWidgetDropdown>
             </CCol>
@@ -168,7 +203,7 @@ import { CChartBar } from '@coreui/vue-chartjs'
             const _center = (center)? center : this.$store.getters.center;
             console.log(center);
             const toDate = new Date();
-            toDate.setDate(toDate.getDate() - 7);
+            toDate.setDate(toDate.getDate() - 1);
 
             const payload = {
                 id:_center.id,

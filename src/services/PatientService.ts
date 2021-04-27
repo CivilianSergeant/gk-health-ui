@@ -8,10 +8,10 @@ export class PatientService{
     private response: any=null;
 
     async getPatients(clientId: number, field: string, value: string, 
-            page: number,size: number): Promise<any>{
+            page: number,size: number, sortBy: string, sortDesc: boolean): Promise<any>{
         const auth = store.getters.auth;
         try{
-            const urlParams = `?centerId=${clientId}${(field)?'&field='+field:''}&value=${value}&page=${page}&size=${size}`;
+            const urlParams = `?centerId=${clientId}${(field)?'&field='+field:''}&value=${value}&page=${page}&size=${size}&sortBy=${sortBy}&sortDesc=${sortDesc}`;
             const response = await axios.get(GetApiRoute(ApiRoutes.ALL_PATIENTS)+urlParams,
             setAuthorizationToken(auth.token));
             if(response.status == 200){
