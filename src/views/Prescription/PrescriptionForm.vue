@@ -1,51 +1,58 @@
 <template>
   <div>
-    <ContentBar :PageTitle="title" />
+    <!-- <ContentBar :PageTitle="title" /> -->
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <Loader :isBusy="isBusy" />
     <b-form @submit.prevent="onSearch">
-      <div class="row">
-        <div class="col-md-3">
-          <b-form-group
-            id="input-group-patient-id"
-            label="Invoice ID:"
-            label-for="invoice-id"
-            description="Search By Invoice ID"
-          >
-            <!-- <b-form-input id="relation"
+      <cCard>
+        <cCardBody>
+          <div class="row">
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-patient-id"
+                label="Invoice ID:"
+                label-for="invoice-id"
+                description="Search By Invoice ID"
+              >
+                <!-- <b-form-input id="relation"
                   placeholder="Invoice ID"
                   v-model="pid"
             ></b-form-input>-->
 
-            <Autocomplete
-              :ajax="true"
-              @choose-item="handleInvoiceNumberAutocomplete"
-              :items="invoices"
-              label="invoiceNumber"
-              rowId="id"
-              @ajax-call="handleInvoiceNumberAjaxCall"
-            />
-          </b-form-group>
-        </div>
-        <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
-          <!-- <b-button type="submit" variant="info">Search</b-button>  -->
-          <b-button @click="onClearSearch" class="ml-1" variant="warning"
-            >Clear</b-button
-          >
-        </div>
-        <div class="col-md-6">
-          <div v-if="invoice != null">
-            Invoice Number: {{ invoice.invoiceNumber }}
+                <Autocomplete
+                  :ajax="true"
+                  @choose-item="handleInvoiceNumberAutocomplete"
+                  :items="invoices"
+                  label="invoiceNumber"
+                  rowId="id"
+                  @ajax-call="handleInvoiceNumberAjaxCall"
+                />
+              </b-form-group>
+            </div>
+            <div
+              class="col-md-3 mt-4 px-0"
+              style="margin-top: 1.8rem !important"
+            >
+              <!-- <b-button type="submit" variant="info">Search</b-button>  -->
+              <b-button @click="onClearSearch" class="ml-1" variant="warning"
+                >Clear</b-button
+              >
+            </div>
+            <div class="col-md-6">
+              <div v-if="invoice != null">
+                Invoice Number: {{ invoice.invoiceNumber }}
+              </div>
+              <div v-if="invoice">
+                <a v-for="(d, i) in invoice.patientServiceDetails" :key="i"
+                  >{{ d.service.name }} <span>Status: {{ isPaid(d) }}</span
+                  >,
+                </a>
+              </div>
+            </div>
           </div>
-          <div v-if="invoice">
-            <a v-for="(d, i) in invoice.patientServiceDetails" :key="i"
-              >{{ d.service.name }} <span>Status: {{ isPaid(d) }}</span
-              >,
-            </a>
-          </div>
-        </div>
-      </div>
+        </cCardBody>
+      </cCard>
       <PatientInfo
         :invoice="invoice"
         :patient="patient"
