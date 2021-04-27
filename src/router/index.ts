@@ -5,7 +5,7 @@ import MonitorDashboard from '../views/Reports/MonitorDashboard.vue'
 import HealthCenter from '../views/HealthCenter.vue'
 import Employees from '../views/Employees.vue'
 
-
+import InvoiceDetail from '../views/ServiceRecords/InvoiceDetail.vue'
 import ServiceRecords from '../views/ServiceRecords/ServiceRecords.vue'
 import RolePermission from '@/views/RolePermission.vue'
 import AccessDenied from '../views/AccessDenied.vue'
@@ -21,19 +21,24 @@ import ServiceCategoryRoutes from './service-category-routes';
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-  
+
   {
-    name:'Health Centers',
+    name: 'Health Centers',
     path: '/health-centers',
     component: HealthCenter
   },
   {
-    name:'Employees',
+    name: 'Employees',
     path: '/employees',
     component: Employees
   },
   {
-    name:'Service Records',
+    name: 'Invoice Details',
+    path: '/invoice/by-id/:id',
+    component: InvoiceDetail
+  },
+  {
+    name: 'Service Records',
     path: '/service-records',
     component: ServiceRecords
   },
@@ -49,9 +54,9 @@ const routes: Array<RouteConfig> = [
 
   ...LabTestRoutes,
   {
-    path:'/role-permissions',
-    name:'Role and Permissions',
-    component:RolePermission
+    path: '/role-permissions',
+    name: 'Role and Permissions',
+    component: RolePermission
   },
   {
     path: '/',
@@ -65,7 +70,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     name: 'Access Denied',
-    path:'/access-denied',
+    path: '/access-denied',
     component: AccessDenied
   },
   {

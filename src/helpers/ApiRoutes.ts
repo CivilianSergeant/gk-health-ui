@@ -1,21 +1,21 @@
 import store from "@/store";
 
-export enum ApiRoutes{
+export enum ApiRoutes {
     DOMAIN = 'http://localhost:8081',
     BASE_PATH = 'http://localhost:8282/api/',
     AUTH_BASEPATH = 'http://103.26.136.30:8080',
     AUTH_PATH = 'http://103.26.136.30:8080/auth',
     REALM_PATH = 'http://103.26.136.30:8080/auth/realms/GK_HEALTH',
-    LOGOUT_PATH='http://103.26.136.30:8080/auth/realms/GK_HEALTH/protocol/openid-connect/logout',
-    USER_INFO_PATH='http://103.26.136.30:8080/auth/realms/GK_HEALTH/protocol/openid-connect/userinfo',
-    USER_ACCOUNT_PATH='http://103.26.136.30:8080/auth/realms/GK_HEALTH/account',
-    REFRESH_TOKEN='http://103.26.136.30:8080/auth/realms/GK_HEALTH/protocol/openid-connect/token',
+    LOGOUT_PATH = 'http://103.26.136.30:8080/auth/realms/GK_HEALTH/protocol/openid-connect/logout',
+    USER_INFO_PATH = 'http://103.26.136.30:8080/auth/realms/GK_HEALTH/protocol/openid-connect/userinfo',
+    USER_ACCOUNT_PATH = 'http://103.26.136.30:8080/auth/realms/GK_HEALTH/account',
+    REFRESH_TOKEN = 'http://103.26.136.30:8080/auth/realms/GK_HEALTH/protocol/openid-connect/token',
     VERSION = 'v1',
 
     // Centers
     ALL_CENTERS = '/health-center',
     CENTER_LIST = '/health-center/list',
-    ADD_CENTER  = '/health-center/add',
+    ADD_CENTER = '/health-center/add',
     GET_CENTERS_BY_KEYWORD = '/health-center/by-keyword/:id',
     CENTER_BY_API_ID = '/health-center/api-id/:id',
     CENTER_BY_OFFICE_TYPE = '/health-center/by-office-type/:id',
@@ -31,7 +31,7 @@ export enum ApiRoutes{
     GET_SERVICIE_CATEGORY_BY_ID = '/service-category/:id',
 
 
-  //Service  Routes
+    //Service  Routes
     ALL_SERVICES = '/service',
     ADD_SERVICE = '/service/add',
     UPDATE_SERVICE = '/service/update',
@@ -41,6 +41,7 @@ export enum ApiRoutes{
     SERVICE_ATTRIBUTE_BY_ID = '/service-attribute/:id',
 
     //Service Records  Routes
+    GET_INVOICE_RECORD_BY_ID = '/invoice/by-id/:id',
     ALL_SERVICE_RECORD = '/report/service-records',
     ALL_SERVICE_RECORD_WITH_DATE = '/report/service-records/:fromDate/:toDate',
 
@@ -88,79 +89,79 @@ export enum ApiRoutes{
     GET_ROLES = '/roles',
     ADD_ROLE_PERMISSION = '/roles/permissions',
 
-    GET_STATS='/report/stats',
-    GET_MONTH_WISE_RECEIVED_STATS='/report/month-wise-received'
+    GET_STATS = '/report/stats',
+    GET_MONTH_WISE_RECEIVED_STATS = '/report/month-wise-received'
 }
 
-export function GetApiRoute(route: string,value=""){
-    
+export function GetApiRoute(route: string, value = "") {
+
     let _route = route;
-    if(_route == ApiRoutes.GET_SERVICE_BY_ID){
-        if(value !=null){
-            _route = route.replace(":id",value);
+    if (_route == ApiRoutes.GET_SERVICE_BY_ID) {
+        if (value != null) {
+            _route = route.replace(":id", value);
         }
     }
 
-    if(_route == ApiRoutes.GET_PATIENT_BY_ID){
-        if(value !=null){
-            _route = route.replace(":id",value);
+    if (_route == ApiRoutes.GET_PATIENT_BY_ID) {
+        if (value != null) {
+            _route = route.replace(":id", value);
         }
     }
 
-    
-    if(_route == ApiRoutes.GET_PATIENT_BY_PID){
-        
-        if(value !=null){
-            _route = route.replace(":id",value);
+
+    if (_route == ApiRoutes.GET_PATIENT_BY_PID) {
+
+        if (value != null) {
+            _route = route.replace(":id", value);
             console.log(_route)
         }
     }
-    
-    if(_route.match(':id')){
-        if(value != null){
-            _route = route.replace(":id",value);
+
+    if (_route.match(':id')) {
+        if (value != null) {
+            _route = route.replace(":id", value);
         }
     }
-    console.log(ApiRoutes.BASE_PATH+ApiRoutes.VERSION+_route);
-    return ApiRoutes.BASE_PATH+ApiRoutes.VERSION+_route;
+    console.log(ApiRoutes.BASE_PATH + ApiRoutes.VERSION + _route);
+    return ApiRoutes.BASE_PATH + ApiRoutes.VERSION + _route;
 }
 
-export function setAuthorizationToken(token: string){
+export function setAuthorizationToken(token: string) {
     return {
         headers: {
-            'Authorization':`Bearer ${token}`
+            'Authorization': `Bearer ${token}`
         }
     };
 
 }
 
-export function handleCatch(){
-    return function(error: any){
+export function handleCatch() {
+    return function (error: any) {
         console.log(error.toString());
         store.commit('finish');
-        if(error.toString().includes('Network Error')){
-            store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-        
-        }else if(error.toString().length>0){
-            if(error.toString().includes("401")){
-                store.commit('setErrorMsg',"Sorry! Request not Authorized");
+        if (error.toString().includes('Network Error')) {
+            store.commit('setErrorMsg', 'Opps! Network Error, Please try again later');
+
+        } else if (error.toString().length > 0) {
+            if (error.toString().includes("401")) {
+                store.commit('setErrorMsg', "Sorry! Request not Authorized");
             }
-        
+
         }
     }
 }
 
-export function handleException(error: any){
-    
+export function handleException(error: any) {
+
     store.commit('finish');
-    if(error.toString().includes('Network Error')){
-        store.commit('setErrorMsg','Opps! Network Error, Please try again later');
-    
-    }else if(error.toString().length>0){
-        if(error.toString().includes("401")){
-            store.commit('setErrorMsg',"Sorry! Request not Authorized");
+    if (error.toString().includes('Network Error')) {
+        store.commit('setErrorMsg', 'Opps! Network Error, Please try again later');
+
+    } else if (error.toString().length > 0) {
+        if (error.toString().includes("401")) {
+            store.commit('setErrorMsg', "Sorry! Request not Authorized");
         }
-    
+
     }
-    
+
 }

@@ -60,7 +60,16 @@
                 <td>{{ ps.address }}</td>
                 <td>{{ ps.receivableAmount }}</td>
                 <td>{{ ps.paid }}</td>
-                <td><b-button type="button">Detail</b-button></td>
+                <!--  -->
+                <td>
+                  <b-button
+                    size="sm"
+                    variant="info"
+                    type="button"
+                    @click="viewDetail(ps.invoiceId)"
+                    >Detail</b-button
+                  >
+                </td>
               </tr>
             </tbody>
             <tfoot>
@@ -184,6 +193,9 @@ export default {
     },
     onSearch() {
       this.fetchServiceRecords();
+    },
+    viewDetail(id) {
+      this.$router.push("/invoice/by-id/" + id);
     },
   },
 };

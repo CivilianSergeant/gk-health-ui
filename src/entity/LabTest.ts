@@ -1,3 +1,3 @@
-export class LabTest{
-    
+export class LabTest {
+
 }
