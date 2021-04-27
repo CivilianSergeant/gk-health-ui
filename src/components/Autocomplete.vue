@@ -6,7 +6,7 @@
             @keydown.40="moveDown" @keydown.38="moveUp" v-model="inputValue" type="text"></textarea>
 		<div v-else class="input-group">
             <input  :id="id" class="form-control autocomplete-input input-sm" 
-            :disabled="(!ajax && items.length==0) || (disabled!=undefined && disabled)" :placeholder="placeholder" @blur="hideResult" 
+            :disabled="(!ajax && items!=undefined && items.length==0) || (disabled!=undefined && disabled)" :placeholder="placeholder" @blur="hideResult" 
             @focus="displayResult"  @keydown.13="chooseItem" @keydown.tab="chooseItem" 
             @keydown.40="moveDown" @keydown.38="moveUp" @input="typing" v-model="inputValue" 
             type="text" :required="required" autocomplete="off"  />
