@@ -200,13 +200,13 @@ import {
         });
       },
       handleInvoiceNumberAjaxCall(searchText) {
-        if (searchText.length >= 2) {
+        // if (searchText.length >= 2) {
           new PatientInvoiceService()
             .getInvoiceNumbers(searchText)
             .then(result => {
               this.invoices = result.collection;
             });
-        }
+        // }
       },
       handleMedicineAutocomplete(medicine,autocomplete,index,rowIndex){
         this.recommendedMedicines[rowIndex].medicine = {id:medicine.id,name:medicine.name};

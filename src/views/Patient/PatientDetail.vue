@@ -1,10 +1,9 @@
 <template>
   <div>
-    <ContentBar :PageTitle="title" />
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
 
-    <h5>
+    <h5 class="pb-2">
       Patient Info #{{ form.pid }}
       <router-link
         to="/patients"
@@ -27,7 +26,7 @@
                 label="Center:"
                 label-for="centers"
               >
-                <strong>{{
+                <strong class="text-dark">{{
                   form.center != null && form.center.name
                     ? form.center.name
                     : "N/A"
@@ -42,7 +41,9 @@
                 label="Full Name:"
                 label-for="input-1"
               >
-                <strong>{{ form.fullName ? form.fullName : "N/A" }}</strong>
+                <strong class="text-dark">{{
+                  form.fullName ? form.fullName : "N/A"
+                }}</strong>
               </b-form-group>
             </div>
             <div class="col-md-3">
@@ -51,7 +52,7 @@
                 label="Guardian Name:"
                 label-for="input-2"
               >
-                <strong>{{
+                <strong class="text-dark">{{
                   form.guardianName ? form.guardianName : "N/A"
                 }}</strong>
               </b-form-group>
@@ -62,7 +63,9 @@
                 label="Mother Name:"
                 label-for="input-3"
               >
-                <strong>{{ form.motherName ? form.motherName : "N/A" }}</strong>
+                <strong class="text-dark">{{
+                  form.motherName ? form.motherName : "N/A"
+                }}</strong>
               </b-form-group>
             </div>
           </div>
@@ -75,7 +78,9 @@
                 label-for="gender"
                 description="Patient's Gender"
               >
-                <strong>{{ form.gender ? form.gender : "N/A" }}</strong>
+                <strong class="text-dark">{{
+                  form.gender ? form.gender : "N/A"
+                }}</strong>
               </b-form-group>
             </div>
             <div class="col-md-3">
@@ -84,7 +89,7 @@
                 label="Marital Status:"
                 label-for="marital-status"
               >
-                <strong>{{
+                <strong class="text-dark">{{
                   form.maritalStatus ? form.maritalStatus : "N/A"
                 }}</strong>
               </b-form-group>
@@ -95,7 +100,7 @@
                 label="Age:"
                 label-for="patient-age"
               >
-                <strong class="text-secondary">{{
+                <strong class="text-dark">{{
                   form.age ? form.age : "N/A"
                 }}</strong>
               </b-form-group>
@@ -109,7 +114,7 @@
                 label="Village"
                 label-for="vilage"
               >
-                <strong class="text-secondary">{{
+                <strong class="text-dark">{{
                   form.village ? form.village : "N/A"
                 }}</strong>
               </b-form-group>
@@ -120,7 +125,7 @@
                 label="Mobile Number:"
                 label-for="mobileNumber"
               >
-                <strong class="text-secondary">{{
+                <strong class="text-dark">{{
                   form.mobileNumber ? form.mobileNumber : "N/A"
                 }}</strong>
               </b-form-group>
@@ -133,7 +138,7 @@
                 label="Blood Group"
                 label-for="bloodGroup"
               >
-                <strong class="text-secondary">{{
+                <strong class="text-dark">{{
                   form.detail ? form.detail.bloodGroup : "N/A"
                 }}</strong>
               </b-form-group>
@@ -144,7 +149,7 @@
                 label="Nationality:"
                 label-for="nationality"
               >
-                <strong class="text-secondary">{{
+                <strong class="text-dark">{{
                   form.detail ? form.detail.nationality : "N/A"
                 }}</strong>
               </b-form-group>
@@ -155,7 +160,7 @@
                 label="National ID:"
                 label-for="nationalId"
               >
-                <strong class="text-secondary">{{
+                <strong class="text-dark">{{
                   form.detail ? form.detail.nationalId : "N/A"
                 }}</strong>
               </b-form-group>
@@ -166,7 +171,7 @@
                 label="Occupation:"
                 label-for="occupation"
               >
-                <strong class="text-secondary">{{
+                <strong class="text-dark">{{
                   form.detail ? form.detail.occupation : "N/A"
                 }}</strong>
               </b-form-group>

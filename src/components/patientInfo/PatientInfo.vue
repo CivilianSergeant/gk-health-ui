@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-12 text-secondary font-weight-bold mb-2">
+    <div class="col-md-12 font-weight-bold mb-2">
       <b-card v-if="patient != null">
         <div class="row">
           <div class="col-md-10">

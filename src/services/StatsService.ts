@@ -22,4 +22,24 @@ export class StatsService{
         
     }
 
+    async getMonthWiseReceivedStats(payload: Record<string,any>): Promise<any>{
+
+        try{
+
+            const auth = store.getters.auth;
+            const response = await axios.get(GetApiRoute(ApiRoutes.GET_MONTH_WISE_RECEIVED_STATS),
+            setAuthorizationToken(auth.token));
+
+            if(response.status == 200){
+                return response.data.object;
+            }
+
+        }catch(error){
+            handleException(error);
+        }
+        
+    }
+
+
+
 }
