@@ -17,6 +17,7 @@
         <b-table
           id="prescription-table"
           :fields="fields"
+          @sort-changed="handleSort"
           :per-page="0"
           :busy.sync="isBusy"
           :current-page="currentPage"
@@ -81,12 +82,14 @@ export default {
       prescriptions: [],
       totalPages: 0,
       totalRows: 0,
-      perPage: 20,
+      perPage: 10,
       currentPage: 1,
+      sortBy:'',
+      sortDesc:false,
       fields: [
-        { key: "pNumber", label: "Prescription No" },
-        { key: "fullName", label: "Patient Name" },
-        { key: "createdAt", label: "Date" },
+        { key: "pNumber", label: "Prescription No",sortable:true },
+        { key: "fullName", label: "Patient Name", sortable:true },
+        { key: "createdAt", label: "Date", sortable: true },
         "action",
       ],
     };
@@ -102,12 +105,26 @@ export default {
     },
   },
   methods: {
+    handleSort(ctx){
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
+      this.currentPage = 1;
+      this.fetchPrescriptions();
+    },
     fetchPrescriptions() {
       this.$store.commit("start");
+      const q = {
+        page: (this.currentPage-1),
+        size: this.perPage,
+        sortBy: this.sortBy,
+        sortDesc: this.sortDesc
+      };
       new PrescriptionService()
-        .getPrescriptions(this.currentPage - 1, this.perPage)
+        .getPrescriptions(q)
         .then((result) => {
-          this.prescriptions = result;
+          this.prescriptions = result.content;
+          this.totalPages = result.totalPages;
+          this.totalRows = result.totalElements;
           this.$store.commit("finish");
         });
     },

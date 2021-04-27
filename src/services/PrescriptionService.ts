@@ -22,13 +22,14 @@ export class PrescriptionService{
         }
     }
 
-    async getPrescriptions(page: number,size: number): Promise<any> {
+    async getPrescriptions(q: any): Promise<any> {
         const auth = store.getters.auth;
         try{
-            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_PRESCRIPTION)+'?page='+
-            page+'&size='+size,setAuthorizationToken(auth.token));
+            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_PRESCRIPTION)
+            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+            setAuthorizationToken(auth.token));
             if(response.status == 200){
-                this.prescriptions = response.data.collection;
+                this.prescriptions = response.data.object;
             }
             return this.prescriptions;
         }catch(error){
