@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 
 @Component
 export default class Autocomplete extends Vue {
@@ -87,6 +87,12 @@ export default class Autocomplete extends Vue {
             }
             return "";
         }
+
+		@Watch('items')
+		onPropertyChanged(value: any, oldValue: any){
+			this.showResult = true;
+			this.focus();
+		}
         
         typing(){
 			//console.log(this.inputValue.length);
@@ -100,7 +106,7 @@ export default class Autocomplete extends Vue {
 			}
 
 			if(this.ajax==true){
-				this.$emit('ajax-call',this.inputValue)
+				this.$emit('ajax-call',this.inputValue,this)
 			}
 			
 		}
@@ -156,7 +162,7 @@ export default class Autocomplete extends Vue {
 		}
 		focus() {
 			this.searchMatch = [];
-			if (this.showResult == true) {
+			if (this.showResult == true && this.listToSearch != undefined) {
 				this.searchMatch = this.listToSearch.filter(
 					(el: any) => {
 						const index = (this.label)? this.label : 'name';
