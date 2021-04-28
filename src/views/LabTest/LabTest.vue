@@ -14,6 +14,56 @@
         >
       </CCardHeader>
       <CCardBody>
+        <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
+          <div class="col-md-3">
+            <b-form-group
+              id="input-group-patient-id"
+              label="Invoice ID:"
+              label-for="invoice-id"
+              description="Search By Invoice ID"
+            >
+              <b-form-input
+                id="invoice-id"
+                placeholder="Invoice ID"
+                v-model="invoiceId"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-md-3">
+            <b-form-group
+              id="input-group-patient-id"
+              label="Fullname:"
+              label-for="fullanme"
+              description="Search By Fullname"
+            >
+              <b-form-input
+                id="fullname"
+                placeholder="Fullname"
+                v-model="fullName"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-md-3">
+            <b-form-group
+              id="input-group-patient-id"
+              label="Patient ID:"
+              label-for="patient-id"
+              description="Search By Patient ID"
+            >
+              <b-form-input
+                id="patient-id"
+                placeholder="Patient ID"
+                v-model="pid"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+            <b-button type="submit" variant="info">Search</b-button>
+            <b-button type="reset" class="ml-1" variant="warning"
+              >Clear</b-button
+            >
+          </div>
+        </b-form>
         <b-table
           striped
           hover
@@ -61,31 +111,35 @@
 </template>
 
 <script>
-import { LabTestService } from "@/services";
+import { LabTestService, PatientInvoiceService } from "@/services";
 export default {
   data() {
     return {
       title: "Lab Test Reports",
       fields: [
-        {key: "invoiceNumber", sortable: true},
-        {key: "serviceName", sortable: true},
-        {key: "fullName", sortable: true},
-        {key: "pid", sortable: true},
-        {key: "createdAt", sortable: true},
-        {key: "status", sortable: true},
+        { key: "invoiceNumber", sortable: true },
+        { key: "serviceName", sortable: true },
+        { key: "fullName", sortable: true },
+        { key: "pid", sortable: true },
+        { key: "createdAt", sortable: true },
+        { key: "status", sortable: true },
         "action",
       ],
+      invoiceId:'',
+      fullName:'',
+      pid:'',
       perPage: 5,
       currentPage: 1,
       labTests: [],
       totalRows: 0,
-      totalPages:0,
-      sortBy:'',
-      sortDesc: false
+      totalPages: 0,
+      sortBy: "",
+      sortDesc: false,
+      invoiceNumbers: [],
     };
   },
   computed: {
-    rows(){
+    rows() {
       return this.totalRows;
     },
     isBusy() {
@@ -112,26 +166,54 @@ export default {
     },
   },
   methods: {
-    handleSort(ctx){
+    handleSort(ctx) {
       this.sortBy = ctx.sortBy;
       this.sortDesc = ctx.sortDesc;
       this.currentPage = 1;
       this.fetchLabtests();
     },
+    // handleInvoiceNumberAutocomplete(invoice, autocomplete) {
+    //   // (new PatientInvoiceService()).getInvoiceById(invoice.id).then(result => {
+    //   //   this.invoice = result;
+    //   // }
+    // },
+    // handleInvoiceNumberAjaxCall(searchText) {
+    //   // if (searchText.length >= 2) {
+    //   new PatientInvoiceService()
+    //     .getInvoiceNumbers(searchText)
+    //     .then((result) => {
+    //       this.invoiceNumbers = result.collection;
+    //     });
+    //   // }
+    // },
+
+    handleSearch(){
+      this.fetchLabtests();
+    },
+    onClearSearch(){
+      this.invoiceId='';
+      this.fullName='';
+      this.pid='';
+      this.fetchLabtests();
+    },
     fetchLabtests() {
-      this.$store.commit('start');
+      this.$store.commit("start");
       const q = {
-        page: (this.currentPage-1),
+        invoiceNumber: this.invoiceId,
+        fullName: this.fullName,
+        pid: this.pid,
+        page: this.currentPage - 1,
         size: this.perPage,
         sortBy: this.sortBy,
-        sortDesc: this.sortDesc
+        sortDesc: this.sortDesc,
       };
+      console.log(q)
       new LabTestService().getLabTests(q).then((result) => {
         this.labTests = result.content;
         this.totalRows = result.totalElements;
         this.totalPages = result.totalPages;
         console.log(this.labTests);
-        this.$store.commit('finish')
+        this.$store.commit("finish");
       });
     },
     viewDetail(id) {

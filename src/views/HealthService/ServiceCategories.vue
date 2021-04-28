@@ -12,7 +12,30 @@
         >
       </CCardHeader>
       <CCardBody>
-    
+              <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
+          
+          <div class="col-md-3">
+            <b-form-group
+              id="input-group-patient-id"
+              label="Name:"
+              label-for="name"
+              description="Search By Category name"
+            >
+              <b-form-input
+                id="name"
+                placeholder="Name"
+                v-model="name"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          
+          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+            <b-button type="submit" variant="info">Search</b-button>
+            <b-button type="reset" class="ml-1" variant="warning"
+              >Clear</b-button
+            >
+          </div>
+        </b-form>
     <b-table v-if="!showForm" id="category-table" :fields="fields" :per-page="0" :busy.sync="isBusy"
         :current-page="currentPage" :items="categories" 
         @sort-changed="handleSort"
@@ -85,7 +108,8 @@ export default {
       totalRows:0,
       totalPages:0,
       sortBy:"",
-      sortDesc:false
+      sortDesc:false,
+      name:''
     };
   },
   watch: {
@@ -123,8 +147,16 @@ export default {
       this.$store.commit("clearMessage");
       // this.showForm = !this.showForm;
     },
+    handleSearch(){
+      this.fetchServiceCategories();
+    },
+    onClearSearch(){
+      this.name = '';
+      this.fetchServiceCategories();
+    },
     fetchServiceCategories() {
       const searchablePagable = {
+        categoryName: this.name,
         sortBy: this.sortBy,
         sortDesc: this.sortDesc,
         page: (this.currentPage-1),

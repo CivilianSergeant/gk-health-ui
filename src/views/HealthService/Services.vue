@@ -15,46 +15,45 @@
         
       </CCardHeader>
       <CCardBody>
-        <b-form-group
-          label="Filter"
-          label-for="filter-input"
-          label-cols-sm="1"
-          label-align-sm="right"
-          label-size="sm"
-          class="my-2"
-        >
-          <b-input-group size="sm" class="col-md-3">
-            <b-form-input
-              id="filter-input"
-              v-model="filter"
-              type="search"
-              placeholder="Type to Search"
-            ></b-form-input>
-
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''"
-                >Clear</b-button
-              >
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
+        <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
+          
+          <div class="col-md-3">
+            <b-form-group
+              id="input-group-patient-id"
+              label="Name:"
+              label-for="name"
+              description="Search By Service name"
+            >
+              <b-form-input
+                id="name"
+                placeholder="Name"
+                v-model="name"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          
+          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+            <b-button type="submit" variant="info">Search</b-button>
+            <b-button type="reset" class="ml-1" variant="warning"
+              >Clear</b-button
+            >
+          </div>
+        </b-form>
       </CCardBody>
     </CCard>
     <CCard>
       <CCardBody>
     <b-table id="service-table" v-if="!showForm" :fields="fields" 
-        @filtered="onFiltered"
+
         @sort-changed="handleSort"
         :per-page="0" 
         :busy.sync="isBusy" 
         :bordered="true" 
         :striped="true" 
         :small="true"
-        :filter="filter"
         :filter-included-fields="filterOn"
         :current-page="currentPage" 
         :items="services">
-
         <template #cell(active)="row">
           <span v-if="row.item.active" class="badge badge-success">Active </span>
           <span v-if="!row.item.active" class="badge badge-danger">Inactive </span>
@@ -138,7 +137,8 @@ export default {
         totalRows:0,
         totalPages:0,
         sortBy:"",
-        sortDesc:false
+        sortDesc:false,
+        name:''
       }
   },
   watch: {
@@ -183,9 +183,17 @@ export default {
       this.currentPage = 1;
       this.fetchServices();
     },
+    handleSearch(){
+      this.fetchServices();
+    },
+    onClearSearch(){
+      this.name = '';
+      this.fetchServices();
+    },
     fetchServices(){
       this.$store.commit('start');
       const searchablePagable = {
+        serviceName:this.name,
         sortBy: this.sortBy,
         sortDesc: this.sortDesc,
         page: (this.currentPage -1 ),

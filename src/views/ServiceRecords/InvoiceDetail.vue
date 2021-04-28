@@ -16,7 +16,7 @@
       <section class="container" slot="pdf-content">
         <div class="row">
           <div class="col-md-6">
-            <strong> Patient Name:</strong> {{ resultData.patient.fullName }}
+            <strong v-if="resultData.patient"> Patient Name:</strong> {{ resultData.patient.fullName }}
             {{ "(" + resultData.patient.pid + ")" }}
           </div>
           <div class="col-md-3">
@@ -41,9 +41,9 @@
               <th>Service Category</th>
               <th>Report Generated</th>
               <th>Date</th>
-              <th>Service Amt</th>
+              <th>Service Amount</th>
               <th>Discount</th>
-              <th>Payable Amt</th>
+              <th>Payable Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -74,7 +74,7 @@
         </h5>
         <a
           @click="printLabReport()"
-          class="btn btn-sm btn-primary cursor-pointer"
+          class="btn btn-sm btn-primary cursor-pointer text-white"
           ><b-icon-printer></b-icon-printer
         ></a>
       </div>
@@ -107,9 +107,9 @@
               <th>Service Category</th>
               <th>Report Generated</th>
               <th>Date</th>
-              <th>Service Amt</th>
+              <th>Service Amount</th>
               <th>Discount</th>
-              <th>Payable Amt</th>
+              <th>Payable Amountt</th>
             </tr>
           </thead>
           <tbody>
@@ -146,6 +146,7 @@ export default {
       id: 0,
       service: null,
       resultData: {
+        patient:{},
         service: { name: null },
         id: null,
       },

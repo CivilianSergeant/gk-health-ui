@@ -5,7 +5,7 @@
     <cCard>
       <cCardBody>
         <b-form @submit.prevent="onSearch">
-          <div class="row py-2 mr-3 d-flex justify-content-end">
+          <div class="row py-2 mx-2 d-flex justify-content-start">
             <div class="mr-2">
               <b-form-datepicker
                 id="datepicker-placeholder"
@@ -34,6 +34,7 @@
     <cCard>
       <cCardHeader> Service Records </cCardHeader>
       <cCardBody>
+        <div class="text-center" v-if="serviceRecords.length==0">To Search Records Select Date Range</div>
         <div v-for="sr in serviceRecords" :key="sr.center.id">
           <h6>{{ sr.center.name }}</h6>
           <table class="table table-bordered">

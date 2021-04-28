@@ -29,7 +29,7 @@ export class CategoryService{
         const auth = store.getters.auth;
         try{
             const response = await axios.get(GetApiRoute(ApiRoutes.ALL_CATEGORIES)
-            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+            +`?categoryName=${q.categoryName}&page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
 
             if(response.status == 200){
