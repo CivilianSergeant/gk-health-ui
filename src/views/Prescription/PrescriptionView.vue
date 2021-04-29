@@ -14,6 +14,7 @@
       ref="html2Pdf"
     >
       <section slot="pdf-content">
+        <ReportHeader></ReportHeader>
         <h5 class="text-center mt-3">Center: {{ resultData.center.name }}</h5>
         <div class="row">
           <div class="col-md-5"></div>
@@ -412,7 +413,7 @@
 import { PrescriptionService, FeedingRuleService } from "@/services";
 import VueHtml2pdf from "vue-html2pdf";
 import MemberRegStatus from "@/components/MemberRegStatus.vue";
-
+import ReportHeader from "@/components/global/ReportHeader";
 export default {
   data() {
     return {
@@ -514,6 +515,7 @@ export default {
   components: {
     VueHtml2pdf,
     MemberRegStatus,
+    ReportHeader,
   },
 };
 </script>
