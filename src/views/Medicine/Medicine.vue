@@ -5,36 +5,30 @@
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <cCard>
       <CCardBody>
-        <div class="row">
-          <div class="col-md-5">
+          <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
+          
+          <div class="col-md-3">
             <b-form-group
-              label="Filter"
-              label-for="filter-input"
-              label-cols-sm="2"
-              label-align-sm="right"
-              label-size="sm"
-              class="my-2"
+              id="input-group-patient-id"
+              label="Name:"
+              label-for="name"
+              description="Search By Medicine name"
             >
-              <b-input-group>
-                <b-form-input
-                  id="filter-input"
-                  v-model="filter"
-                  type="search"
-                  placeholder="Type to Search"
-                ></b-form-input>
-
-                <b-input-group-append>
-                  <b-button :disabled="!filter" @click="filter = ''"
-                    >Clear</b-button
-                  >
-                </b-input-group-append>
-              </b-input-group>
+              <b-form-input
+                id="name"
+                placeholder="Name"
+                v-model="name"
+              ></b-form-input>
             </b-form-group>
           </div>
-          <div class="col-md-7 text-right">
-            <!-- All Medicines -->
+          
+          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+            <b-button type="submit" variant="info">Search</b-button>
+            <b-button type="reset" class="ml-1" variant="warning"
+              >Clear</b-button
+            >
           </div>
-        </div>
+        </b-form>
       </CCardBody>
     </cCard>
 
@@ -140,7 +134,8 @@ export default {
       totalPages:0,
       totalRows: 0,
       sortBy:"",
-      sortDesc:false
+      sortDesc:false,
+      name:''
     };
   },
   watch: {
@@ -154,6 +149,13 @@ export default {
     this.fetcheMedicines();
   },
   methods: {
+    handleSearch(){
+      this.fetcheMedicines();
+    },
+    onClearSearch(){
+      this.name = '';
+      this.fetcheMedicines();
+    },
     handleSort(ctx){
       console.log(ctx)
       this.sortBy = ctx.sortBy;
@@ -164,6 +166,7 @@ export default {
     fetcheMedicines() {
       this.$store.commit("start");
       const searchablePagable = {
+        medicineName:this.name,
         sortBy: this.sortBy,
         sortDesc: this.sortDesc,
         page: (this.currentPage-1),

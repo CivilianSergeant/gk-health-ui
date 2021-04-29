@@ -11,7 +11,7 @@ export class MedicineService{
         const auth = store.getters.auth;
         try{
             const response = await axios.get(GetApiRoute(ApiRoutes.ALL_MEDICINE)
-                +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+                +`?medicineName=${q.medicineName}&page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
             if(response.status==200){
                 this.medicines = response.data.object;

@@ -218,7 +218,10 @@ import { CChartBar } from '@coreui/vue-chartjs'
                     this.stats=result;
                 }
             });
-            (new StatsService()).getMonthWiseReceivedStats().then(result=>{
+            const q = {
+                centerId: _center.id
+            };
+            (new StatsService()).getMonthWiseReceivedStats(q).then(result=>{
                 this.$store.commit('finish');
                 if(result!=undefined){
                     this.monthWiseReceiveds[0].data.push(result.jan);

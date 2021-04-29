@@ -12,7 +12,7 @@
         >
       </CCardHeader>
       <CCardBody>
-              <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
+          <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
           
           <div class="col-md-3">
             <b-form-group
