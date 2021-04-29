@@ -14,6 +14,16 @@
       ref="html2Pdf"
     >
       <section class="container" slot="pdf-content">
+        <div class="my-5 text-center">
+          <ReportHeader></ReportHeader>
+          <!-- <h5>Grameen Kalyan</h5>
+          Telecom Bhaban, Level 5, 53/1 Box Nagar, Zoo Road, <br />
+          Mirpur – 1, Dhaka-1216, Bangladesh -->
+          <h6 class="my-3">Invoice Details Report</h6>
+          <h5 class="d-inline mr-3">
+            Invoice Number: {{ resultData.invoiceNumber }}
+          </h5>
+        </div>
         <div class="row">
           <div class="col-md-6">
             <strong> Patient Name:</strong> {{ resultData.patient.fullName }}
@@ -38,7 +48,6 @@
             <tr>
               <th>SL</th>
               <th>Service Name</th>
-              <th>Service Category</th>
               <th>Report Generated</th>
               <th>Date</th>
               <th>Service Amt</th>
@@ -50,7 +59,6 @@
             <tr v-for="(sd, i) in resultData.patientServiceDetails" :key="i">
               <td>{{ i }}</td>
               <td>{{ sd.service.name }}</td>
-              <td>{{ sd.service.serviceCategory.name }}</td>
               <td>{{ sd.reportGenerated ? "Yes" : "No" }}</td>
               <td>{{ showCreatedDate(sd.createdAt) }}</td>
               <td>{{ sd.serviceAmount }}</td>
@@ -59,7 +67,7 @@
             </tr>
 
             <tr>
-              <td colspan="7"><strong>Total</strong></td>
+              <td colspan="6"><strong>Total</strong></td>
 
               <td>{{ resultData.payableAmount }}</td>
             </tr>
@@ -104,7 +112,6 @@
             <tr>
               <th>SL</th>
               <th>Service Name</th>
-              <th>Service Category</th>
               <th>Report Generated</th>
               <th>Date</th>
               <th>Service Amt</th>
@@ -116,7 +123,6 @@
             <tr v-for="(sd, i) in resultData.patientServiceDetails" :key="i">
               <td>{{ i + 1 }}</td>
               <td>{{ sd.service.name }}</td>
-              <td>{{ sd.service.serviceCategory.name }}</td>
               <td>{{ sd.reportGenerated ? "Yes" : "No" }}</td>
               <td>{{ showCreatedDate(sd.createdAt) }}</td>
               <td>{{ sd.serviceAmount }}</td>
@@ -125,7 +131,7 @@
             </tr>
 
             <tr>
-              <td colspan="7"><strong>Total</strong></td>
+              <td colspan="6"><strong>Total</strong></td>
 
               <td>{{ resultData.payableAmount }}</td>
             </tr>
@@ -139,6 +145,8 @@
 <script>
 import { ServiceRecordService } from "@/services";
 import VueHtml2pdf from "vue-html2pdf";
+import ReportHeader from "@/components/global/ReportHeader";
+
 export default {
   data() {
     return {
@@ -188,6 +196,7 @@ export default {
   },
   components: {
     VueHtml2pdf,
+    ReportHeader,
   },
 };
 </script>
