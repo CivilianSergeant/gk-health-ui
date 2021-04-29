@@ -991,9 +991,11 @@ export default {
     },
     fetchServices() {
       this.$store.commit("start");
+      console.log('hererehrerer')
       new HealthService()
-        .getServices()
+        .getServicesList()
         .then((result) => {
+          console.log(result)
           this.services = result;
           this.$store.commit("finish");
         })

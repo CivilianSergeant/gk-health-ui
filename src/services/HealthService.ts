@@ -23,6 +23,21 @@ export class HealthService{
         }
     }
 
+    async getServicesList(): Promise<any> {
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_SERVICES)
+            +`/list`,
+            setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.services = response.data.collection;
+            }
+            return this.services;
+        }catch(error){
+            handleException(error);
+        }
+    }
+
     async getLabServices(): Promise<any> {
         const auth = store.getters.auth;
         try{
