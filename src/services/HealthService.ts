@@ -12,7 +12,7 @@ export class HealthService{
         const auth = store.getters.auth;
         try{
             const response = await axios.get(GetApiRoute(ApiRoutes.ALL_SERVICES)
-            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+            +`?serviceName=${q.serviceName}&page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
             if(response.status == 200){
                 this.services = response.data.object;

@@ -34,7 +34,7 @@ export class LabTestService {
         const auth = store.getters.auth;
         try{
             const response = await axios.get(GetApiRoute(ApiRoutes.GET_LAB_TEST_ALL)
-            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+            +`?invoiceNumber=${q.invoiceNumber}&fullName=${q.fullName}&pid=${q.pid}&page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
 
             if (response.status == 200) {
