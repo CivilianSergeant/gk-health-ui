@@ -41,6 +41,22 @@ export class CategoryService{
         }
     }
 
+    async getCategoryList(): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_CATEGORIES)
+            +`/list`,
+            setAuthorizationToken(auth.token));
+
+            if(response.status == 200){
+                this.categories = response.data.collection;
+            }
+            return this.categories;
+        }catch(error){
+            handleException(error);
+        }
+    }
+
     async getServiceCategoryById(id: number): Promise<any>{
         const auth = store.getters.auth;
         try{
