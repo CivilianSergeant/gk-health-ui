@@ -14,6 +14,59 @@
         >
       </CCardHeader>
       <CCardBody>
+         <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
+          
+          <div class="col-md-3">
+            <b-form-group
+              id="input-group-patient-id"
+              label="Prescription No:"
+              label-for="pNumber"
+              
+            >
+              <b-form-input
+                id="pNumber"
+                placeholder="Prescription No"
+                v-model="pNumber"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-md-3">
+            <b-form-group
+              id="input-group-patient-id"
+              label="Patient Name:"
+              label-for="fullName"
+              
+            >
+              <b-form-input
+                id="name"
+                placeholder="Patient Name"
+                v-model="fullName"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-md-3">
+            <b-form-group
+              id="input-group-patient-id"
+              label="By Date:"
+              label-for="date"
+              
+            >
+              <b-form-input
+                id="name"
+                placeholder="By Date"
+                type="date"
+                v-model="date"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          
+          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+            <b-button type="submit" variant="info">Search</b-button>
+            <b-button type="reset" class="ml-1" variant="warning"
+              >Clear</b-button
+            >
+          </div>
+        </b-form>
         <b-table
           id="prescription-table"
           :fields="fields"
@@ -92,6 +145,9 @@ export default {
         { key: "createdAt", label: "Date", sortable: true },
         "action",
       ],
+      pNumber:'',
+      fullName:'',
+      date:''
     };
   },
   mounted() {
@@ -105,6 +161,15 @@ export default {
     },
   },
   methods: {
+    onClearSearch(){
+      this.pNumber = '';
+      this.fullName = '';
+      this.date = '';
+      this.fetchPrescriptions();
+    },
+    handleSearch(){
+      this.fetchPrescriptions();
+    },
     handleSort(ctx){
       this.sortBy = ctx.sortBy;
       this.sortDesc = ctx.sortDesc;
@@ -114,6 +179,9 @@ export default {
     fetchPrescriptions() {
       this.$store.commit("start");
       const q = {
+        pNumber: this.pNumber,
+        fullName: this.fullName,
+        date: this.date,
         page: (this.currentPage-1),
         size: this.perPage,
         sortBy: this.sortBy,

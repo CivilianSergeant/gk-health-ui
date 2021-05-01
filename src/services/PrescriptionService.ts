@@ -26,7 +26,7 @@ export class PrescriptionService{
         const auth = store.getters.auth;
         try{
             const response = await axios.get(GetApiRoute(ApiRoutes.ALL_PRESCRIPTION)
-            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+            +`?pNumber=${q.pNumber}&fullName=${q.fullName}&date=${q.date}&page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
             if(response.status == 200){
                 this.prescriptions = response.data.object;
