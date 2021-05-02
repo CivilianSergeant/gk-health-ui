@@ -90,7 +90,9 @@ export default class Autocomplete extends Vue {
 
 		@Watch('items')
 		onPropertyChanged(value: any, oldValue: any){
-			this.showResult = true;
+			if(this.inputValue.length>0){
+				this.showResult = true;
+			}
 			this.focus();
 		}
         

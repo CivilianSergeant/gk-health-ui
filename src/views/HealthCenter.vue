@@ -6,29 +6,30 @@
     <!-- <h5> All Centers</h5> -->
     <CCard>
       <CCardBody>
-        <b-form-group
-          label="Filter"
-          label-for="filter-input"
-          label-cols-sm="1"
-          label-align-sm="right"
-          label-size="sm"
-          class="my-2"
-        >
-          <b-input-group size="sm" class="col-md-3">
-            <b-form-input
-              id="filter-input"
-              v-model="filter"
-              type="search"
-              placeholder="Type to Search"
-            ></b-form-input>
-
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''"
-                >Clear</b-button
+        <b-form>
+            <div class="row" >
+            <div class="col-md-3" v-if="showRaOfficeList">
+              <b-form-group
+              id="input-group-regional-office"
+              label="Region Office:"
+              label-for="regional-office"
               >
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
+                <b-form-select :options="raOffices" @change="handleChangeRaOffice" v-model="search.raoffice"></b-form-select>
+              </b-form-group>
+            </div>
+            <div class="col-md-3" >
+              <Loader :isBusy="isBusy" />
+              <b-form-group v-if="hcOffices.length>0"
+              id="input-group-hc-office"
+              label="HC Office:"
+              label-for="hc-office"
+              >
+                <b-form-select :options="hcOffices" @change="handleChangeHcOffice" v-model="search.hcoffice"></b-form-select>
+              </b-form-group>
+            </div>
+          </div>
+
+        </b-form>
       </CCardBody>
     </CCard>
 
@@ -69,6 +70,9 @@ import { handleCatch } from "@/helpers/ApiRoutes";
 export default {
   name: "HealthCenter",
   computed: {
+    showRaOfficeList(){
+      return (this.$store.getters.center.officeTypeId == 1 || this.$store.getters.center.officeTypeId ==4);
+    },
     rows() {
       return this.totalRows;
     },
@@ -107,7 +111,11 @@ export default {
       totalRows: 0,
       totalPages:0,
       sortBy:'',
-      sortDesc:false
+      sortDesc:false,
+      raOffices:[],
+      raCenters:[],
+      hcOffices:[],
+      search:{}
     };
   },
   watch: {
@@ -120,14 +128,57 @@ export default {
   beforeMount() {
     this.$store.commit("clearErrorMsg");
     this.fetchCenters();
+    
+    this.fetchOffice();
+    
   },
 
   methods: {
+    handleChangeRaOffice(val){
+      this.center = val;
+      this.hcOffices = [];
+      this.fetchHcOffice();
+    },
+    handleChangeHcOffice(val){
+      this.center = val;
+      this.hcOffices = [];
+      this.fetchHcOffice();
+    },
+    fetchRaOffice(){
+      (new CenterService()).getRaCenters().then(result=>{
+        this.raCenters = result;
+        result.map(ra=>{
+          this.raOffices.push({value:ra.id,text:ra.name})
+        });
+      });
+    },
+    fetchHcOffice(){
+      this.$store.commit('start')
+      console.log(this.center);
+      const raOffice = (this.raCenters.length>0)?(this.raCenters.filter(r=>r.id == this.center))[0] :
+      this.$store.getters.center;
+      console.log(raOffice);
+      (new CenterService()).getCentersByThirdLevel(raOffice).then(result=>{
+        if(result.length>0){
+          result.forEach(hc=>this.hcOffices.push({value:hc.id,text:hc.name}));
+        }
+        this.$store.commit('finish');
+      });
+    },
     handleSort(ctx){
       this.sortBy = ctx.sortBy;
       this.sortDesc = ctx.sortDesc;
       this.currentPage = 1;
       this.fetchCenters();
+    },
+    fetchOffice(){
+      if(this.$store.getters.center.officeTypeId==1 || this.$store.getters.center.officeTypeId==4){
+        this.fetchRaOffice();
+      }else if(this.$store.getters.center.officeTypeId == 5){
+        this.fetchHcOffice();
+      }
+        
+      
     },
     fetchCenters() {
       this.$store.commit("start");

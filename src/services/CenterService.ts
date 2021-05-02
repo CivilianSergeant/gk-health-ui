@@ -75,4 +75,25 @@ export class CenterService {
         }
         return this.centers;
     }
+
+    async getRaCenters(): Promise<Center[]>{
+        const auth = store.getters.auth;
+        const result = await axios.get(GetApiRoute(ApiRoutes.GET_RA_OFFICE),
+        setAuthorizationToken(auth.token));
+        if(result.status == 200){
+            this.centers = result.data;
+        }
+        return this.centers;
+    }
+
+    async getCentersByThirdLevel(office: any): Promise<Center[]>{
+        const auth = store.getters.auth;
+        const result = await axios.get(GetApiRoute(ApiRoutes.GET_HC_OFFICE)+
+        `?raOfficeCode=${office.centerCode}`,
+        setAuthorizationToken(auth.token));
+        if(result.status == 200){
+            this.centers = result.data;
+        }
+        return this.centers;
+    }
 }

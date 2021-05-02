@@ -20,7 +20,7 @@
               id="input-group-patient-id"
               label="Invoice ID:"
               label-for="invoice-id"
-              description="Search By Invoice ID"
+              
             >
               <b-form-input
                 id="invoice-id"
@@ -34,7 +34,7 @@
               id="input-group-patient-id"
               label="Fullname:"
               label-for="fullanme"
-              description="Search By Fullname"
+              
             >
               <b-form-input
                 id="fullname"
@@ -43,12 +43,12 @@
               ></b-form-input>
             </b-form-group>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <b-form-group
               id="input-group-patient-id"
               label="Patient ID:"
               label-for="patient-id"
-              description="Search By Patient ID"
+              
             >
               <b-form-input
                 id="patient-id"
@@ -57,7 +57,23 @@
               ></b-form-input>
             </b-form-group>
           </div>
-          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+          <div class="col-md-2">
+            <b-form-group
+              id="input-group-active"
+              label="Status:"
+              label-for="active"
+              
+            >
+              <b-form-select
+                id="active"
+                placeholder="Status"
+                v-model="status"
+                :options="statuses"
+              ></b-form-select>
+
+            </b-form-group>
+          </div>
+          <div class="col-md-2 mt-4 px-0" style="margin-top: 1.8rem !important">
             <b-button type="submit" variant="info">Search</b-button>
             <b-button type="reset" class="ml-1" variant="warning"
               >Clear</b-button
@@ -128,6 +144,7 @@ export default {
       invoiceId:'',
       fullName:'',
       pid:'',
+      status:'',
       perPage: 5,
       currentPage: 1,
       labTests: [],
@@ -136,6 +153,12 @@ export default {
       sortBy: "",
       sortDesc: false,
       invoiceNumbers: [],
+      statuses:[
+        {value:'',text:'Select Status'},
+        {value:'pending',text:'Pending'},
+        {value:'processing',text:'Processing'},
+        {value:'complete',text:'Complete'},
+      ]
     };
   },
   computed: {
@@ -172,20 +195,6 @@ export default {
       this.currentPage = 1;
       this.fetchLabtests();
     },
-    // handleInvoiceNumberAutocomplete(invoice, autocomplete) {
-    //   // (new PatientInvoiceService()).getInvoiceById(invoice.id).then(result => {
-    //   //   this.invoice = result;
-    //   // }
-    // },
-    // handleInvoiceNumberAjaxCall(searchText) {
-    //   // if (searchText.length >= 2) {
-    //   new PatientInvoiceService()
-    //     .getInvoiceNumbers(searchText)
-    //     .then((result) => {
-    //       this.invoiceNumbers = result.collection;
-    //     });
-    //   // }
-    // },
 
     handleSearch(){
       this.fetchLabtests();
@@ -199,6 +208,7 @@ export default {
     fetchLabtests() {
       this.$store.commit("start");
       const q = {
+        status:this.status,
         invoiceNumber: this.invoiceId,
         fullName: this.fullName,
         pid: this.pid,

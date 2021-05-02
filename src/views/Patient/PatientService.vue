@@ -623,11 +623,6 @@ export default {
         this.totalPayable = 0;
 
         patientInvoice.patientServiceDetails.map((r) => {
-          // if(this.registration.gb){
-          //   this.totalPayable+= r.currentGbCost
-          // }else{
-          //   this.totalPayable+= r.currentCost
-          // }
 
           this.totalPayable += r.payableAmount;
         });
@@ -998,17 +993,6 @@ export default {
           console.log(result)
           this.services = result;
           this.$store.commit("finish");
-        })
-        .catch((error) => {
-          this.$store.commit("finish");
-          if (error.toString().match("Error: Network Error") != null) {
-            this.$store.commit(
-              "setErrorMsg",
-              "Opps! Network Error, Please try again later"
-            );
-          } else if (error.toString.length > 0) {
-            this.$store.commit("setErrorMsg", error);
-          }
         });
     },
 

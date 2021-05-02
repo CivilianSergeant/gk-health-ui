@@ -4,28 +4,68 @@
     <!-- <h5 class="py-3"></h5> -->
     <cCard>
       <cCardBody>
+        
         <b-form @submit.prevent="onSearch">
+          <div class="row" >
+            <div class="col-md-3" v-if="showRaOfficeList">
+              <b-form-group
+              id="input-group-regional-office"
+              label="Region Office:"
+              label-for="regional-office"
+              >
+                <b-form-select :options="raOffices" @change="handleChangeRaOffice" v-model="search.raoffice"></b-form-select>
+              </b-form-group>
+            </div>
+            <div class="col-md-3" >
+              <Loader :isBusy="isBusy" />
+              <b-form-group v-if="hcOffices.length>0"
+              id="input-group-hc-office"
+              label="HC Office:"
+              label-for="hc-office"
+              >
+                <b-form-select :options="hcOffices" @change="handleChangeHcOffice" v-model="search.hcoffice"></b-form-select>
+              </b-form-group>
+            </div>
+          </div>
           <div class="row py-2 mx-2 d-flex justify-content-start">
             <div class="mr-2">
-              <b-form-datepicker
+              <!-- <b-form-datepicker
                 id="datepicker-placeholder"
                 placeholder="from date"
                 locale="en"
+                
                 v-model="form.from_date"
-              ></b-form-datepicker>
+              ></b-form-datepicker> -->
+              <b-form-group
+              label="From Date"
+              >
+              <b-form-input type="date" placeholder="from date" v-model="form.from_date">
+              </b-form-input>
+              </b-form-group>
             </div>
             <div>
-              <b-form-datepicker
+              <b-form-group
+              label="To Date"
+              >
+              <b-form-input type="date" placeholder="To date" v-model="form.to_date">
+              </b-form-input>
+              </b-form-group>
+              <!-- <b-form-datepicker
                 id="datepicker-placeholder2"
                 placeholder="To date"
                 locale="en"
                 v-model="form.to_date"
-              ></b-form-datepicker>
+              ></b-form-datepicker> -->
             </div>
             <div>
+              <b-form-group
+              label="."
+              class="text-white"
+              >
               <b-button type="submit" class="ml-2" variant="info"
                 >Search</b-button
               >
+              </b-form-group>
             </div>
           </div>
         </b-form>
@@ -97,9 +137,12 @@
 </template>
 
 <script>
-import { ServiceRecordService } from "@/services";
+import { ServiceRecordService, CenterService } from "@/services";
 export default {
   computed: {
+    showRaOfficeList(){
+      return (this.$store.getters.center.officeTypeId == 1 || this.$store.getters.center.officeTypeId ==4);
+    },
     rows() {
       return this.totalRows;
     },
@@ -113,6 +156,7 @@ export default {
   watch: {
     center(newLen, oldLen) {
       if (newLen.id != undefined) {
+        this.fetchOffice();
         this.fetchServiceRecords();
       }
     },
@@ -135,14 +179,61 @@ export default {
       totalReceivable: 0,
       totalPaid: 0,
       form: {},
+      currentCenter:null,
+      raCenters:[],
+      hcCenters:[],
+      hcOffices:[],
+      raOffices:[],
+      search:{},
     };
   },
+  
   mounted() {
     if (this.$store.getters.center.id != undefined) {
       this.fetchServiceRecords();
+      this.fetchOffice();
     }
   },
   methods: {
+    handleChangeRaOffice(val){
+      this.currentCenter = val;
+      this.hcOffices = [];
+      this.fetchHcOffice();
+    },
+    handleChangeHcOffice(val){
+      this.currentCenter = val;
+      
+    },
+    fetchRaOffice(){
+      (new CenterService()).getRaCenters().then(result=>{
+        this.raCenters = result;
+        result.map(ra=>{
+          this.raOffices.push({value:ra.id,text:ra.name})
+        });
+      });
+    },
+    fetchHcOffice(){
+      this.$store.commit('start')
+      console.log(this.currentCenter);
+      const raOffice = (this.raCenters.length>0)?(this.raCenters.filter(r=>r.id == this.currentCenter))[0] :
+      this.$store.getters.center;
+      console.log(raOffice);
+      (new CenterService()).getCentersByThirdLevel(raOffice).then(result=>{
+        this.hcCenters = result;
+        if(result.length>0){
+          result.forEach(hc=>this.hcOffices.push({value:hc.id,text:hc.name}));
+        }
+        this.$store.commit('finish');
+      });
+    },
+    fetchOffice(){
+      if(this.$store.getters.center.officeTypeId==1 || this.$store.getters.center.officeTypeId==4){
+        this.fetchRaOffice();
+      }else if(this.$store.getters.center.officeTypeId == 5){
+        this.fetchHcOffice();
+      }  
+    },
+
     formatDate(date, start) {
       const d = new Date(date);
       let month = "" + (d.getMonth() + 1);
@@ -158,7 +249,16 @@ export default {
     },
     fetchServiceRecords() {
       this.$store.commit("start");
-      const center = this.$store.getters.center;
+      let centerObj=null;
+
+      if(this.hcCenters.length>0){
+        centerObj = (this.hcCenters.filter(r=>r.id == this.currentCenter))[0];
+      }else if(this.raCenters.length>0){
+        centerObj = (this.raCenters.filter(r=>r.id == this.currentCenter))[0];
+      }
+
+
+      const center = (centerObj!=null)? centerObj : this.$store.getters.center;
 
       const fromDateObj = new Date();
       fromDateObj.setDate(fromDateObj.getDate() - 7);

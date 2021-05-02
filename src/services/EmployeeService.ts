@@ -14,7 +14,8 @@ export class EmployeeService{
         const auth = store.getters.auth;
         try{
             const result = await axios.get(GetApiRoute(ApiRoutes.ALL_EMPLOYEES)
-            +`?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+            +`?centerId=${q.center}&employeeCode=${q.employeeCode}&fullName=${q.fullName}&contactNo=${q.contactNo}&email=${q.email}`+
+            `&page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
             if(result.status==200){
                 this.employees = result.data.object;
