@@ -97,11 +97,22 @@ import {
       this.fetchLabServices();
       this.fetchFeedingRules();
       this.fetchMedicines();
+      this.fetchInvoiceNumbers();
     },
     components:{
       PatientInfo
     },
     methods: {
+      handleInvoiceItemClick(invoiceId){
+        this.fetchInvoiceDetail(invoiceId);
+      },
+      fetchInvoiceNumbers(){
+        (new PatientInvoiceService())
+            .getPrescriptionInvoiceNumbers()
+            .then(result => {
+              this.invoices = result;
+            });
+      },
       handleUploadedFile(data){
         this.filePath = data.object.filename;
       },
@@ -184,7 +195,12 @@ import {
         this.fetchServiceDetail();
       },
       handleInvoiceNumberAutocomplete(invoice, autocomplete) {
-        (new PatientInvoiceService()).getInvoiceById(invoice.id).then(result => {
+        this.fetchInvoiceDetail(invoice.id);
+        this.invoiceAutocomplete = autocomplete;
+      },
+      fetchInvoiceDetail(invoiceId){
+        this.$store.commit('start');
+        (new PatientInvoiceService()).getInvoiceById(invoiceId).then(result => {
           this.invoice = result;
           this.patient = this.invoice.patient;
           this.prescription.doctor = this.$store.getters.employee;
@@ -196,12 +212,18 @@ import {
           this.addMedicine();
           this.addMedicine();
           this.addMedicine();
-          this.invoiceAutocomplete = autocomplete;
+          this.$store.commit('finish')
         });
+      },
+      onResetPrescription(){
+        this.invoice=null;
+        this.patient= null;
+        this.prescription.patientInvoice = '';
+        this.prescription.prescriptionPatient = '';
       },
       handleInvoiceNumberAjaxCall(searchText) {
         // if (searchText.length >= 2) {
-          new PatientInvoiceService()
+          (new PatientInvoiceService())
             .getInvoiceNumbers(searchText)
             .then(result => {
               this.invoices = result.collection;

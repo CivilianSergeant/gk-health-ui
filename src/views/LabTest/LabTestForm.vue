@@ -382,7 +382,7 @@ export default {
               "Lab Report Created Sucessfully"
             );
             const navigationService = new NavigationService();
-            navigationService.redirect(this, "lab-tests");
+            navigationService.redirect(this, "Lab Tests");
           }
         }
         this.$store.commit("finish");

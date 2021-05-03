@@ -3,7 +3,7 @@
     <!-- <ContentBar :PageTitle="title" /> -->
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
-    <Loader :isBusy="isBusy" />
+    <!-- <Loader :isBusy="isBusy" /> -->
     <b-form @submit.prevent="onSearch">
       <cCard>
         <cCardBody>
@@ -21,12 +21,12 @@
             ></b-form-input>-->
 
                 <Autocomplete
-                  :ajax="true"
+                  
                   @choose-item="handleInvoiceNumberAutocomplete"
                   :items="invoices"
                   label="invoiceNumber"
                   rowId="id"
-                  @ajax-call="handleInvoiceNumberAjaxCall"
+                  
                 />
               </b-form-group>
             </div>
@@ -49,6 +49,15 @@
                   >,
                 </a>
               </div>
+            </div>
+          </div>
+          <Loader :isBusy="isBusy"/>
+          <div class="row" v-if="!patient">
+            <div class="col-md-8">
+              <h5>Latest Invoice</h5>
+              <ul class="list-group">
+                <li class="cursor-pointer list-group-item" @click="handleInvoiceItemClick(invoice.id)" v-for="invoice in invoices" :key="invoice.id">{{invoice.invoiceNumber}} - {{invoice.patientFullName}}[{{invoice.pid}}]</li>
+              </ul>
             </div>
           </div>
         </cCardBody>

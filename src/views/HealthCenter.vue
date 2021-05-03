@@ -6,7 +6,7 @@
     <!-- <h5> All Centers</h5> -->
     <CCard>
       <CCardBody>
-        <b-form>
+        <b-form @submit.prevent="onSearch" @reset.prevent="onReset">
             <div class="row" >
             <div class="col-md-3" v-if="showRaOfficeList">
               <b-form-group
@@ -14,21 +14,35 @@
               label="Region Office:"
               label-for="regional-office"
               >
-                <b-form-select :options="raOffices" @change="handleChangeRaOffice" v-model="search.raoffice"></b-form-select>
+                <b-form-select :options="raOffices" v-model="search.raOffice"></b-form-select>
               </b-form-group>
             </div>
-            <div class="col-md-3" >
-              <Loader :isBusy="isBusy" />
-              <b-form-group v-if="hcOffices.length>0"
-              id="input-group-hc-office"
-              label="HC Office:"
-              label-for="hc-office"
-              >
-                <b-form-select :options="hcOffices" @change="handleChangeHcOffice" v-model="search.hcoffice"></b-form-select>
-              </b-form-group>
-            </div>
+            
           </div>
-
+          <div class="row">
+            <div class="col-md-3" >
+              <b-form-group
+              id="input-group-name"
+              label="Office/Center Name:"
+              label-for="name"
+              >
+              <b-form-input placeholder="Name" v-model="search.name"></b-form-input>
+              </b-form-group>
+          </div>
+          <div class="col-md-3" >
+              <b-form-group
+              id="input-group-office-code"
+              label="Office/Center Code:"
+              label-for="code"
+              >
+              <b-form-input placeholder="Office Code" v-model="search.code"></b-form-input>
+              </b-form-group>
+          </div>
+          <div class="col-md-3 pt-4">
+            <b-button type="submit" variant="success" class="mr-2">Search</b-button>
+            <b-button type="reset" variant="warning">Clear</b-button>
+          </div>
+          </div>
         </b-form>
       </CCardBody>
     </CCard>
@@ -65,7 +79,7 @@
 
 <script>
 import { CenterService } from "@/services/CenterService";
-import { handleCatch } from "@/helpers/ApiRoutes";
+
 
 export default {
   name: "HealthCenter",
@@ -88,6 +102,9 @@ export default {
     message() {
       return this.$store.state.message;
     },
+    center() {
+      return this.$store.getters.center;
+    }
   },
   data() {
     return {
@@ -115,7 +132,7 @@ export default {
       raOffices:[],
       raCenters:[],
       hcOffices:[],
-      search:{}
+      search:{raOffice:'',name:'',code:''}
     };
   },
   watch: {
@@ -134,6 +151,15 @@ export default {
   },
 
   methods: {
+    onSearch(){
+      this.fetchCenters();
+    },
+    onReset(){
+      this.search.raOffice='';
+      this.search.name = '';
+      this.search.code = '';
+      this.fetchCenters();
+    },
     handleChangeRaOffice(val){
       this.center = val;
       this.hcOffices = [];
@@ -142,7 +168,7 @@ export default {
     handleChangeHcOffice(val){
       this.center = val;
       this.hcOffices = [];
-      this.fetchHcOffice();
+      // this.fetchHcOffice();
     },
     fetchRaOffice(){
       (new CenterService()).getRaCenters().then(result=>{
@@ -182,12 +208,17 @@ export default {
     },
     fetchCenters() {
       this.$store.commit("start");
+      const raOffice = (this.raCenters.filter(ra=>ra.id==this.search.raOffice));
       const q = {
+        center: (raOffice.length==1)? raOffice[0].centerCode:'',
+        name: this.search.name,
+        code: this.search.code,
         page: (this.currentPage -1 ),
         size: this.perPage,
         sortBy: this.sortBy,
         sortDesc: this.sortDesc
       }
+      console.log(this.search)
       new CenterService().getCentersWithPagination(q).then((result) => {
         this.centers = result.content;
         this.totalRows = result.totalElements;

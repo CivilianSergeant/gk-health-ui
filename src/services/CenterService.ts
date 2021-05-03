@@ -13,7 +13,7 @@ export class CenterService {
         const auth = store.getters.auth;
         try{
             const result = await axios.get(GetApiRoute(ApiRoutes.CENTER_LIST)
-            + `?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
+            + `?thirdLevel=${q.center}&name=${q.name}&code=${q.code}&page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`,
             setAuthorizationToken(auth.token));
             if(result.status == 200){
                 this.centers = result.data.object;

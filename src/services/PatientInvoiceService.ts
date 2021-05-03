@@ -35,6 +35,21 @@ export class PatientInvoiceService{
         }
     }
 
+    async getPrescriptionInvoiceNumbers(): Promise<any>{
+
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.PRESCRIPTION_INVOICE_NUMBERS),
+            setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.response = response.data.collection;
+            }
+            return this.response;
+        }catch(error){  
+            handleException(error);
+        }
+    }
+
     async getInvoiceById(id: string): Promise<any>{
         const auth = store.getters.auth;
         try{
