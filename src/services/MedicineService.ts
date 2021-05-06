@@ -23,6 +23,21 @@ export class MedicineService{
         }
     }
 
+    async getMedicineList(): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_MEDICINE)+'/list',
+            setAuthorizationToken(auth.token));
+            if(response.status==200){
+                this.medicines = response.data.collection;
+            }
+
+            return this.medicines;
+        }catch(error){
+            handleException(error);
+        }
+    }
+
     async getMedicineById(id: string): Promise<any>{
 
         const auth = store.getters.auth;

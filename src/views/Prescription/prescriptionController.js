@@ -96,7 +96,7 @@ import {
       
       this.fetchLabServices();
       this.fetchFeedingRules();
-      this.fetchMedicines();
+      
       this.fetchInvoiceNumbers();
     },
     components:{
@@ -104,6 +104,7 @@ import {
     },
     methods: {
       handleInvoiceItemClick(invoiceId){
+        this.fetchMedicines();
         this.fetchInvoiceDetail(invoiceId);
       },
       fetchInvoiceNumbers(){
@@ -255,7 +256,8 @@ import {
         });
       },
       fetchMedicines() {
-        new MedicineService().getMedicines().then(result => {
+        
+        (new MedicineService()).getMedicineList().then(result => {
           this.medicines = result;
         });
       },
@@ -290,7 +292,7 @@ import {
           if(result.id>0){
             this.$store.commit('setSuccessMsg','Prescription Created Successfully');
             const navigationService =new NavigationService();
-            navigationService.redirect(this,"prescriptions");
+            navigationService.redirect(this,"Prescriptions");
             window.scrollTo(0,0);
             }
 
