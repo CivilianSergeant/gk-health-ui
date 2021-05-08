@@ -256,12 +256,12 @@
                 Invoice No # {{ pi.invoiceNumber }}
                 <a
                   @click="showReport(i)"
-                  class="cursor-pointer btn btn-info btn-sm"
+                  class="cursor-pointer btn btn-info btn-sm text-white"
                   ><b-icon-printer></b-icon-printer> Print</a
                 >
               </h5>
               <h6>Date: {{ getDate(pi.createdAt) }}</h6>
-              <table class="table table-bordered">
+              <table class="table table-bordered cTable">
                 <thead class="thead-light">
                   <tr>
                     <th>Sl</th>
@@ -546,4 +546,6 @@ export default {
 .clearBoth {
   clear: both;
 }
+
+.cTable .table th, .cTable .table td{padding: 0.3rem;}
 </style>

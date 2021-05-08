@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="patientService">
     <!-- <ContentBar :PageTitle="title"/> -->
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
@@ -71,29 +71,74 @@
                   </div>
                 </div>
               </div>
+              <!-- service-->
+              <div class="row">
+                <!-- <vue-typeahead-bootstrap :data="services"
+          :serializer="input=>input.name" v-model="service.id"/> -->
+
+                <div class="col-md-6">
+                  <b-form-group
+                    id="input-group-patient-id"
+                    label="Search Service:"
+                    label-for="patient-id"
+                    description="Search Service to add"
+                  >
+                    <Autocomplete
+                      @choose-item="handleAutocomplete"
+                      :items="services"
+                      label="name"
+                      rowId="serviceId"
+                      :disabled="!patient"
+                    />
+                  </b-form-group>
+                </div>
+                <div class="col-md-6 mt-4" v-if="service">
+                  <b-button
+                    @click="addPatientService"
+                    class="ml-2"
+                    pill
+                    variant="success"
+                  >
+                    <b-icon-plus-circle
+                      scale="1.25"
+                      class="t-bold"
+                    ></b-icon-plus-circle
+                  ></b-button>
+                </div>
+              </div>
+              <!--end service-->
             </div>
             <div class="col-md-6 font-weight-bold">
+              <!--font-weight-bold-->
               <Loader :isBusy="isBusy" />
-              <b-card v-if="patient != null">
+              <b-card class="mb-0" v-if="patient != null">
                 <b-card-title>Patient Info #{{ patient.pid }}</b-card-title>
-                <div v-if="patient.id > 0">
-                  <span>Patient Name: {{ consumer.fullName }}</span>
-                  <span v-if="patient.gender"
-                    >, Sex: {{ patient.gender }}
-                  </span>
-                  <span v-if="patient.age">, Age: {{ patient.age }}</span>
-                </div>
-                <div>
-                  IS GB?:
-                  <Status
-                    :data="form.cardRegistration && form.cardRegistration.gb"
-                  />
-                </div>
-                <div>
-                  Card Registered?:
-                  <Status
-                    :data="patient.registration && patient.registration.id"
-                  />
+                <div class="row">
+                  <div class="col-md-7">
+                    <div v-if="patient.id > 0">
+                      <span>Patient Name: {{ consumer.fullName }}</span>
+                      <span v-if="patient.gender"
+                        >, Sex: {{ patient.gender }}
+                      </span>
+                      <span v-if="patient.age">, Age: {{ patient.age }}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div>
+                      IS GB?:
+                      <Status
+                        :data="
+                          form.cardRegistration && form.cardRegistration.gb
+                        "
+                      />
+                    </div>
+                    <div>
+                      Card Registered?:
+                      <Status
+                        :data="patient.registration && patient.registration.id"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <span v-if="form.cardRegistration && form.cardRegistration.id"
                   >Card Number: {{ form.cardRegistration.cardNumber }}</span
@@ -104,8 +149,8 @@
                     form.cardRegistration.members.length > 0
                   "
                 >
-                  Family Members
-                  <ul>
+                  Family Members:
+                  <ul class="fMembers">
                     <li
                       class="mb-2"
                       v-for="(member, m) in form.cardRegistration.members"
@@ -137,6 +182,7 @@
                   >Registration Expired</span
                 >
                 <p
+                  class="mb-0"
                   v-if="
                     form.cardRegistration &&
                     form.cardRegistration.validityDuration > 0
@@ -156,42 +202,9 @@
               </b-card>
             </div>
           </div>
-          <div class="row">
-            <!-- <vue-typeahead-bootstrap :data="services"
-          :serializer="input=>input.name" v-model="service.id"/> -->
-
-            <div class="col-md-3">
-              <b-form-group
-                id="input-group-patient-id"
-                label="Search Service:"
-                label-for="patient-id"
-                description="Search Service to add"
-              >
-                <Autocomplete
-                  @choose-item="handleAutocomplete"
-                  :items="services"
-                  label="name"
-                  rowId="serviceId"
-                  :disabled="!patient"
-                />
-              </b-form-group>
-            </div>
-            <div class="col-md-3 mt-4" v-if="service">
-              <b-button
-                @click="addPatientService"
-                class="ml-2"
-                pill
-                variant="success"
-              >
-                <b-icon-plus-circle
-                  scale="1.25"
-                  class="t-bold"
-                ></b-icon-plus-circle
-              ></b-button>
-            </div>
-          </div>
-        </b-form> </CCardBody
-    ></cCard>
+        </b-form>
+      </CCardBody></cCard
+    >
     <cCard
       ><CCardBody>
         <table class="table table-bordered">
@@ -649,10 +662,30 @@ export default {
         orientation: "portrait",
         format: "A4",
       });
-      let x = 80;
+
+      //   <h5>Grameen Kalyan</h5>
+      // Telecom Bhaban, Level 5, 53/1 Box Nagar, Zoo Road, <br />
+      // Mirpur – 1, Dhaka-1216, Bangladesh
+
+      let x = 90;
       let y = 30;
+      pdf.setFontSize(11);
+      pdf.text("Grameen Kalyan", x, y);
+      //pdf.line(x, y + 1, 120, y + 1);
+
+      x = 60;
+      y = y + 5;
+      pdf.text("Telecom Bhaban, Level 5, 53/1 Box Nagar, Zoo Road,", x, y);
+
+      x = 75;
+      y = y + 5;
+      pdf.text("Mirpur – 1, Dhaka-1216, Bangladesh", x, y);
+
+      x = 90;
+      y = y + 20;
+      pdf.setFontSize(14);
       pdf.text("Money Receipt", x, y);
-      pdf.line(x, y + 1, 120, y + 1);
+      pdf.line(x, y + 1, 125, y + 1);
 
       x = 15;
       y = y + 20;
@@ -1076,5 +1109,29 @@ export default {
 <style>
 .rounded-pill {
   border-radius: 60rem !important;
+}
+
+.patientService .c-main {
+  padding-top: 1rem;
+}
+
+.patientService .table th,
+.patientService .table td {
+  padding: 0.3rem;
+}
+
+.patientService .card {
+  margin-bottom: 0.5rem;
+}
+.patientService .card-body {
+  padding: 0.6rem;
+}
+
+ul.fMembers {
+  padding: 0px;
+}
+ul.fMembers li {
+  display: inline-block;
+  margin: 0.3rem 0.53rem 0.3rem 0;
 }
 </style>

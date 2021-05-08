@@ -93,7 +93,7 @@
             Center: {{ getCenterName }}
             <a
               @click="printLabReport()"
-              class="btn btn-sm btn-primary cursor-pointer"
+              class="btn btn-sm btn-primary cursor-pointer text-white"
               ><b-icon-printer></b-icon-printer
             ></a>
           </h5>
