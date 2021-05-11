@@ -5,94 +5,100 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isRouteCheckingPermission:false,
-    isBusy:false,
-    isMenuLoading:false,
-    isError:false,
-    isSuccess:false,
-    user:{},
-    auth:{},
-    center:{},
-    employee:{},
-    message:'',
-    menus:[],
-    navs:[],
+    isRouteCheckingPermission: false,
+    isBusy: false,
+    isMenuLoading: false,
+    isError: false,
+    isSuccess: false,
+    user: {},
+    auth: {},
+    center: {},
+    employee: {},
+    message: '',
+    menus: [],
+    navs: [],
     sidebarShow: true, //'responsive',
-    sidebarMinimize: false
+    sidebarMinimize: false,
+    backToList: "",
   },
   mutations: {
-    startLoadingMenu(state){
-      state.isMenuLoading=true;
+    startLoadingMenu(state) {
+      state.isMenuLoading = true;
     },
-    menuLoaded(state){
-      state.isMenuLoading=false;
+    menuLoaded(state) {
+      state.isMenuLoading = false;
     },
-    start(state){
-      state.isBusy=true;
+    start(state) {
+      state.isBusy = true;
     },
-    finish(state){
-      state.isBusy=false;
+    finish(state) {
+      state.isBusy = false;
     },
-    setSuccessMsg(state,msg){
-      state.isSuccess=true;
-      state.isError=false;
-      state.message=msg;
+    setSuccessMsg(state, msg) {
+      state.isSuccess = true;
+      state.isError = false;
+      state.message = msg;
     },
-    setErrorMsg(state,msg){
-      state.isSuccess=false;
-      state.isError=true;
-      state.message=msg;
+    setErrorMsg(state, msg) {
+      state.isSuccess = false;
+      state.isError = true;
+      state.message = msg;
     },
-    clearErrorMsg(state){
-      state.isError=false;
+    clearErrorMsg(state) {
+      state.isError = false;
     },
-    clearSuccessMsg(state){
-      state.isSuccess=false;
+    clearSuccessMsg(state) {
+      state.isSuccess = false;
     },
-    clearMessage(state){
-      state.isError=false;
-      state.isSuccess=false;
+    clearMessage(state) {
+      state.isError = false;
+      state.isSuccess = false;
     },
-    setUser(state,user){
+    setUser(state, user) {
       state.user = user;
     },
-    setAuth(state,keycloak){
+    setAuth(state, keycloak) {
       state.auth = keycloak;
     },
-    setCurrentCenter(state,center){
+    setCurrentCenter(state, center) {
       state.center = center;
     },
-    setCurrentEmployee(state, employee){
+    setCurrentEmployee(state, employee) {
       state.employee = employee;
     },
-    setMenus(state,menus){
+    setMenus(state, menus) {
       state.menus = menus;
     },
-    setNavs(state,navs){
+    setNavs(state, navs) {
       state.navs = navs;
     },
-    setRoutePermissionStatus(state,checking){
+    setRoutePermissionStatus(state, checking) {
       state.isRouteCheckingPermission = checking
     },
-    toggleSidebarDesktop (state) {
+    toggleSidebarDesktop(state) {
       const sidebarOpened = [true, 'responsive'].includes(state.sidebarShow)
       state.sidebarShow = sidebarOpened ? false : true // 'responsive'
     },
-    toggleSidebarMobile (state) {
+    toggleSidebarMobile(state) {
       const sidebarClosed = [false, 'responsive'].includes(state.sidebarShow)
       state.sidebarShow = sidebarClosed ? true : false // 'responsive'
     },
-    set (state: any, [variable, value]) {
+    set(state: any, [variable, value]) {
       state[variable] = value
+    },
+    setBackToList(state, path) {
+      state.backToList = path;
     }
   },
-  getters:{
-    center: state=> {return state.center} ,
-    employee: state=>  {return state.employee} ,
-    auth: state=> {return state.auth},
-    menus: state=> {return state.menus},
-    navs: state=> {return state.navs},
-    routeChecking: state=> {return state.isRouteCheckingPermission}
+  getters: {
+    center: state => { return state.center },
+    employee: state => { return state.employee },
+    auth: state => { return state.auth },
+    menus: state => { return state.menus },
+    navs: state => { return state.navs },
+    routeChecking: state => { return state.isRouteCheckingPermission },
+    backToListPath: state => { return state.backToList }
+
   },
   actions: {
   },

@@ -35,7 +35,7 @@
               <b-form-group
                 id="input-group-1"
                 label-for="input-1"
-                description="Patient's full name"
+                description=""
               >
                 <label> Full Name: <span class="text-danger">*</span> </label>
                 <b-form-input
@@ -51,7 +51,7 @@
               <b-form-group
                 id="input-group-2"
                 label-for="input-2"
-                description="Patient's Guardian name"
+                description=""
               >
                 <label>
                   Guardian Name: <span class="text-danger">*</span>
@@ -65,11 +65,11 @@
                 ></b-form-input>
               </b-form-group>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
               <b-form-group
                 id="input-group-3"
                 label-for="input-3"
-                description="Patient's Mother name"
+                description=""
               >
                 <label> Mother Name: <span class="text-danger">*</span> </label>
                 <b-form-input
@@ -89,7 +89,7 @@
                 id="input-group-4"
                 label="Gender:"
                 label-for="gender"
-                description="Patient's Gender"
+                description=""
               >
                 <b-form-select
                   id="gender"
@@ -103,7 +103,7 @@
                 id="input-group-6"
                 label="Marital Status:"
                 label-for="marital-status"
-                description="Patient's Marital Status"
+                description=""
               >
                 <b-form-select
                   id="marital-status"
@@ -122,18 +122,17 @@
                         <b-form-datepicker :required="true" id="patient-datepicker"  v-model="form.dateOfBirth" class="mt-2"></b-form-datepicker>
                     </b-form-group>
                 </div> -->
-            <div class="col-md-4">
+            <div class="col-md-6">
               <b-form-group
                 id="input-group-6"
                 label-for="patient-age"
-                description="Patient's Age"
+                description=""
               >
                 <label> Age: <span class="text-danger">*</span> </label>
                 <b-form-input
                   :required="true"
                   id="patient-age"
                   v-model="form.age"
-                  class="mt-2"
                 ></b-form-input>
               </b-form-group>
             </div>
@@ -145,7 +144,7 @@
                 id="input-group-7"
                 label="Village"
                 label-for="vilage"
-                description="Patient's address"
+                description=""
               >
                 <b-form-input
                   id="village"
@@ -155,12 +154,12 @@
                 ></b-form-input>
               </b-form-group>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
               <b-form-group
                 id="input-group-8"
                 label="Mobile Number:"
                 label-for="mobileNumber"
-                description="Patient's Mobile No"
+                description=""
               >
                 <b-form-input
                   id="mobileNumber"
@@ -170,12 +169,12 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
               <b-form-group
                 id="input-group-9"
                 label="Blood Group"
                 label-for="bloodGroup"
-                description="Patient's Blood Group"
+                description=""
               >
                 <b-form-input
                   id="bloodGroup"
@@ -190,7 +189,7 @@
                 id="input-group-10"
                 label="Nationality:"
                 label-for="nationality"
-                description="Nationality"
+                description=""
               >
                 <b-form-input
                   id="nationality"
@@ -204,12 +203,12 @@
                 id="input-group-10"
                 label="National ID:"
                 label-for="nationalId"
-                description="Patient's National ID"
+                description=""
               >
                 <b-form-input
                   id="nationalId"
                   v-model="form.detail.nationalId"
-                  placeholder="National ID"
+                  placeholder="Patient's National ID"
                 ></b-form-input>
               </b-form-group>
             </div>
@@ -218,7 +217,7 @@
                 id="input-group-10"
                 label="Occupation:"
                 label-for="occupation"
-                description="Occupation"
+                description=""
               >
                 <b-form-input
                   id="occupation"

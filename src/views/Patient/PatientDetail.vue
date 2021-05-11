@@ -5,6 +5,7 @@
 
     <h5 class="pb-2">
       Patient Info #{{ form.pid }}
+
       <router-link
         to="/patients"
         class="btn btn-primary btn-sm float-right ml-2"
@@ -520,6 +521,9 @@ export default {
 
       return false;
     },
+    backToList() {
+      console.log("stee:" + JSON.stringify(this.$store.state));
+    },
     showReportButton(service, patientId, invoiceId) {
       if (service.labTest == true) {
         return `/lab-tests/${patientId}/${invoiceId}/${service.serviceId}`;
@@ -547,5 +551,8 @@ export default {
   clear: both;
 }
 
-.cTable .table th, .cTable .table td{padding: 0.3rem;}
+.cTable .table th,
+.cTable .table td {
+  padding: 0.3rem;
+}
 </style>

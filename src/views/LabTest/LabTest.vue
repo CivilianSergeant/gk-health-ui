@@ -14,13 +14,16 @@
         >
       </CCardHeader>
       <CCardBody>
-        <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
+        <b-form
+          class="row"
+          @submit.prevent="handleSearch"
+          @reset.prevent="onClearSearch"
+        >
           <div class="col-md-3">
             <b-form-group
               id="input-group-patient-id"
               label="Invoice ID:"
               label-for="invoice-id"
-              
             >
               <b-form-input
                 id="invoice-id"
@@ -34,7 +37,6 @@
               id="input-group-patient-id"
               label="Fullname:"
               label-for="fullanme"
-              
             >
               <b-form-input
                 id="fullname"
@@ -48,7 +50,6 @@
               id="input-group-patient-id"
               label="Patient ID:"
               label-for="patient-id"
-              
             >
               <b-form-input
                 id="patient-id"
@@ -62,7 +63,6 @@
               id="input-group-active"
               label="Status:"
               label-for="active"
-              
             >
               <b-form-select
                 id="active"
@@ -70,7 +70,6 @@
                 v-model="status"
                 :options="statuses"
               ></b-form-select>
-
             </b-form-group>
           </div>
           <div class="col-md-2 mt-4 px-0" style="margin-top: 1.8rem !important">
@@ -141,10 +140,10 @@ export default {
         { key: "status", sortable: true },
         "action",
       ],
-      invoiceId:'',
-      fullName:'',
-      pid:'',
-      status:'',
+      invoiceId: "",
+      fullName: "",
+      pid: "",
+      status: "",
       perPage: 5,
       currentPage: 1,
       labTests: [],
@@ -153,12 +152,12 @@ export default {
       sortBy: "",
       sortDesc: false,
       invoiceNumbers: [],
-      statuses:[
-        {value:'',text:'Select Status'},
-        {value:'pending',text:'Pending'},
-        {value:'processing',text:'Processing'},
-        {value:'complete',text:'Complete'},
-      ]
+      statuses: [
+        { value: "", text: "Select Status" },
+        { value: "pending", text: "Pending" },
+        { value: "processing", text: "Processing" },
+        { value: "complete", text: "Complete" },
+      ],
     };
   },
   computed: {
@@ -196,19 +195,19 @@ export default {
       this.fetchLabtests();
     },
 
-    handleSearch(){
+    handleSearch() {
       this.fetchLabtests();
     },
-    onClearSearch(){
-      this.invoiceId='';
-      this.fullName='';
-      this.pid='';
+    onClearSearch() {
+      this.invoiceId = "";
+      this.fullName = "";
+      this.pid = "";
       this.fetchLabtests();
     },
     fetchLabtests() {
       this.$store.commit("start");
       const q = {
-        status:this.status,
+        status: this.status,
         invoiceNumber: this.invoiceId,
         fullName: this.fullName,
         pid: this.pid,
@@ -217,7 +216,7 @@ export default {
         sortBy: this.sortBy,
         sortDesc: this.sortDesc,
       };
-      console.log(q)
+      console.log(q);
       new LabTestService().getLabTests(q).then((result) => {
         this.labTests = result.content;
         this.totalRows = result.totalElements;

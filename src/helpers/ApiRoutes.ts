@@ -125,7 +125,7 @@ export function GetApiRoute(route: string, value = "") {
             _route = route.replace(":id", value);
         }
     }
-    console.log(ApiRoutes.BASE_PATH + ApiRoutes.VERSION + _route);
+    //console.log(ApiRoutes.BASE_PATH + ApiRoutes.VERSION + _route);
     return ApiRoutes.BASE_PATH + ApiRoutes.VERSION + _route;
 }
 

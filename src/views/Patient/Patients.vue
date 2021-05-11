@@ -11,7 +11,7 @@
       <CCardBody>
         <b-form @submit.prevent="onSearch" @reset.prevent="onClearSearch">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3" v-bind:class="center ? 'centerSelected' : ''">
               <Autocomplete
                 :ajax="true"
                 @choose-item="handleAutoComplete"
@@ -29,7 +29,10 @@
               ></b-form-select>
             </div>
             <div class="col-md-2">
-              <b-form-input v-model="search.keyword"></b-form-input>
+              <b-form-input
+                v-model="search.keyword"
+                :disabled="!search.keywordType"
+              ></b-form-input>
             </div>
             <div class="col-md-3">
               <b-button type="submit" size="sm" variant="info">Search</b-button>
@@ -102,6 +105,7 @@
 <script>
 import { PatientService } from "@/services/PatientService";
 import { CenterService } from "@/services";
+import { LocalStorageService } from "@/services/LocalStorageService";
 
 export default {
   name: "Patients",
@@ -135,12 +139,12 @@ export default {
       perPage: 20,
       currentPage: 1,
       fields: [
-        { key: "pid", label: "Patient ID",sortable:true },
-        { key: "center", label: "Center Name",sortable:true },
-        {key:"fullName", sortable:true},
-        {key:"guardianName",sortable:true},
-        {key:"gender", sortable:true},
-        {key:"mobileNumber", sortable:true},
+        { key: "pid", label: "Patient ID", sortable: true },
+        { key: "center", label: "Center Name", sortable: true },
+        { key: "fullName", sortable: true },
+        { key: "guardianName", sortable: true },
+        { key: "gender", sortable: true },
+        { key: "mobileNumber", sortable: true },
         "action",
       ],
       keywordTypes: [
@@ -148,11 +152,11 @@ export default {
         { value: "fullName", text: "Name" },
         { value: "pid", text: "PID" },
         { value: "mobileNumber", text: "Mobile No" },
-        { value: "guardianName", text: "Guardian Name" }
+        { value: "guardianName", text: "Guardian Name" },
       ],
       search: { keywordType: null, keyword: "" },
-      sortBy:'',
-      sortDesc:false
+      sortBy: "",
+      sortDesc: false,
     };
   },
 
@@ -163,12 +167,12 @@ export default {
       },
     },
   },
-  beforeMount() {
+  mounted() {
     this.$store.commit("clearErrorMsg");
     this.fetchPatients();
   },
   methods: {
-    handleSort(ctx){
+    handleSort(ctx) {
       this.sortBy = ctx.sortBy;
       this.sortDesc = ctx.sortDesc;
       this.currentPage = 1;
@@ -183,13 +187,15 @@ export default {
       if (this.centerSearchAutoComplete) {
         this.centerSearchAutoComplete.setInputValue("");
       }
+      new LocalStorageService().set("backPath", "");
+      //this.$store.commit("setBackToList", "");
       this.fetchPatients();
     },
     handleOnChangeAjaxCall(searchText) {
       // if (searchText.length >= 2) {
-        new CenterService().getCentersByKeyword(searchText).then((result) => {
-          this.centers = result;
-        });
+      new CenterService().getCentersByKeyword(searchText).then((result) => {
+        this.centers = result;
+      });
       // }
     },
     handleAutoComplete(center, autocomplete) {
@@ -200,7 +206,7 @@ export default {
       this.$router.push("/patients/" + id);
     },
     fetchPatients() {
-      if(this.$store.state.isBusy){
+      if (this.$store.state.isBusy) {
         return;
       }
       this.$store.commit("start");
@@ -208,7 +214,15 @@ export default {
       const field = this.search.keywordType ? this.search.keywordType : "";
       const value = this.search.keyword ? this.search.keyword : "";
       new PatientService()
-        .getPatients(centerId, field, value, this.currentPage - 1, this.perPage,this.sortBy,this.sortDesc)
+        .getPatients(
+          centerId,
+          field,
+          value,
+          this.currentPage - 1,
+          this.perPage,
+          this.sortBy,
+          this.sortDesc
+        )
         .then((result) => {
           this.$store.commit("finish");
           this.totalPages = result.totalPages;
@@ -219,3 +233,9 @@ export default {
   },
 };
 </script>
+<style type="text/css">
+.centerSelected input {
+  background: #3cb371;
+  color: #fff;
+}
+</style>
