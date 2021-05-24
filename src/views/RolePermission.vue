@@ -17,7 +17,7 @@
       <CCard>
         <CCardBody>
           <Loader class="mb-2" :isBusy="isBusy" />
-          <table class="table border">
+          <table class="table border table-responsive position-relative">
             <thead>
               <tr>
                 <th>Menu Name</th>

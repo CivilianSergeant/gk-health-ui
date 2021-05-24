@@ -72,19 +72,20 @@
               ></b-form-select>
             </b-form-group>
           </div>
-          <div class="col-md-2 mt-4 px-0" style="margin-top: 1.8rem !important">
+          <div class="col-md-2 mt-4" style="margin-top: 1.8rem !important">
             <b-button type="submit" variant="info">Search</b-button>
             <b-button type="reset" class="ml-1" variant="warning"
               >Clear</b-button
             >
           </div>
         </b-form>
+        <div class="table-responsive">
         <b-table
           striped
           hover
           bordered
           small
-          class="mt-4"
+          class="mt-4 position-relative"
           id="lab-tests"
           :fields="fields"
           :items="labTests"
@@ -113,6 +114,7 @@
             >
           </template>
         </b-table>
+        </div>
         <Loader :isBusy="isBusy" />
         <b-pagination
           v-model="currentPage"

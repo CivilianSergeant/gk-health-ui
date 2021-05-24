@@ -50,8 +50,10 @@
     <CCard>
       <CCardHeader>All Centers</CCardHeader>
       <CCardBody>
+        <div class="table-responsive">
         <b-table
           id="center-table"
+          class="position-relative"
           :fields="fields"
           @filtered="onFiltered"
           @sort-changed="handleSort"
@@ -65,6 +67,7 @@
           striped
           small
         ></b-table>
+        </div>
         <Loader :isBusy="isBusy" />
         <b-pagination
           v-model="currentPage"
