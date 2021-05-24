@@ -12,7 +12,7 @@
         >
       </CCardHeader>
       <CCardBody>
-          <b-form class="row" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
+          <b-form class="row my-3" @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
           
           <div class="col-md-3">
             <b-form-group
@@ -29,14 +29,15 @@
             </b-form-group>
           </div>
           
-          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+          <div class="col-md-3 mt-4 " style="margin-top: 1.8rem !important">
             <b-button type="submit" variant="info">Search</b-button>
             <b-button type="reset" class="ml-1" variant="warning"
               >Clear</b-button
             >
           </div>
         </b-form>
-    <b-table v-if="!showForm" id="category-table" :fields="fields" :per-page="0" :busy.sync="isBusy"
+        <div class="table-responsive">
+    <b-table v-if="!showForm" id="category-table" class="position-relative" :fields="fields" :per-page="0" :busy.sync="isBusy"
         :current-page="currentPage" :items="categories" 
         @sort-changed="handleSort"
         :bordered="true"
@@ -55,6 +56,7 @@
             <router-link class="btn btn-primary btn-sm " :to="'/service-categories/'+row.item.id+'/detail'">Edit</router-link>
         </template>
       </b-table>
+        </div>
       <Loader :isBusy="isBusy"/>
       <b-pagination v-if="!showForm"
         v-model="currentPage"

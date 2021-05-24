@@ -32,7 +32,7 @@
             </b-form-group>
           </div>
           
-          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+          <div class="col-md-3 mt-4" style="margin-top: 1.8rem !important">
             <b-button type="submit" variant="info">Search</b-button>
             <b-button type="reset" class="ml-1" variant="warning"
               >Clear</b-button
@@ -43,7 +43,8 @@
     </CCard>
     <CCard>
       <CCardBody>
-    <b-table id="service-table" v-if="!showForm" :fields="fields" 
+        <div class="table-responsive">
+    <b-table id="service-table" class="position-relative" v-if="!showForm" :fields="fields" 
 
         @sort-changed="handleSort"
         :per-page="0" 
@@ -67,6 +68,7 @@
             <router-link class="btn btn-primary btn-sm " :to="'/services/'+row.item.serviceId+'/detail'">Edit</router-link>
         </template>
       </b-table>
+        </div>
       <Loader :isBusy="isBusy"/>
       <b-pagination v-if="!showForm"
         v-model="currentPage"

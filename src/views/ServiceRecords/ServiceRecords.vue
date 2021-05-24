@@ -77,7 +77,7 @@
         <div class="text-center" v-if="serviceRecords.length==0">To Search Records Select Date Range</div>
         <div v-for="sr in serviceRecords" :key="sr.center.id">
           <h6>{{ sr.center.name }}</h6>
-          <table class="table table-bordered">
+          <table class="table table-bordered table-responsive position-relative">
             <thead class="thead-light">
               <tr>
                 <th>Date</th>
