@@ -22,6 +22,10 @@ export enum ApiRoutes {
     GET_RA_OFFICE = '/health-center/ra-office',
     GET_HC_OFFICE = '/health-center/hc-office',
 
+    // Villages
+    ALL_VILLAGES = '/villages',
+    ADD_VILLAGE = '/villages/add',
+
     ALL_EMPLOYEES = '/employee',
     ALL_REMOTE_EMPLOYEES = '/employee/remote-employees',
     ADD_EMPLOYEE = '/employee/add',
