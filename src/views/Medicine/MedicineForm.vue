@@ -78,7 +78,7 @@
         </CCardBody>
         <CCardFooter>
           <div class="row mt-2 mb-2">
-            <div class="col-md-3 d-flex justify-content-between">
+            <div class="col-md-3 d-flex justify-content">
               <b-button type="submit" variant="info"
                 ><CIcon name="cil-check-circle" /> Submit</b-button
               >

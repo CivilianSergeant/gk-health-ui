@@ -17,6 +17,7 @@ import MedicineRoutes from "@/router/medicine-routes";
 import PrescriptionRoutes from "@/router/prescription-routes";
 import HealthServiceRoutes from "@/router/health-service-routes";
 import ServiceCategoryRoutes from './service-category-routes';
+import VillageRoutes from "@/router/village-routes";
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,8 @@ const routes: Array<RouteConfig> = [
   ...PrescriptionRoutes,
 
   ...MedicineRoutes,
+
+  ...VillageRoutes,
 
   ...LabTestRoutes,
   {

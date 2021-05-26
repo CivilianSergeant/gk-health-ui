@@ -174,7 +174,7 @@ export default {
       }
     },
   },
-  data() {
+  data() { 
     return {
       title: "Service Record",
       fields: [
