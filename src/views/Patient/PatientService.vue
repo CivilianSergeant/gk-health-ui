@@ -207,7 +207,7 @@
     >
     <cCard
       ><CCardBody>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-responsive">
           <thead class="thead-light">
             <tr>
               <th>Sl</th>
@@ -285,8 +285,9 @@
       </div>
     </div>
 
-    <h4>Service History</h4>
+    
     <b-card v-if="patient">
+      <h4>Service History</h4>
       <b-card-body v-for="(pi, i) in consumer.patientInvoices" :key="i">
         <h5>
           Invoice No # {{ pi.invoiceNumber }}
@@ -297,7 +298,7 @@
           >
         </h5>
         <h6>Date: {{ getDate(pi.createdAt) }}</h6>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-responsive">
           <thead class="thead-light">
             <tr>
               <th>Sl</th>

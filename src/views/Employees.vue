@@ -82,14 +82,16 @@
             </div>
           </div>
           <div class="row mb-3 "> 
-            <div class="col-md-3 offset-9 text-right">
+            <div class="col-md-12  d-flex justify-content-end">
               <b-button type="submit" class="mr-2" variant="success">Search</b-button>
               <b-button type="reset" variant="warning">Clear</b-button>
             </div>
           </div>
         </b-form>
+        <div class="table-responsive">
         <b-table
           id="employee-table"
+          class="position-relative"
           :fields="fields"
           :per-page="0"
           :current-page="currentPage"
@@ -100,6 +102,7 @@
           striped
           small
         ></b-table>
+        </div>
         <Loader :isBusy="isBusy" />
         <b-pagination
           v-model="currentPage"

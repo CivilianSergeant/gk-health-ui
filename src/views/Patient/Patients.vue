@@ -34,7 +34,7 @@
                 :disabled="!search.keywordType"
               ></b-form-input>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 py-1">
               <b-button type="submit" size="sm" variant="info">Search</b-button>
               <b-button
                 class="ml-3 text-white"
@@ -58,8 +58,10 @@
         ></CCardHeader
       >
       <CCardBody>
+        <div class="table-responsive">
         <b-table
           id="patient-table"
+          class="position-relative"
           @sort-changed="handleSort"
           :fields="fields"
           :per-page="0"
@@ -90,6 +92,7 @@
             >
           </template>
         </b-table>
+        </div>
         <Loader :isBusy="isBusy" />
         <b-pagination
           v-model="currentPage"

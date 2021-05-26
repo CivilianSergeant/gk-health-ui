@@ -235,7 +235,7 @@
               </div>
             </div>
             <div class="col-md-9 border-left">
-              <table class="table">
+              <table class="table table-responsive position-relative">
                 <thead>
                   <tr class="bg-light text-dark">
                     <th>Medicine</th>

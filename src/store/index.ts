@@ -17,7 +17,7 @@ export default new Vuex.Store({
     message: '',
     menus: [],
     navs: [],
-    sidebarShow: true, //'responsive',
+    sidebarShow: 'responsive',//true, //
     sidebarMinimize: false,
     backToList: "",
   },

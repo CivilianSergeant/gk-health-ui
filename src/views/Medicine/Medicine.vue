@@ -22,7 +22,7 @@
             </b-form-group>
           </div>
           
-          <div class="col-md-3 mt-4 px-0" style="margin-top: 1.8rem !important">
+          <div class="col-md-3 mt-4" style="margin-top: 1.8rem !important">
             <b-button type="submit" variant="info">Search</b-button>
             <b-button type="reset" class="ml-1" variant="warning"
               >Clear</b-button
@@ -42,8 +42,10 @@
         ></CCardHeader
       >
       <CCardBody>
+        <div class="table-responsive">
         <b-table
           id="medicine-table"
+          class="position-relative"
           :fields="fields"
           @filtered="onFiltered"
           @sort-changed="handleSort"
@@ -76,6 +78,7 @@
             </div>
           </template>
         </b-table>
+        </div>
         <b-pagination
         v-model="currentPage"
         :total-rows="rows"
