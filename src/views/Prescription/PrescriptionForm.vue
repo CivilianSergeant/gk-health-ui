@@ -21,12 +21,10 @@
             ></b-form-input>-->
 
                 <Autocomplete
-                  
                   @choose-item="handleInvoiceNumberAutocomplete"
                   :items="invoices"
                   label="invoiceNumber"
                   rowId="id"
-                  
                 />
               </b-form-group>
             </div>
@@ -51,12 +49,21 @@
               </div>
             </div>
           </div>
-          <Loader :isBusy="isBusy"/>
+          <Loader :isBusy="isBusy" />
           <div class="row" v-if="!patient">
             <div class="col-md-8">
               <h5>Latest Invoice</h5>
               <ul class="list-group">
-                <li class="cursor-pointer list-group-item" @click="handleInvoiceItemClick(invoice.id)" v-for="invoice in invoices" :key="invoice.id">{{invoice.invoiceNumber}} - {{invoice.patientFullName}}[{{invoice.pid}}]</li>
+                <li
+                  class="cursor-pointer list-group-item"
+                  @click="handleInvoiceItemClick(invoice.id)"
+                  v-for="invoice in invoices"
+                  :key="invoice.id"
+                >
+                  {{ invoice.invoiceNumber }} - {{ invoice.patientFullName }}[{{
+                    invoice.pid
+                  }}]
+                </li>
               </ul>
             </div>
           </div>
