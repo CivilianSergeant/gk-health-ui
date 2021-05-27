@@ -66,7 +66,17 @@
           hover
           striped
           small
-        ></b-table>
+        >
+         <template #cell(action)="row">
+            <div class="text-center">
+              <router-link
+                class="btn btn-primary btn-sm"
+                :to="'/health-center/' + row.item.id + '/detail'"
+                >Edit</router-link
+              >
+            </div>
+          </template>
+        </b-table>
         </div>
         <Loader :isBusy="isBusy" />
         <b-pagination
@@ -123,6 +133,7 @@ export default {
         {key: "secondLevel", sortable: true},
         {key: "thirdLevel", sortable: true},
         {key: "fourthLevel", sortable: true},
+        "action",
       ],
       currentPage: 1,
       perPage: 10,

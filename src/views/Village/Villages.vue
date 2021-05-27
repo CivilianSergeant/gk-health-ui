@@ -15,7 +15,7 @@
                 :filter="filter"
                 :filter-included-fields="filterOn"
                 :current-page="currentPage"
-                :items="villags"
+                :items="villages"
                 :bordered="true"
                 :hover="true"
                 :striped="true"
@@ -30,6 +30,23 @@
 
 <script>
     export default {
+        computed: {
+            rows() {
+            return this.totalRows; //this.services.length
+            },
+            isBusy() {
+            return this.$store.state.isBusy;
+            },
+            isError() {
+            return this.$store.state.isError;
+            },
+            isSuccess() {
+            return this.$store.state.isSuccess;
+            },
+            message() {
+            return this.$store.state.message;
+            },
+        },
         data(){
             return {
                 fields: [
@@ -40,6 +57,14 @@
                     { key:"village", sortable:true},
                     "action",
                 ],
+                villages:[],
+                perPage: 10,
+                currentPage: 1,
+                filter: null,
+                filterOn: [],
+                totalPages:0,
+                totalRows: 0,
+                sortBy:"",
             }
         }
     }
