@@ -217,7 +217,7 @@ export default {
         onReset() {
             this.$store.commit("clearMessage");
             const navigationService = new NavigationService();
-            navigationService.redirect(this, "/villages");
+            navigationService.redirect(this, "/Villages");
         },
         
     }
