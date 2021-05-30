@@ -28,6 +28,11 @@
     <CDropdownItem href="http://training.ghrmplus.com" target="_blank">
       <CIcon name="cil-settings" />HRM
     </CDropdownItem>
+
+    <CDropdownItem href="http://103.26.136.30:8081" target="_blank">
+      <CIcon name="cil-settings" />ACCOUNTS
+    </CDropdownItem>
+
     <CDropdownDivider />
     <CDropdownItem :href="onLogout()">
       <CIcon name="cil-lock-locked" />Sign Out

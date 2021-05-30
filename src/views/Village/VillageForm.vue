@@ -8,7 +8,7 @@
         ></CCardHeader>
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
             <CCardBody>
-                <div class="row">
+                <div class="row py-2" style="background:#f2f2f2">
                     <div class="col-md-4">
                         <b-form-group
                             id="input-group-1"
@@ -20,16 +20,19 @@
                            <b-form-select  @change="handleChangeRaOffice" :options="raOffices"></b-form-select>
                         </b-form-group>
                         </div>
-                    <div class="col-md-4" >
+                    <div class="col-md-4">
                             <!-- <Loader :isBusy="isBusy" /> -->
                             <b-form-group
                             id="input-group-hc-office"
                             label="HC Office:"
                             label-for="hc-office"
                             >
-                                <b-form-select :options="hcOffices"  v-model="form.hcoffice.id"></b-form-select>
+                                <b-form-select :options="hcOffices"  v-model="form.hcofficeId"></b-form-select>
                             </b-form-group>
                     </div>
+                </div>
+                <hr>
+                <div class="row mt-3">
                     <div class="col-md-4">
                         <b-form-group
                             id="input-group-1"
@@ -39,8 +42,10 @@
                             <label> Division: <span class="text-danger">*</span></label>
                             <b-form-select
                             required
+                            :options="divisions"
                             id="divisions"
-                            v-model="form.division.id"
+                             @change="handleChangeDivision"
+                            v-model="form.divisionId"
                             ></b-form-select>
                         </b-form-group>
                         </div>
@@ -54,7 +59,10 @@
                             <label> District: <span class="text-danger">*</span></label>
                             <b-form-select
                             required
-                            v-model="form.district.id"
+                            :disabled="districts.length==0 || form.divisionId==null"
+                            :options="districts"
+                            @change="handleChangeDistrict"
+                            v-model="form.districtId"
                             id="divisions"
                             ></b-form-select>
                         </b-form-group>
@@ -68,7 +76,10 @@
                             <label> Upazila: <span class="text-danger">*</span></label>
                             <b-form-select
                             required
-                            v-model="form.upazila.id"
+                            :options="thanas"
+                            :disabled="thanas.length==0 || form.districtId==null"
+                            v-model="form.thanaId"
+                            @change="handleChangeThana"
                             id="upazila"
                             ></b-form-select>
                         </b-form-group>
@@ -82,7 +93,10 @@
                             <label> Union: <span class="text-danger">*</span></label>
                             <b-form-select
                             required
-                            v-model="form.union.id"
+                            :disabled="unions.length==0 || form.thanaId==null"
+                            :options="unions"
+                            @change="handleChangeUnion"
+                            v-model="form.unionId"
                             id="unions"
                             ></b-form-select>
                         </b-form-group>
@@ -96,7 +110,9 @@
                             <label> Village: </label>
                             <b-form-select
                             id="villages"
-                            v-model="form.village.id"
+                            :disabled="villages.length==0 || form.unionId==null"
+                            :options="villages"
+                            v-model="form.lgVillageId"
                             ></b-form-select>
                         </b-form-group>
                         </div>
@@ -134,6 +150,7 @@
 <script>
 import {
   NavigationService,
+  LocationService
 } from "@/services";
 import { CenterService } from "@/services/CenterService";
 
@@ -155,27 +172,35 @@ export default {
   },
     data(){
         return {
-            form: { centerId: null,
-            hcoffice:{id:null},
-            division:{id:null},
-            district:{id:null},
-            upazila:{id:null},
-            thana:{id:null},
-            union:{id:null},
-            village:{id:null},
+            form: {
+            id: "null",
+            hcofficeId:null,
+            divisionId:null,
+            districtId:null,
+            thanaId:null,
+            unionId:null,
+            lgVillageId:null,
             villageCode:null,
-            villageName:null, },
+            villageName:null, 
+            },
             // selectedCenter: null,
             currentCenter:null,
             raCenters:[],
             raOffices:[], 
             hcOffices:[],
             centers:[],
+            divisions:[],
+            districts:[],
+            thanas:[],
+            unions:[],
+            villages:[],
+
         }
     },
     mounted(){
         this.fetchRaOffice();
         this.fetchCenters();
+        this.fetchDivisions();
     },
     methods:{
         fetchRaOffice(){
@@ -213,6 +238,89 @@ export default {
                          this.hcOffices.push({value:m.id,text:m.name});
                      })
                  });
+        },
+        fetchDivisions(){
+             (new LocationService()).getDivisions().then(result=>{
+                result.unshift({ divisionId: null, divisionName: "Select Division" });
+                result.map(r => {
+                     this.divisions.push({value:r.divisionId,text:r.divisionName});
+                }) 
+            });
+        },
+        handleChangeDivision(val){
+            this.selectedDvision = val;
+            //console.log(this.selectedDvision);
+            this.districts = [];
+            this.unions = [];
+            this.thanas = [];
+            this.villages = [];
+
+            this.getDistrictList(val);
+        },
+        getDistrictList(id){
+            //console.log(id);
+             (new LocationService()).getDistrictBydivisionId(id).then(result=>{
+                result.collection.unshift({ districtId: null, districtName: "Select District" });
+                result.collection.map(r => {
+                     this.districts.push({value:r.districtId,text:r.districtName});
+                }) 
+                this.$store.commit('finish'); 
+            });
+        },
+        handleChangeDistrict(val){
+            this.thanas = [];
+            this.unions = [];
+            this.villages = [];
+            this.getThanaList(val);
+        },
+        getThanaList(id){
+             (new LocationService()).getThanaBydistrictId(id).then(result=>{
+                result.collection.unshift({ thanaId: null, thanaName: "Select Upozilla" });
+                result.collection.map(r => {
+                     this.thanas.push({value:r.thanaId,text:r.thanaName});
+                }) 
+                this.$store.commit('finish'); 
+            });
+        },
+        handleChangeThana(val){
+            this.unions = [];
+            this.villages = [];
+            this.getUnionList(val);
+        },
+        getUnionList(id){
+             (new LocationService()).getUnionByThanaId(id).then(result=>{
+                result.collection.unshift({ unionId: null, unionName: "Select Union" });
+                result.collection.map(r => {
+                     this.unions.push({value:r.unionId,text:r.unionName});
+                }) 
+                this.$store.commit('finish'); 
+            });
+        },
+        handleChangeUnion(val){
+            this.villages = [];
+            this.getVillageList(val);
+        },
+        getVillageList(unionId){
+             (new LocationService()).getVillageByUnionId(unionId).then(result=>{
+                result.collection.unshift({ lgVillageId: null, villageName: "Select Village" });
+              
+                result.collection.map(r => {
+                     this.villages.push({value:r.lgVillageId,text:r.villageName});
+                })
+               
+                this.$store.commit('finish'); 
+            });
+        },
+        onSubmit(){
+            this.$store.commit("start");
+            new LocationService().addLocation(this.form,() => {
+                const message =
+                this.id != undefined ? "Location Updated" : "Location Created";
+                this.$store.commit("setSuccessMsg", message);
+                this.$store.commit("finish");
+                const navigationService = new NavigationService();
+                navigationService.redirect(this, "Villages");
+            });
         },
         onReset() {
             this.$store.commit("clearMessage");

@@ -22,6 +22,14 @@ export enum ApiRoutes {
     GET_RA_OFFICE = '/health-center/ra-office',
     GET_HC_OFFICE = '/health-center/hc-office',
 
+    //Location
+    ALL_DIVISIONS = '/location/divisions',
+    GET_DISTRICT_BY_DIVISION_ID = '/location/districts/:id',
+    GET_THANA_BY_DISTRICT_ID = '/location/thanas/:id',
+    GET_UNION_BY_THANA_ID = '/location/unions/:id',
+    GET_VILLAGE_BY_UNION_ID = '/location/villages/:id',
+    ADD_LOCATION = '/location/add',
+
     // Villages
     ALL_VILLAGES = '/villages',
     ADD_VILLAGE = '/villages/add',
