@@ -83,4 +83,23 @@ export class LocationService{
             
         
     }
+
+    async locationMapping(payload: Record<string, any>, callback: Function): Promise<any> {
+        
+        const auth = store.getters.auth;
+
+        try{
+            const response = await axios.post(GetApiRoute(ApiRoutes.MAPPING_LOCATION),payload,
+            setAuthorizationToken(auth.token));
+                
+            if(response.status==200){
+                
+                callback();
+            }
+        }catch(error){
+            handleException(error);
+        }
+            
+        
+    }
 }

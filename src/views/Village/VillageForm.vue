@@ -27,7 +27,7 @@
                             label="HC Office:"
                             label-for="hc-office"
                             >
-                                <b-form-select :options="hcOffices"  v-model="form.hcofficeId"></b-form-select>
+                                <b-form-select :options="hcOffices"  v-model="form.centerId"></b-form-select>
                             </b-form-group>
                     </div>
                 </div>
@@ -173,8 +173,8 @@ export default {
     data(){
         return {
             form: {
-            id: "null",
-            hcofficeId:null,
+            //id: "null",
+            centerId:null,
             divisionId:null,
             districtId:null,
             thanaId:null,
@@ -201,6 +201,7 @@ export default {
         this.fetchRaOffice();
         this.fetchCenters();
         this.fetchDivisions();
+        //console.log("centerid-",this.$store.getters.center.id);
     },
     methods:{
         fetchRaOffice(){
@@ -312,7 +313,9 @@ export default {
             });
         },
         onSubmit(){
+             
             this.$store.commit("start");
+            if(this.villages.length<0){
             new LocationService().addLocation(this.form,() => {
                 const message =
                 this.id != undefined ? "Location Updated" : "Location Created";
@@ -321,11 +324,26 @@ export default {
                 const navigationService = new NavigationService();
                 navigationService.redirect(this, "Villages");
             });
+            }else{
+                 const req={
+                     healthCenter:{id:this.form.centerId},
+                     village:{lgVillageId:this.form.lgVillageId}
+                 };
+
+                 new LocationService().locationMapping(req,() => {
+                const message =
+                this.id != undefined ? "" : "Location Mapped";
+                this.$store.commit("setSuccessMsg", message);
+                this.$store.commit("finish");
+                const navigationService = new NavigationService();
+                navigationService.redirect(this, "Villages");
+            });
+            }
         },
         onReset() {
             this.$store.commit("clearMessage");
             const navigationService = new NavigationService();
-            navigationService.redirect(this, "/Villages");
+            navigationService.redirect(this, "Villages");
         },
         
     }

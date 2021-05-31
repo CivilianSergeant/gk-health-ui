@@ -1,5 +1,7 @@
 <template>
     <div> 
+        <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
+    <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
         <CCard>
             <CCardHeader> Village List <router-link
           to="/villages/add"

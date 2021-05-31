@@ -29,6 +29,7 @@ export enum ApiRoutes {
     GET_UNION_BY_THANA_ID = '/location/unions/:id',
     GET_VILLAGE_BY_UNION_ID = '/location/villages/:id',
     ADD_LOCATION = '/location/add',
+    MAPPING_LOCATION = '/location/mapping',
 
     // Villages
     ALL_VILLAGES = '/villages',

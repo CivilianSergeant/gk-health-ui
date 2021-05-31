@@ -11,7 +11,7 @@ const VillageRoutes: Array<RouteConfig> = [
     },
     
     {
-        name: 'Village List',
+        name: 'Villages',
         path: '/villages',
         component: Villages
     },
