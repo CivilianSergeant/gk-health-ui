@@ -32,7 +32,7 @@ export enum ApiRoutes {
     MAPPING_LOCATION = '/location/mapping',
 
     // Villages
-    ALL_VILLAGES = '/villages',
+    ALL_VILLAGES = '/location/villages',
     ADD_VILLAGE = '/villages/add',
 
     ALL_EMPLOYEES = '/employee',

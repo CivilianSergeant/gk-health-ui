@@ -25,6 +25,23 @@ export class LocationService{
         }
     }
 
+    async getVillages(q: any): Promise<any>{
+        const auth = store.getters.auth;
+       try{
+           let path: string = ApiRoutes.ALL_VILLAGES;
+           path += `?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`;
+            const response = await axios.get(GetApiRoute(path),
+            setAuthorizationToken(auth.token));
+            if(response.status==200){
+                this.villages = response.data.object;
+            }
+
+            return this.villages;
+        }catch(error){
+            handleException(error);
+        }
+    }
+
     async getDistrictBydivisionId(id: string): Promise<any[]>{
         const auth = store.getters.auth;
         const result = await axios.get(GetApiRoute(ApiRoutes.GET_DISTRICT_BY_DIVISION_ID,id),
