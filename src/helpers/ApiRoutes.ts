@@ -33,6 +33,7 @@ export enum ApiRoutes {
 
     // Villages
     ALL_VILLAGES = '/location/villages',
+    GET_VILLAGE_BY_CENTER = '/location/center-villages/:id',
     ADD_VILLAGE = '/villages/add',
 
     ALL_EMPLOYEES = '/employee',

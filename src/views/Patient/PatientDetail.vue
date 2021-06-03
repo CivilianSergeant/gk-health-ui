@@ -116,7 +116,18 @@
                 label-for="vilage"
               >
                 <strong class="text-dark">{{
-                  form.village ? form.village : "N/A"
+                  form.village ? form.village.villageName : "N/A"
+                }}</strong>
+              </b-form-group>
+            </div>
+             <div class="col-md-6">
+              <b-form-group
+                id="input-group-7"
+                label="Street Address"
+                label-for=""
+              >
+                <strong class="text-dark">{{
+                  form.village ? form.streetAddress : "N/A"
                 }}</strong>
               </b-form-group>
             </div>

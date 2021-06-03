@@ -139,16 +139,31 @@
           </div>
 
           <div class="row">
+            <div class="col-md-3">
+                        <b-form-group
+                          id="input-group-r-gender"
+                          label="Village:"
+                          label-for="village"
+                          description=""
+                        >
+                          <b-form-select
+                            id="r-village"
+                            v-model="form.village.lgVillageId"
+                            :options="villages"
+                          ></b-form-select>
+                        </b-form-group>
+                      </div>
             <div class="col-md-6">
               <b-form-group
+                v-if="form.village.lgVillageId"
                 id="input-group-7"
-                label="Village"
-                label-for="vilage"
+                label="Street Address"
+                label-for="street-address"
                 description=""
               >
                 <b-form-input
-                  id="village"
-                  v-model="form.village"
+                  id="streetAddress"
+                  v-model="form.streetAddress"
                   type="text"
                   placeholder="Patient's address"
                 ></b-form-input>
@@ -323,6 +338,7 @@
                           ></b-form-input>
                         </b-form-group>
                       </div>
+
                       <div class="col-md-3">
                         <b-form-group
                           id="input-group-r-gender"
@@ -426,7 +442,7 @@
 import { CenterService } from "@/services/CenterService";
 import { LocalStorageService } from "@/services/LocalStorageService";
 import { NavigationService } from "@/services/NavigationService";
-import { PatientService } from "@/services";
+import { LocationService, PatientService } from "@/services";
 
 export default {
   name: "Patients",
@@ -463,14 +479,13 @@ export default {
       form: {
         pid: "",
         center: { id: null },
-        apiVillageId: null,
+        village: {lgVillageId:null},
         fullName: "",
         age: "",
         guardianName: "",
         motherName: "",
         gender: null,
         maritalStatus: null,
-        village: "",
         mobileNumber: "",
         detail: {
           bloodGroup: null,
@@ -488,6 +503,7 @@ export default {
           apiEmployeeId: 124,
         },
       },
+      villages:[],
     };
   },
 
@@ -514,6 +530,7 @@ export default {
   },
   mounted() {
     console.log(this.$store.getters);
+    this.fetchVillagesByCenter();
   },
   created() {
     new LocalStorageService().getReferrer((r) => (this.referrer = r), this);
@@ -555,7 +572,7 @@ export default {
           this.form.pid = response.data.patient.pid;
           const navigationService = new NavigationService();
           navigationService.setLocalStorageService(new LocalStorageService());
-          navigationService.redirect(this, "patients");
+          navigationService.redirect(this, "Patients");
         } else {
           this.$store.commit("setErrorMsg", response);
         }
@@ -566,7 +583,7 @@ export default {
     onReset() {
       const navigationService = new NavigationService();
       navigationService.setLocalStorageService(new LocalStorageService());
-      navigationService.redirect(this, "patients");
+      navigationService.redirect(this, "Patients");
       this.referrer = null;
       console.log("");
     },
@@ -587,6 +604,7 @@ export default {
     fetchPatient(id) {
       new PatientService().getPatientById(id, (data) => {
         this.form = data;
+        this.form.center = {id:null}
         if (data.detail == null) {
           this.form.detail = {
             bloodGroup: null,
@@ -615,6 +633,24 @@ export default {
 
         this.$store.commit("finish");
       });
+    },
+
+    fetchVillagesByCenter(){
+      const id = this.$store.getters.center.apiOfficeId;
+      if(id==undefined)
+      {
+        return;
+      }
+      (new LocationService()).getVillagesByCenter(id).then((result)=>{
+         this.villages.push({ value: null, text: "Select Village" });
+        result.forEach((v)=>{
+          this.villages.push({
+            value: v.lgVillageId,
+            text: v.villageName,
+          })
+        })
+        
+      })
     },
   },
 };

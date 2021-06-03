@@ -119,4 +119,23 @@ export class LocationService{
             
         
     }
+
+
+    async getVillagesByCenter(id: number): Promise<any>{
+        console.log("cid=",id);
+        const auth = store.getters.auth;
+       try{
+           const path: string = ApiRoutes.GET_VILLAGE_BY_CENTER;
+            const response = await axios.get(GetApiRoute(path,id.toString()),
+            setAuthorizationToken(auth.token));
+            if(response.status==200){
+                this.villages = response.data.collection;
+            }
+
+            return this.villages;
+        }catch(error){
+            handleException(error);
+        }
+    }
+
 }
