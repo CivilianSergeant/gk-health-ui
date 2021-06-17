@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import { VoucherService } from '@/services';
+import { VoucherService,NavigationService } from '@/services';
 export default {
   computed: {
     isError() {
@@ -162,14 +162,23 @@ export default {
       },
       onSubmit(){
           this.form.officeId = this.$store.getters.center.apiOfficeId;
+          this.form.officeTypeId = this.$store.getters.center.officeTypeId;
           this.form.totalAmount = this.getTotalAmount;
           this.form.voucherDate = this.form.voucherDate+ 'T00:00:00';
           this.form.module = 'GK_HEALTH';
-        (new VoucherService()).addVoucher(this.form).then(result=>console.log(result));
+        (new VoucherService()).addVoucher(this.form).then(result=>{
+            if(result.id != undefined || result.id != null){
+                this.redirectTo('Vouchers')
+            }
+        });
       },
       onReset(){
         this.clearMessage();
-      }
+      },
+      redirectTo(routeName){
+            const navigationService = new NavigationService();
+            navigationService.redirect(this, routeName);
+        }
   }
 }
 </script>

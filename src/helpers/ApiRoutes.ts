@@ -109,7 +109,8 @@ export enum ApiRoutes {
     GET_STATS = '/report/stats',
     GET_MONTH_WISE_RECEIVED_STATS = '/report/month-wise-received',
 
-    ADD_VOUCHER = '/accounts/voucher/add'
+    ADD_VOUCHER = '/accounts/voucher/add',
+    GET_VOUCHERS = '/accounts/voucher/list'
 }
 
 export function GetApiRoute(route: string, value = "") {
