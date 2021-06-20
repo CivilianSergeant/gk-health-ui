@@ -107,7 +107,10 @@ export enum ApiRoutes {
     ADD_ROLE_PERMISSION = '/roles/permissions',
 
     GET_STATS = '/report/stats',
-    GET_MONTH_WISE_RECEIVED_STATS = '/report/month-wise-received'
+    GET_MONTH_WISE_RECEIVED_STATS = '/report/month-wise-received',
+
+    ADD_VOUCHER = '/accounts/voucher/add',
+    GET_VOUCHERS = '/accounts/voucher/list'
 }
 
 export function GetApiRoute(route: string, value = "") {
