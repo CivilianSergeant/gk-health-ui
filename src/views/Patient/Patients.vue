@@ -86,6 +86,16 @@
               >{{ row.item.mobileNumber ? row.item.mobileNumber : "N/A" }}
             </span>
           </template>
+          <template #cell(age)="row">
+            <span
+              >{{ row.item.age !="null" ? row.item.age : 'N/A' }}
+            </span>
+          </template>
+          <template #cell(gb)="row">
+            <span
+              >{{ row.item.gb ? 'Yes' : 'No' }}
+            </span>
+          </template>
           <template #cell(action)="row">
             <b-button size="sm" variant="info" @click="viewDetail(row.item.id)"
               >Detail</b-button
@@ -147,6 +157,8 @@ export default {
         { key: "fullName", sortable: true },
         { key: "guardianName", sortable: true },
         { key: "gender", sortable: true },
+        { key: "age", sortable: true },
+        { key: "gb", label:"IS GB?", sortable: true },
         { key: "mobileNumber", sortable: true },
         "action",
       ],

@@ -122,9 +122,9 @@
                         <b-form-datepicker :required="true" id="patient-datepicker"  v-model="form.dateOfBirth" class="mt-2"></b-form-datepicker>
                     </b-form-group>
                 </div> -->
-            <div class="col-md-6">
+            <div class="col-md-3">
               <b-form-group
-                id="input-group-6"
+                id="input-group-3"
                 label-for="patient-age"
                 description=""
               >
@@ -134,6 +134,20 @@
                   id="patient-age"
                   v-model="form.age"
                 ></b-form-input>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-3"
+                label-for="patient-isgb"
+                description=""
+              >
+                <label for="patient-isgb"> Is GB: <span class="text-danger">*</span> </label>
+                <b-form-checkbox
+                  :required="true"
+                  id="patient-isgb"
+                  v-model="form.gb"
+                ></b-form-checkbox>
               </b-form-group>
             </div>
           </div>
@@ -605,6 +619,9 @@ export default {
       new PatientService().getPatientById(id, (data) => {
         this.form = data;
         this.form.center = {id:null}
+        if(data.village==null){
+          this.form.village = {lgVillageId:null}
+        }
         if (data.detail == null) {
           this.form.detail = {
             bloodGroup: null,

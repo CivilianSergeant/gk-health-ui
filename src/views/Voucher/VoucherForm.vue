@@ -174,6 +174,7 @@ export default {
       },
       onReset(){
         this.clearMessage();
+        this.redirectTo('Vouchers');
       },
       redirectTo(routeName){
             const navigationService = new NavigationService();
