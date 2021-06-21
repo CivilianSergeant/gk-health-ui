@@ -30,6 +30,7 @@
                       label="pid"
                       rowId="id"
                       :disable="false"
+                      ref="patientSelect"
                       @ajax-call="handlePatientAutocomplete"
                     />
                   </b-form-group>
@@ -127,9 +128,7 @@
                     <div>
                       IS GB?:
                       <Status
-                        :data="
-                          form.cardRegistration && form.cardRegistration.gb
-                        "
+                        :data="isGB()"
                       />
                     </div>
                     <div>
@@ -729,15 +728,23 @@ export default {
 
       pdf.output("dataurlnewwindow");
     },
+
     showPatientType() {
-      if (this.consumer.registration) {
-        if (this.consumer.registration.gb) {
+      if(this.consumer.registration && this.registration.active){
+        if(this.consumer.gb){
           return "CH-GB";
+        }else{
+          return "CH-NGB";
         }
-        return "CH-NGB";
+      }else{
+        if(this.consumer.gb){
+          return "NCH-GB";
+        }else{
+          return "NCH-NGB";
+        }
       }
-      return "NCH";
     },
+
     showReferredCard() {
       if (this.consumer && this.consumer.cardMember) {
         return this.consumer.cardMember.cardRegistration.cardNumber;
@@ -947,9 +954,10 @@ export default {
       this.registration = null;
       this.service = null;
       this.consumer = null;
-      if (this.autocomplete.setInputValue != undefined) {
-        this.autocomplete.setInputValue("");
-      }
+      // if (this.autocomplete.setInputValue != undefined) {
+      //   this.autocomplete.setInputValue("");
+      // }
+      this.$refs['patientSelect'].setInputValue("")
       this.pid = "";
     },
     register() {
@@ -974,13 +982,11 @@ export default {
     },
     isGB() {
       if (this.consumer.cardMember != null) {
-        return this.consumer.cardMember.cardRegistration.gb;
+        return this.consumer.cardMember.gb;
+      }else{
+        return this.consumer.gb;
       }
-      if (this.form.cardRegistration != null) {
-        return this.form.cardRegistration.gb;
-      }
-
-      return false;
+      
     },
 
     findPatient() {

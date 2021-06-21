@@ -571,6 +571,9 @@ export default {
         formRequest.cardRegistration = null;
       }
 
+      if(this.form.village.lgVillageId!=null){
+        this.form.village = null;
+      }
       formRequest.center.id = this.$store.getters.center.id;
 
       // axios.defaults.headers.common = {

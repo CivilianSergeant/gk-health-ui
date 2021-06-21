@@ -142,6 +142,18 @@
                 }}</strong>
               </b-form-group>
             </div>
+            <div class="col-md-3">
+              <b-form-group
+                id="input-group-9"
+                label="IS GB:"
+                label-for="isGB"
+              >
+                <strong class="text-dark">{{
+                  form.gb ? "YES" : "NO"
+                }}</strong>
+              </b-form-group>
+            </div>
+            
           </div>
           <div class="row">
             <div class="col-md-2">
@@ -251,7 +263,7 @@
                   >Inactive</span
                 >
               </p>
-              <p>IS GB: ({{ form.registration.gb ? "Yes" : "No" }})</p>
+              <!-- <p>IS GB: ({{ form.registration.gb ? "Yes" : "No" }})</p> -->
               <p>Card Members ({{ form.registration.members.length }})</p>
               <p>Start Date: {{ form.registration.startDate }}</p>
               <p>Expire Date: {{ form.registration.expiredDate }}</p>
