@@ -3,6 +3,7 @@ import store from "@/store";
 export enum ApiRoutes {
     DOMAIN = 'http://localhost:8081',
     BASE_PATH = 'http://localhost:8282/api/',
+    // ACCOUNT_PATH = 'http://localhost:8383/api/',
     AUTH_BASEPATH = 'http://103.26.136.30:8080',
     AUTH_PATH = 'http://103.26.136.30:8080/auth',
     REALM_PATH = 'http://103.26.136.30:8080/auth/realms/GK_HEALTH',
@@ -110,7 +111,8 @@ export enum ApiRoutes {
     GET_MONTH_WISE_RECEIVED_STATS = '/report/month-wise-received',
 
     ADD_VOUCHER = '/accounts/voucher/add',
-    GET_VOUCHERS = '/accounts/voucher/list'
+    GET_VOUCHERS = '/accounts/voucher/list',
+    VOUCHER_TYPES = '/accounts/voucher/by-module/GK_HEALTH'
 }
 
 export function GetApiRoute(route: string, value = "") {
