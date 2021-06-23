@@ -206,7 +206,8 @@
     >
     <cCard
       ><CCardBody>
-        <table class="table table-bordered table-responsive">
+        <div class="table-responsive">
+        <table class="table table-bordered position-relative">
           <thead class="thead-light">
             <tr>
               <th>Sl</th>
@@ -268,6 +269,7 @@
             </tr>
           </tfoot>
         </table>
+        </div>
       </CCardBody></cCard
     >
     <div
@@ -297,7 +299,8 @@
           >
         </h5>
         <h6>Date: {{ getDate(pi.createdAt) }}</h6>
-        <table class="table table-bordered table-responsive">
+        <div class="table-responsive">
+        <table class="table table-bordered position-relative">
           <thead class="thead-light">
             <tr>
               <th>Sl</th>
@@ -330,6 +333,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
       </b-card-body>
     </b-card>
 
@@ -730,7 +734,8 @@ export default {
     },
 
     showPatientType() {
-      if(this.consumer.registration && this.registration.active){
+      //this.consumer.registration.active
+      if(this.consumer.registration && this.consumer.registration.active){
         if(this.consumer.gb){
           return "CH-GB";
         }else{

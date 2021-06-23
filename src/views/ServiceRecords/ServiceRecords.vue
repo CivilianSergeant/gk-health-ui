@@ -75,9 +75,9 @@
       <cCardHeader> Service Records </cCardHeader>
       <cCardBody>
         <div class="text-center" v-if="serviceRecords.length==0">To Search Records Select Date Range</div>
-        <div v-for="sr in serviceRecords" :key="sr.center.id">
+        <div class="table-responsive" v-for="sr in serviceRecords" :key="sr.center.id">
           <h6>{{ sr.center.name }}</h6>
-          <table class="table table-bordered table-responsive position-relative">
+          <table class="table table-bordered position-relative">
             <thead class="thead-light">
               <tr>
                 <th>Date</th>
@@ -123,15 +123,15 @@
             </tfoot>
           </table>
         </div>
-        <div class="grand-total">
-          <table class="table table-bordered">
+        <div class="grand-total table-responsive">
+          <table class="table table-bordered position-relative">
             <tbody>
               <tr>
                 
-                <th >Grand Total</th>
-                <th>{{ grandTotalReceivable }}</th>
+                <th width="725">Grand Total</th>
+                <th width="110">{{ grandTotalReceivable }}</th>
                 <th>{{ grandTotalPaid }}</th>
-                <th></th>
+               
               </tr>
             </tbody>
           </table>
@@ -302,8 +302,8 @@ export default {
             r.serviceRecords.forEach((sr) => {
               r.totalReceivable += parseFloat(sr.receivableAmount);
               r.totalPaid += parseFloat(sr.paid);
-              this.grandTotalReceivable += r.totalReceivable;
-              this.grandTotalPaid += r.totalPaid;
+              this.grandTotalReceivable += parseFloat(sr.receivableAmount);//r.totalReceivable;
+              this.grandTotalPaid +=  parseFloat(sr.paid);//r.totalPaid;
             });
           });
           this.serviceRecords = result;
