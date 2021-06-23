@@ -10,6 +10,7 @@
                 class="btn btn-primary btn-sm float-right"
                 >Vouchers</router-link
             ></CCardHeader>
+            
             <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
                 <CCardBody>
                     <div class="col-md-4">
@@ -132,6 +133,7 @@
                             <CIcon name="cil-x-circle" /> Cancel</b-button
                         >
                         </div>
+                        <div class="col-md-4"> <Loader :isBusy="isBusy" /></div>
                     </div>
                 </CCardFooter>
             </b-form>
@@ -144,6 +146,10 @@
 import { VoucherService,NavigationService } from '@/services';
 export default {
   computed: {
+     isBusy() {
+        return this.$store.state.isBusy;
+      },
+
     isError() {
       return this.$store.state.isError;
     },
@@ -154,7 +160,7 @@ export default {
       return this.$store.state.message;
     },
     disbleBtn(){
-        return this.form.amount==0 || this.form.voucherNo==''
+        return (this.form.amount==0 || this.form.voucherNo=='') || this.isBusy;
     },
     getTotalAmount(){
         let result = 0;
@@ -180,23 +186,30 @@ export default {
             ]
     };
   },
+
   methods:{
       clearMessage(){
           this.$store.commit('clearMessage');
       },
       onSubmit(){
+          if(this.isBusy){
+              return false;
+          }
+          this.$store.commit("start");
           this.form.officeId = this.$store.getters.center.apiOfficeId;
           this.form.officeTypeId = this.$store.getters.center.officeTypeId;
           this.form.totalAmount = this.getTotalAmount;
           this.form.voucherDate = this.form.voucherDate+ 'T00:00:00';
           this.form.module = 'GK_HEALTH';
         (new VoucherService()).addVoucher(this.form).then(result=>{
+            this.$store.commit("finish");
             if(result.id != undefined || result.id != null){
                 this.redirectTo('Vouchers')
             }
         });
       },
       onReset(){
+        this.$store.commit("finish");
         this.clearMessage();
         this.redirectTo('Vouchers');
       },
