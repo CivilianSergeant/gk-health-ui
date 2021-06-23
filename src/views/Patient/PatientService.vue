@@ -1059,11 +1059,22 @@ export default {
 
     onSubmit() {
       this.$store.commit("start");
+      this.consumer.registration.startDate = this.consumer.registration.startDate.toString().replace(" ","T")
+      this.consumer.registration.expiredDate = this.consumer.registration.expiredDate.toString().replace(" ","T")
+      const form = {
+        id: this.consumer.id,
+        pid: this.consumer.pid,
+        center: this.$store.getters.center,
+        createdBy: this.$store.getters.employee,
+        patientInvoices: [this.patientInvoice],
+        registration: this.consumer.registration
+      };
+     
       this.consumer.patientInvoices.unshift(this.patientInvoice);
       this.consumer.center = this.$store.getters.center;
       this.consumer.createdBy = this.$store.getters.employee;
       new PatientInvoiceService()
-        .saveInvoice(this.consumer)
+        .saveInvoice(form)
         .then((result) => {
           if (result.status == 200) {
             this.consumer = result.object;
