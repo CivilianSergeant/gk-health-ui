@@ -6,6 +6,7 @@ export class VoucherService{
 
     private voucher: any;
     private voucherTypes: any;
+    private totalUnpostedAmount: any;
 
     async addVoucher(payload: any): Promise<any>{
         const auth = store.getters.auth;
@@ -54,4 +55,20 @@ export class VoucherService{
             handleException(error);
         }
     }
+
+    async getTotalUnpostedAmount(): Promise<any>{
+        const auth = store.getters.auth;
+        try {
+            const response = await axios.get(GetApiRoute(ApiRoutes.GET_TOTAL_UNPOSTED_AMOUNT),
+                setAuthorizationToken(auth.token));
+            if (response.status == 200) {
+                this.totalUnpostedAmount = response.data.object;
+            }
+
+            return this.totalUnpostedAmount;
+        } catch (error) {
+            handleException(error);
+        }
+    }
+
 }

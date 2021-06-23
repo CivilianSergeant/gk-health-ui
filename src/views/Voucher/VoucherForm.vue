@@ -23,6 +23,7 @@
                         id="voucherType"
                         :options="voucherTypes"
                         v-model="form.alias"
+                        @change="handleChangeType"
                         required
                         ></b-form-select>
 
@@ -172,8 +173,7 @@ export default {
             amount:0,
             adjAmount:0,
             note:'',
-            alias:"",
-            
+            alias:"",            
         },
         voucherTypes:[
                // {value:null,text:"Select Voucher Type"},
@@ -206,7 +206,7 @@ export default {
         },
         getVoucherTypes(){
             (new VoucherService()).getVoucherTypes().then((result)=>{
-                this.voucherTypes.push({ value: null, text: "Select Voucher Type" });
+                this.voucherTypes.push({ value: "", text: "Select Voucher Type" });
                 result.forEach((v)=>{
                     this.voucherTypes.push({
                         value: v.alias,
@@ -216,6 +216,15 @@ export default {
                 
             })
     },
+    handleChangeType(){
+        if(this.form.alias=='patient-service'){
+           (new VoucherService()).getTotalUnpostedAmount().then((result)=>{
+               this.form.amount = result;
+           })
+        }else{
+            this.form.amount = 0;
+        }
+    }
   }
 }
 </script>

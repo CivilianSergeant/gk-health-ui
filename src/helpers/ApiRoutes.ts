@@ -112,7 +112,8 @@ export enum ApiRoutes {
 
     ADD_VOUCHER = '/accounts/voucher/add',
     GET_VOUCHERS = '/accounts/voucher/list',
-    VOUCHER_TYPES = '/accounts/voucher/by-module/GK_HEALTH'
+    VOUCHER_TYPES = '/accounts/voucher/by-module/GK_HEALTH',
+    GET_TOTAL_UNPOSTED_AMOUNT = '/invoice/total-unposted-amount'
 }
 
 export function GetApiRoute(route: string, value = "") {
