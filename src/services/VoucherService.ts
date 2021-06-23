@@ -5,6 +5,7 @@ import { GetApiRoute, ApiRoutes, setAuthorizationToken, handleException } from '
 export class VoucherService{
 
     private voucher: any;
+    private voucherTypes: any;
 
     async addVoucher(payload: any): Promise<any>{
         const auth = store.getters.auth;
@@ -37,5 +38,20 @@ export class VoucherService{
         }
 
         return this.voucher;
+    }
+
+    async getVoucherTypes(): Promise<any> {
+        const auth = store.getters.auth;
+        try {
+            const response = await axios.get(GetApiRoute(ApiRoutes.VOUCHER_TYPES),
+                setAuthorizationToken(auth.token));
+            if (response.status == 200) {
+                this.voucherTypes = response.data.collection;
+            }
+
+            return this.voucherTypes;
+        } catch (error) {
+            handleException(error);
+        }
     }
 }

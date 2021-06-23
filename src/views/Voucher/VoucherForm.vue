@@ -14,6 +14,22 @@
                 <CCardBody>
                     <div class="col-md-4">
                         <b-form-group
+                        id="input-group-1"
+                        label-for="voucherType"
+                        description=""
+                        >
+                        <label>Voucher Type <span class="text-danger">*</span></label>
+                        <b-form-select
+                        id="voucherType"
+                        :options="voucherTypes"
+                        v-model="form.alias"
+                        required
+                        ></b-form-select>
+
+                        </b-form-group>
+                    </div>
+                    <div class="col-md-4">
+                        <b-form-group
                             id="input-group-1"
                             label-for="input-1"
                             description=""
@@ -145,6 +161,9 @@ export default {
         return result = isNaN(total)? result : total; 
     }
   },
+  beforeMount() {
+      this.getVoucherTypes();
+  },
   data() {
     return {
         form:{
@@ -152,8 +171,13 @@ export default {
             voucherDate:(new Date()).toISOString().substring(0,10),
             amount:0,
             adjAmount:0,
-            note:''
-        }
+            note:'',
+            alias:"",
+            
+        },
+        voucherTypes:[
+               // {value:null,text:"Select Voucher Type"},
+            ]
     };
   },
   methods:{
@@ -179,7 +203,19 @@ export default {
       redirectTo(routeName){
             const navigationService = new NavigationService();
             navigationService.redirect(this, routeName);
-        }
+        },
+        getVoucherTypes(){
+            (new VoucherService()).getVoucherTypes().then((result)=>{
+                this.voucherTypes.push({ value: null, text: "Select Voucher Type" });
+                result.forEach((v)=>{
+                    this.voucherTypes.push({
+                        value: v.alias,
+                        text: v.name,
+                    })
+                })
+                
+            })
+    },
   }
 }
 </script>
