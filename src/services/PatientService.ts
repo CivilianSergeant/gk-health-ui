@@ -74,10 +74,12 @@ export class PatientService {
         }
     }
 
-    async getPatientIdsByPid(pid: string): Promise<any> {
+    async getPatientIdsByPid(pid: string, field: string): Promise<any> {
         const auth = store.getters.auth;
         try {
-            const response = await axios.get(GetApiRoute(ApiRoutes.GET_PATIENTIDS_BY_PID, pid),
+
+            const path = GetApiRoute(ApiRoutes.GET_PATIENTIDS_BY_FIELD)+"/"+field+"/"+pid;
+            const response = await axios.get(path,
                 setAuthorizationToken(auth.token));
             if (response.status == 200) {
                 this.response = response.data;
