@@ -204,6 +204,7 @@ export default {
         (new VoucherService()).addVoucher(this.form).then(result=>{
             this.$store.commit("finish");
             if(result.id != undefined || result.id != null){
+                this.$store.commit('setSuccessMsg','Voucher Created Successfully')
                 this.redirectTo('Vouchers')
             }
         });
@@ -232,7 +233,7 @@ export default {
     handleChangeType(){
         if(this.form.alias=='patient-service'){
            (new VoucherService()).getTotalUnpostedAmount().then((result)=>{
-               this.form.amount = result;
+               this.form.amount = (result)?result:0;
            })
         }else{
             this.form.amount = 0;

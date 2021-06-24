@@ -13,7 +13,7 @@
         ></CCardHeader>
         <CCardBody>
             <b-table
-            id="patient-table"
+            id="voucher-table"
             class="position-relative"
             @sort-changed="handleSort"
             :fields="fields"
@@ -30,6 +30,13 @@
                     <span>{{row.item.voucherDate.substr(0,10)}}</span>
                 </template>
             </b-table>
+            <Loader :isBusy="isBusy" />
+            <b-pagination
+          v-model="currentPage"
+          :total-rows="rows"
+          :per-page="perPage"
+          aria-controls="voucher-table"
+        ></b-pagination>
         </CCardBody>
     </cCard>
 
@@ -59,7 +66,8 @@ export default {
     },
     data() {
         return {
-            
+            totalPages: 0,
+            totalRows: 0,
             currentPage: 1,
             vouchers:[],
             perPage:10,

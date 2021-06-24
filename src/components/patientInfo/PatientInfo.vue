@@ -58,17 +58,22 @@
               </div> -->
           <div class="col-md-2">
             <div>
-              <span class="w-50 d-inline-block"> NCH:</span>
-              <Status :data="!patient.registration" />
+              <span class="w-50 d-inline-block"> NCH-GB:</span>
+              <Status :data="gbNCh()" />
             </div>
             <div>
               <span class="w-50 d-inline-block">CH-GB:</span>
-              <Status :data="isGb()" />
+              <Status :data="gbCh()" />
             </div>
 
             <div>
               <span class="w-50 d-inline-block">CH-NGB:</span>
-              <Status :data="patient.registration && !isGb()" />
+              <Status :data="ngbCh()" />
+            </div>
+
+            <div>
+              <span class="w-50 d-inline-block">NCH-NGB:</span>
+              <Status :data="ngbNch()" />
             </div>
           </div>
         </div>
@@ -90,13 +95,36 @@ export default class PatientInfo extends Vue {
   getDate() {
     this.currentDate = new Date();
   }
-  isGb() {
-    if (this.patient.registration != null) {
-      console.log("tset1", this.patient.registration);
-      return this.patient.registration.gb;
+  gbCh() {
+    if (this.patient.registration != null && this.patient.gb) {
+      return true;
     }
-    console.log("tset2", this.patient.registration);
+  
     return false;
   }
+
+  gbNCh() {
+    if (this.patient.registration == null && this.patient.gb) {
+      return true;
+    }
+    return false;
+  }
+
+  ngbCh(){
+     if (this.patient.registration != null && !this.patient.gb) {
+       return true;
+     }
+
+     return false;
+  }
+
+  ngbNch(){
+    if (this.patient.registration == null && !this.patient.gb) {
+       return true;
+    }
+    return false;
+  }
+
+
 }
 </script>
