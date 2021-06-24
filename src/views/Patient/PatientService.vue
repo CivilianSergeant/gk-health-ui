@@ -4,12 +4,39 @@
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
 
-    <cCard
-      ><CCardBody>
+    <cCard>
+      <CCardHeader>
+        <b-button
+                    @click="gotoPatientCreateView"
+                    class="ml-2 float-right"
+                    pill
+                    variant="success"
+                  >
+                    <b-icon-plus-circle
+                      scale="1.25"
+                      class="t-bold"
+                    ></b-icon-plus-circle
+                  ></b-button>
+      </CCardHeader>
+      <CCardBody>
         <b-form @submit.prevent="onSearch">
           <div class="row">
             <div class="col-md-6">
               <div class="row">
+                  <div class="col-md-3">
+                      <b-form-group 
+                      id="input-group-keyword"
+                        label="Search By:"
+                        label-for="keyword-type"
+                        description=""
+                      >
+                    <b-form-select
+                      id="search-keyword"
+                      v-model="search.keywordType"
+                      :options="keywordTypes"
+                    ></b-form-select>
+                      </b-form-group>
+                 </div>
                 <div class="col-md-5">
                   <b-form-group
                     id="input-group-patient-id"
@@ -35,7 +62,7 @@
                     />
                   </b-form-group>
                 </div>
-                <div class="col-md-7 mt-4">
+                <div class="col-md-4 mt-4">
                   <!-- <b-button type="submit" variant="info">Search</b-button>  -->
                   <b-button
                     @click="onClearSearch"
@@ -43,17 +70,7 @@
                     variant="warning"
                     >Clear</b-button
                   >
-                  <b-button
-                    @click="gotoPatientCreateView"
-                    class="ml-2"
-                    pill
-                    variant="success"
-                  >
-                    <b-icon-plus-circle
-                      scale="1.25"
-                      class="t-bold"
-                    ></b-icon-plus-circle
-                  ></b-button>
+                  
                 </div>
               </div>
               <div class="row">
@@ -568,6 +585,7 @@ export default {
           startDate: "",
           expiredDate: "",
           validityDuration: 0,
+          searchKeyword:"pid",
         },
       },
       bloodGroups: [
@@ -597,6 +615,13 @@ export default {
         { value: 6, text: "6 Months" },
         { value: 12, text: "12 Months" },
       ],
+      keywordTypes:[
+        {value:null, text:"Select Field"},
+        {value:"pid", text:"PID"},
+        {value:"name", text:"Name"},
+        {value:"mobileNumber", text:"Mobile Number"},
+      ],
+      search: { keywordType: null, keyword: "" },
       autocomplete: {},
       patientIdAutocomplete: {},
       totalPayable: 0,
