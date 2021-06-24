@@ -50,6 +50,23 @@ export class PatientInvoiceService{
         }
     }
 
+    async getLabTestInvoiceNumbers(): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.GET_LAB_TEST_INVOICE_NUMBERS),
+            setAuthorizationToken(auth.token));
+
+            if(response.status == 200) {
+                this.response = response.data.collection;
+            }
+
+        } catch(e){
+            handleException(e);
+        }
+
+        return this.response;
+    }
+
     async getInvoiceById(id: string): Promise<any>{
         const auth = store.getters.auth;
         try{

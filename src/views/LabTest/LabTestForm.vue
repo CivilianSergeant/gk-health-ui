@@ -75,7 +75,7 @@
         :form="form"
       ></PatientInfo>
     </b-form>
-    <cCard>
+    <cCard v-if="service">
       <CCardBody>
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
           <div class="row">
@@ -93,7 +93,7 @@
               </b-form-group>
             </div>
             <div class="col-md-3 offset-md-5">
-              <b-form-group v-if="service" label="Delivery date" description="">
+              <b-form-group  label="Delivery date" description="">
                 <b-form-datepicker
                   id="datepicker-placeholder"
                   placeholder="Delivery date"
@@ -234,8 +234,16 @@ export default {
     }
     this.fetchLabTestUnits();
     this.fetchSpecimens();
+    // this.fetchInvoiceNumbers();
   },
   methods: {
+    fetchInvoiceNumbers(){
+      (new PatientInvoiceService())
+          .getLabTestInvoiceNumbers()
+          .then(result => {
+            this.invoices = result;
+      });
+    },
     showUnit(attr) {
       if (attr.labTestUnit) {
         const unit = this.units.filter((u) => u.id == attr.labTestUnit.id);
