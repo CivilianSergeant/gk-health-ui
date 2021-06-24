@@ -22,40 +22,8 @@
                 </div>
               </div>
             </div>
-            <!-- <div>
-                  IS GB?:
-                  <Status :data="isGb()"/>
-                </div>
-                <div>
-                  Card Registered?:
-                  <Status :data="patient.registration && patient.registration.id"/>
-                </div> -->
-            <!-- <span
-                  v-if="patient.registration && patient.registration.id"
-                >Card Number: {{patient.registration.cardNumber}}</span>
-                <div v-if="patient.registration && patient.registration.members.length>0">
-                  Family Members
-                  <ul>
-                    <li
-                      v-for="(member,m) in form.cardRegistration.members"
-                      :key="m"
-                    >{{member.fullName}}</li>
-                  </ul>
-                </div> -->
-            <!-- <p v-if="patient.registration && patient.registration.validityDuration>0">
-                  Registration Valid for ({{patient.registration.validityDuration}}) Months From {{getDate(patient.registration.startDate)}}
-                  - {{getDate(patient.registration.expiredDate)}}
-                </p> -->
           </div>
-          <!-- <div class="col-md-3">
-                <h5 class="mt-1">Invoice Detail</h5>
-                <p>Invoice No: {{invoice.invoiceNumber}}</p>
-                <ul class="nav">
-                  <li v-for="d in invoice.patientServiceDetails" :key="d.id">
-                    <p>{{d.service.name}} - {{d.payableAmount}} BDT</p>
-                  </li>
-                </ul>
-              </div> -->
+
           <div class="col-md-2">
             <div>
               <span class="w-50 d-inline-block"> NCH-GB:</span>
@@ -65,12 +33,10 @@
               <span class="w-50 d-inline-block">CH-GB:</span>
               <Status :data="gbCh()" />
             </div>
-
             <div>
               <span class="w-50 d-inline-block">CH-NGB:</span>
               <Status :data="ngbCh()" />
             </div>
-
             <div>
               <span class="w-50 d-inline-block">NCH-NGB:</span>
               <Status :data="ngbNch()" />
