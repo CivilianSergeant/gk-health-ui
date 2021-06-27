@@ -21,7 +21,7 @@
                         ></b-form-input>-->
 
                 <Autocomplete
-                  :ajax="true"
+                  :ajax="false"
                   @choose-item="handleInvoiceNumberAutocomplete"
                   :items="invoices"
                   label="invoiceNumber"
@@ -57,7 +57,7 @@
                     d.service.name
                   }}</span>
                   <span v-if="d.service.labTest == true && d.reportGenerated"
-                    >{{ d.service.name }} (Generated)</span
+                    >{{ d.service.name }} (Report Generated)</span
                   >
                   <span v-if="d.selected">Selected</span>
                 </div>
@@ -75,6 +75,24 @@
         :form="form"
       ></PatientInfo>
     </b-form>
+    <cCard class="px-2 py-4" v-if="!patient">
+            <div class="col-md-8">
+              <h5>Latest Invoice</h5>
+              <ul class="list-group" v-if="invoices.length>0">
+                <li
+                  class="cursor-pointer list-group-item"
+                  @click="handleInvoiceItemClick(invoice.id)"
+                  v-for="invoice in invoices"
+                  :key="invoice.id"
+                >
+                  {{ invoice.invoiceNumber }} - {{ invoice.patientFullName }} [{{
+                    invoice.pid
+                  }}]
+                </li>
+              </ul>
+              <p v-if="invoices.length==0">No Invoice found in this center for Lab Test</p>
+            </div>
+          </cCard>
     <cCard v-if="service">
       <CCardBody>
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
@@ -234,12 +252,22 @@ export default {
     }
     this.fetchLabTestUnits();
     this.fetchSpecimens();
-    // this.fetchInvoiceNumbers();
+    this.fetchInvoiceNumbers();
   },
   methods: {
+    handleInvoiceItemClick(invoiceId){
+        new PatientInvoiceService().getInvoiceById(invoiceId).then((result) => {
+        if(result){
+          this.invoice = result;
+          this.patient = this.invoice.patient;
+        }
+        
+      });
+    },
     fetchInvoiceNumbers(){
+      const centerId = this.$store.getters.center.id;
       (new PatientInvoiceService())
-          .getLabTestInvoiceNumbers()
+          .getLabTestInvoiceNumbers(centerId)
           .then(result => {
             this.invoices = result;
       });
@@ -336,7 +364,7 @@ export default {
     onClearSearch() {
       this.patient = null;
       this.invoice = null;
-      this.service = null;
+      this.service = { labTestAttributes: [] };
 
       this.$store.commit("clearMessage");
 
@@ -397,7 +425,7 @@ export default {
       });
     },
     onReset() {
-      this.service = null;
+      this.service = { labTestAttributes: [] };
       this.patient = null;
       this.invoice = null;
       this.form = {

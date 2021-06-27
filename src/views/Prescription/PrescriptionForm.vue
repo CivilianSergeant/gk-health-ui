@@ -53,7 +53,7 @@
           <div class="row" v-if="!patient">
             <div class="col-md-8">
               <h5>Latest Invoice</h5>
-              <ul class="list-group">
+              <ul class="list-group" v-if="invoices.length>0">
                 <li
                   class="cursor-pointer list-group-item"
                   @click="handleInvoiceItemClick(invoice.id)"
@@ -65,6 +65,7 @@
                   }}]
                 </li>
               </ul>
+              <p v-if="invoices.length==0">No Invoice found in this center for prescription</p>
             </div>
           </div>
         </cCardBody>

@@ -224,7 +224,7 @@ export default {
     },
     fetchServiceCategories(){
       this.$store.commit('start');
-      (new CategoryService()).getCategories().then(result=>{
+      (new CategoryService()).getCategoryList().then(result=>{
           this.categories.push({value:null,text:'Select Category'});
           result.forEach(category=>{
               this.categories.push({labTest:category.labTest,value:category.id,text:category.name,id:category.id})

@@ -108,8 +108,9 @@ import {
         this.fetchInvoiceDetail(invoiceId);
       },
       fetchInvoiceNumbers(){
+        const centerId = this.$store.getters.center.id;
         (new PatientInvoiceService())
-            .getPrescriptionInvoiceNumbers()
+            .getPrescriptionInvoiceNumbers(centerId)
             .then(result => {
               this.invoices = result;
             });

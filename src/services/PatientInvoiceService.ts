@@ -35,11 +35,11 @@ export class PatientInvoiceService{
         }
     }
 
-    async getPrescriptionInvoiceNumbers(): Promise<any>{
+    async getPrescriptionInvoiceNumbers(id: number): Promise<any>{
 
         const auth = store.getters.auth;
         try{
-            const response = await axios.get(GetApiRoute(ApiRoutes.PRESCRIPTION_INVOICE_NUMBERS),
+            const response = await axios.get(GetApiRoute(ApiRoutes.PRESCRIPTION_INVOICE_NUMBERS,id.toString()),
             setAuthorizationToken(auth.token));
             if(response.status == 200){
                 this.response = response.data.collection;
@@ -50,10 +50,12 @@ export class PatientInvoiceService{
         }
     }
 
-    async getLabTestInvoiceNumbers(): Promise<any>{
+    async getLabTestInvoiceNumbers(id: number): Promise<any>{
         const auth = store.getters.auth;
         try{
-            const response = await axios.get(GetApiRoute(ApiRoutes.GET_LAB_TEST_INVOICE_NUMBERS),
+            const path = GetApiRoute(ApiRoutes.GET_LAB_TEST_INVOICE_NUMBERS,id.toString());
+            console.log(path);
+            const response = await axios.get(path,
             setAuthorizationToken(auth.token));
 
             if(response.status == 200) {

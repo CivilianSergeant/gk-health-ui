@@ -86,8 +86,8 @@ export enum ApiRoutes {
     // Patient Invoice Routes
     PATIENT_INVOICE_CREATE = '/invoice/create',
     PATIENT_INVOICE_NUMBERS_BY_KEYWORD = '/invoice/invoice-numbers/:id',
-    PRESCRIPTION_INVOICE_NUMBERS = '/invoice/prescription-invoice-numbers',
-    GET_LAB_TEST_INVOICE_NUMBERS = '/invoice/lab-test-invoice-numbers',
+    PRESCRIPTION_INVOICE_NUMBERS = '/invoice/prescription-invoice-numbers/:id',
+    GET_LAB_TEST_INVOICE_NUMBERS = '/invoice/lab-test-invoice-numbers/:id',
     PATIENT_INVOICE_BY_ID = '/invoice/by-id/:id',
 
     ALL_FEEDING_RULES = '/feeding-rules',

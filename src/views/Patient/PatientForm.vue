@@ -130,6 +130,7 @@
               >
                 <label> Age: <span class="text-danger">*</span> </label>
                 <b-form-input
+                  type="number"
                   :required="true"
                   id="patient-age"
                   v-model="form.age"
