@@ -1183,8 +1183,12 @@ export default {
 
     onSubmit() {
       this.$store.commit("start");
-      this.consumer.registration.startDate = this.consumer.registration.startDate.toString().replace(" ","T")
-      this.consumer.registration.expiredDate = this.consumer.registration.expiredDate.toString().replace(" ","T")
+      if(this.consumer.registration){
+        this.consumer.registration.startDate = this.consumer.registration.startDate
+                                                      .toString().replace(" ","T")
+        this.consumer.registration.expiredDate = this.consumer.registration.expiredDate
+                                                      .toString().replace(" ","T")
+      }
       const form = {
         id: this.consumer.id,
         pid: this.consumer.pid,
