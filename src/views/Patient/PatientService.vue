@@ -263,7 +263,7 @@
                     Referred Patient: {{ showReferredPatient() }}
                   </div>
                   <div v-if="showReferredCard()">
-                    IS GB?: <Status :data="isGB()" />
+                    IS GB?: <Status :data="isReferedPatientGb()" />
                   </div>
                 </div>
               </div>
@@ -767,6 +767,9 @@ export default {
       this.onSearch();
     }
   },
+  mounted(){
+    this.$store.commit('clearMessage');
+  },
   methods: {
     showReport(i) {
       const invoice = this.patient.patientInvoices[i];
@@ -898,7 +901,8 @@ export default {
             this.patient.registration.members[i] = _member;
           });
       } else {
-        this.consumer = member.patient;
+        this.findPatient(member.patient.pid)
+        // this.consumer = member.patient;
         console.log(this.consumer);
       }
     },
@@ -974,7 +978,8 @@ export default {
       }
 
       const serviceAmount = service.currentCost;
-      const discountAmount = this.isGB()
+      console.log((this.isGB() || this.isReferedPatientGb()),'IS GB');
+      const discountAmount = (this.isGB() || this.isReferedPatientGb())
         ? service.currentCost - service.currentGbCost
         : 0;
       const payableAmount = serviceAmount - discountAmount;
@@ -1050,7 +1055,7 @@ export default {
       }
 
       const serviceAmount = this.service.currentCost;
-      const discountAmount = this.isGB()
+      const discountAmount = (this.isGB() || this.isReferedPatientGb())
         ? this.service.currentCost - this.service.currentGbCost
         : 0;
       const payableAmount = serviceAmount - discountAmount;
@@ -1080,6 +1085,7 @@ export default {
       this.service = null;
       this.consumer = null;
       this.patientNumbers = [];
+      this.form.cardRegistration = { members:[]};
       // if (this.autocomplete.setInputValue != undefined) {
       //   this.autocomplete.setInputValue("");
       // }
@@ -1110,17 +1116,21 @@ export default {
       this.findPatient();
     },
     isGB() {
-      if (this.consumer.cardMember != null) {
-        return this.consumer.cardMember.gb;
-      }else{
         return this.consumer.gb;
-      }
-      
     },
-
-    findPatient() {
+    isReferedPatientGb(){
+      if(this.consumer.cardMember==null){
+        return false;
+      }
+      if(this.consumer.cardMember.cardRegistration == null){
+        return false;
+      }
+      return this.consumer.cardMember.cardRegistration.patient.gb;
+    },
+    findPatient(_pid) {
+      const pid = (_pid != undefined)? _pid : this.pid;
       new PatientService()
-        .getPatientByPid(this.pid)
+        .getPatientByPid(pid)
         .then((result) => {
           this.$store.commit("finish");
           if (result != null && result.status == 200) {
@@ -1195,8 +1205,9 @@ export default {
         center: this.$store.getters.center,
         createdBy: this.$store.getters.employee,
         patientInvoices: [this.patientInvoice],
-        registration: this.consumer.registration
+        registration: {...this.consumer.registration}
       };
+      form.registration.members = [];
      
       this.consumer.patientInvoices.unshift(this.patientInvoice);
       this.consumer.center = this.$store.getters.center;
