@@ -22,25 +22,13 @@
             <h6 class="border p-1">{{ title }}</h6>
           </div>
           <div class="col-md-5 text-right">
-            <div>
-              <span class="w-50 d-inline-block"> NCH:</span>
-              <Status
-                :type="1"
-                :data="!resultData.prescriptionPatient.registration"
-              />
-            </div>
-            <div>
-              <span class="w-50 d-inline-block">CH-GB:</span>
-              <Status :type="1" :data="isGb()" />
-            </div>
-
-            <div>
-              <span class="w-50 d-inline-block">CH-NGB:</span>
-              <Status
-                :type="1"
-                :data="resultData.prescriptionPatient.registration && !isGb()"
-              />
-            </div>
+             <MemberRegStatus
+            v-if="resultData.prescriptionPatient"
+            :gbnch="gbNCh()"
+            :gbch="gbCh()"
+            :ngbch="ngbCh()"
+            :ngbnch="ngbNch()"
+          ></MemberRegStatus>
           </div>
         </div>
         <div class="row">
@@ -231,9 +219,10 @@
           </div>
           <MemberRegStatus
             v-if="resultData.prescriptionPatient"
-            :nch="hasCard()"
-            :chgb="isGb()"
-            :chngb="hasCardNonGB()"
+            :gbnch="gbNCh()"
+            :gbch="gbCh()"
+            :ngbch="ngbCh()"
+            :ngbnch="ngbNch()"
           ></MemberRegStatus>
         </div>
         <div class="row">
@@ -511,6 +500,39 @@ export default {
     printPrescription() {
       this.$refs.html2Pdf.generatePdf();
     },
+    gbCh() {
+    const patient = this.resultData.prescriptionPatient;
+    if (patient.registration != null && patient.gb) {
+      return true;
+    }
+  
+    return false;
+  },
+
+  gbNCh() {
+     const patient = this.resultData.prescriptionPatient;
+    if (patient.registration == null && patient.gb) {
+      return true;
+    }
+    return false;
+  },
+
+  ngbCh(){
+     const patient = this.resultData.prescriptionPatient;
+     if (patient.registration != null && !patient.gb) {
+       return true;
+     }
+
+     return false;
+  },
+ 
+  ngbNch(){
+    const patient = this.resultData.prescriptionPatient;
+    if (patient.registration == null && !patient.gb) {
+       return true;
+    }
+    return false;
+  }
   },
   components: {
     VueHtml2pdf,

@@ -1,8 +1,8 @@
 <template>
     <span>
         <span v-if="type==1">
-            <input type="checkbox" checked v-if="data" />
-           <input type="checkbox" v-if="!data" />
+            <input type="checkbox"  :readonly="true" checked v-if="data" />
+           <input type="checkbox" :disabled="true" v-if="!data" />
         </span>
         
         <span v-if="type==undefined">

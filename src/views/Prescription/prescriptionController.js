@@ -64,6 +64,7 @@ import {
         service: null,
         durationUnits: [
           {value:'days', text:'Days'},
+          {value:'week', text:'Week'},
           {value:'months', text:'Months'}
         ],
         form: {

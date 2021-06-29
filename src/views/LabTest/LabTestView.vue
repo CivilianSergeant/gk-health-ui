@@ -29,11 +29,12 @@
             Date: {{ showCreatedDate(resultData) }}
           </div>
           <!-- <div class="col-md-6"> -->
-          <MemberRegStatus
+           <MemberRegStatus
             v-if="resultData.patient"
-            :nch="hasCard()"
-            :chgb="isGb()"
-            :chngb="hasCardNonGB()"
+            :gbnch="gbNCh()"
+            :gbch="gbCh()"
+            :ngbch="ngbCh()"
+            :ngbnch="ngbNch()"
           ></MemberRegStatus>
           <!-- </div> -->
         </div>
@@ -104,11 +105,12 @@
             </div>
             <!-- <div class="col-md-6"> -->
             <MemberRegStatus
-              v-if="resultData.patient"
-              :nch="hasCard()"
-              :chgb="isGb()"
-              :chngb="hasCardNonGB()"
-            ></MemberRegStatus>
+            v-if="resultData.patient"
+            :gbnch="gbNCh()"
+            :gbch="gbCh()"
+            :ngbch="ngbCh()"
+            :ngbnch="ngbNch()"
+          ></MemberRegStatus>
             <!-- </div> -->
           </div>
           <div class="row py-3">
@@ -310,6 +312,39 @@ export default {
     printLabReport() {
       this.$refs.html2Pdf.generatePdf();
     },
+    gbCh() {
+    const patient = this.resultData.patient;
+    if (patient.registration != null && patient.gb) {
+      return true;
+    }
+  
+    return false;
+  },
+
+  gbNCh() {
+     const patient = this.resultData.patient;
+    if (patient.registration == null && patient.gb) {
+      return true;
+    }
+    return false;
+  },
+
+  ngbCh(){
+     const patient = this.resultData.patient;
+     if (patient.registration != null && !patient.gb) {
+       return true;
+     }
+
+     return false;
+  },
+ 
+  ngbNch(){
+    const patient = this.resultData.patient;
+    if (patient.registration == null && !patient.gb) {
+       return true;
+    }
+    return false;
+  }
   },
   components: {
     VueHtml2pdf,
