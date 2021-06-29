@@ -445,7 +445,7 @@
       bvModalEvent.trigger="ok"
       title="Card Register"
     >
-      <div class="col-md-4 d-flex flex-row">
+      <!-- <div class="col-md-4 d-flex flex-row">
         IS GB?: &nbsp;
         <b-form-checkbox
           id="input-is-gb"
@@ -456,7 +456,7 @@
           :value="true"
           :unchecked-value="false"
         ></b-form-checkbox>
-      </div>
+      </div> -->
 
       <div class="col-md-4 mt-2" v-if="form.cardRegistration">
         <b-form-group

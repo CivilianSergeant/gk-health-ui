@@ -143,7 +143,7 @@
                 label-for="patient-isgb"
                 description=""
               >
-                <label for="patient-isgb"> Is GB: <span class="text-danger">*</span> </label>
+                <label for="patient-isgb"> Is GB:  </label>
                 <b-form-checkbox
                   :required="true"
                   id="patient-isgb"
