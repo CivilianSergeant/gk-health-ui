@@ -46,6 +46,12 @@ export class MenuService {
   static processMenus(data: any): any{
     const _navs: Array<any>= [];
       const _groups: any[] = [];
+      const medicineMenus: any = {
+        _name: 'CSidebarNavDropdown',
+        name: 'Medicine',
+        
+        icon: 'cil-puzzle',
+        items: [ ]};
       const patientMenus: any = {
         _name: 'CSidebarNavDropdown',
         name: 'Patient',
@@ -89,7 +95,13 @@ export class MenuService {
             icon:m.icon,
            
           }
-          if(m.name.toString().toLowerCase().match(/patient/)){
+          if(m.name.toString().toLowerCase().match(/medicine/)){
+            if(_groups.indexOf('medicine') == -1){
+              _groups.push('medicine');
+              _navs.push(medicineMenus);
+            }
+            medicineMenus.items.push(menu);
+          }else if(m.name.toString().toLowerCase().match(/patient/)){
             if(_groups.indexOf('patient') == -1){
               _groups.push('patient');
               _navs.push(patientMenus);

@@ -81,7 +81,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '*',
-    name: 'pagenotfound',
+    name: 'Page not found',
     component: PageNotFound
   }
 ]

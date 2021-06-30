@@ -69,8 +69,10 @@ export enum ApiRoutes {
 
     ALL_MEDICINE_BRAND = '/medicine-brand',
     ADD_MEDICINE_BRAND = '/medicine-brand/add',
+    GET_MEDICINE_BRAND_BY_ID = '/medicine-brand/:id',
     ALL_MEDICINE_GROUP = '/medicine-group',
     ADD_MEDICINE_GROUP = '/medicine-group/add',
+    GET_MEDICINE_GROUP_BY_ID = '/medicine-group/:id',
 
     // Patient Routes
     ALL_PATIENTS = '/patient',

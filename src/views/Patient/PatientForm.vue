@@ -577,10 +577,9 @@ export default {
       }
       formRequest.center.id = this.$store.getters.center.id;
 
-      // axios.defaults.headers.common = {
-      //   "Access-Control-Allow-Origin": ApiRoutes.DOMAIN,
-      //   "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-      // };
+      if(this.id){
+        formRequest.createdAt = formRequest.createdAt.toString().replace(" ","T");
+      }
       console.log(formRequest);
       try {
         const response = await new PatientService().addPatient(formRequest);
