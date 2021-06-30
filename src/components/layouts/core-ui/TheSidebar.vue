@@ -67,8 +67,9 @@ export default class Sidebar extends Vue {
   }
   
   handleClick(){
-    
+    console.log('before clear')
     this.$store.commit('clearMessage');
+    console.log('after clear')
   }
 }
 </script>
