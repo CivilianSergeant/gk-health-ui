@@ -56,19 +56,5 @@ export default class Sidebar extends Vue {
     return this.$store.state.sidebarMinimize;
   }
 
-  mounted(){
-    const menus = window.document.getElementsByClassName('c-sidebar-nav-item');
-    let i=0;
-    for(i = 0;i<menus.length;i++){
-      menus[i].addEventListener('click',this.handleClick)
-      // console.log(menus[i]);
-    }
-    
-  }
-  
-  handleClick(){
-    
-    this.$store.commit('clearMessage');
-  }
 }
 </script>

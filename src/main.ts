@@ -97,6 +97,14 @@ function checkRoutePermission(route: any, writePath: boolean, next: any) {
 
 //Route Guard
 router.beforeEach((to,from,next)=>{
+  
+  const fromRoutes = from.path;
+  console.log(fromRoutes.match(to.path.substr(1)))
+  const matched = fromRoutes.match(to.path.substr(1));
+  if(matched == null || matched.index<=0){
+    store.commit('clearMessage');
+  }
+
   store.commit('setRoutePermissionStatus',true);
   // console.log(to,from,'here menus undefined',store.getters.menus);
   const segments = to.path.split("/");
