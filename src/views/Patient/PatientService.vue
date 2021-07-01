@@ -1323,5 +1323,9 @@ ul.fMembers li {
   z-index: 9;
   top: 84px;
 }
+
+.cardInfoPopup .card {
+  box-shadow: 2px 4px 21px #ccc;
+}
 </style>
 
