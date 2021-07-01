@@ -53,7 +53,7 @@
           <div class="row" v-if="!patient">
             <div class="col-md-8">
               <h5>Latest Invoice</h5>
-              <ul class="list-group" v-if="invoices.length>0">
+              <ul class="list-group" v-if="invoices.length > 0">
                 <li
                   class="cursor-pointer list-group-item"
                   @click="handleInvoiceItemClick(invoice.id)"
@@ -65,7 +65,9 @@
                   }}]
                 </li>
               </ul>
-              <p v-if="invoices.length==0">No Invoice found in this center for prescription</p>
+              <p v-if="invoices.length == 0">
+                No Invoice found in this center for prescription
+              </p>
             </div>
           </div>
         </cCardBody>
@@ -236,7 +238,9 @@
               </div>
             </div>
             <div class="col-md-9 border-left">
-              <table class="table table-responsive position-relative">
+              <table
+                class="table table-responsive position-relative prescriptionTbl"
+              >
                 <thead>
                   <tr class="bg-light text-dark">
                     <th>Medicine</th>
@@ -274,6 +278,7 @@
                     <td style="width: 150px">
                       <b-form-input
                         type="number"
+                        min="0"
                         v-model="medicine.duration"
                       ></b-form-input>
                     </td>
@@ -412,5 +417,14 @@
 .courseDuration {
   width: 92px;
   display: inline-block;
+}
+
+.prescriptionTbl {
+  overflow: visible;
+  z-index: 9;
+}
+
+.prescriptionTbl td {
+  padding: 0.6rem;
 }
 </style>

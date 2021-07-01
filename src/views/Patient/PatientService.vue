@@ -87,9 +87,8 @@
               <Loader :isBusy="isBusy" />
               <b-card class="mb-0" v-if="patient != null">
                 <b-button
-                  variant="danger"
                   @click="hideCardInfo"
-                  class="btn-sm float-right"
+                  class="btn-sm float-right crossBtn"
                 >
                   <b-icon-x-square scale="1.25" class="t-bold">
                   </b-icon-x-square>
@@ -309,6 +308,7 @@
           <table class="table table-bordered position-relative">
             <thead class="thead-light">
               <tr>
+                <th>Action</th>
                 <th>Sl</th>
                 <th>Service Name</th>
                 <th>Room No</th>
@@ -324,6 +324,13 @@
                 v-for="(ps, i) in patientInvoice.patientServiceDetails"
                 :key="i"
               >
+                <td>
+                  <b-icon-trash-fill
+                    @click="deleteService(i, ps)"
+                    variant="danger"
+                    class="d-inline-block cursor-pointer ml-2"
+                  ></b-icon-trash-fill>
+                </td>
                 <td>{{ i + 1 }}</td>
                 <td>{{ ps.service.name }}</td>
                 <td><input type="text" v-model="ps.roomNumber" /></td>
@@ -340,12 +347,12 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="5" class="text-right">Grand Total</td>
+                <td colspan="6" class="text-right">Grand Total</td>
                 <td>{{ totalPayable }}</td>
                 <!-- <td></td> -->
               </tr>
               <tr>
-                <td colspan="5" class="text-right">Total Paid</td>
+                <td colspan="6" class="text-right">Total Paid</td>
                 <td>
                   <b-form-input
                     type="number"
@@ -356,7 +363,7 @@
                 <!-- <td></td> -->
               </tr>
               <tr>
-                <td colspan="5" class="text-right">Due Amount</td>
+                <td colspan="6" class="text-right">Due Amount</td>
                 <td>
                   <b-form-input
                     type="number"
@@ -1276,6 +1283,15 @@ export default {
     hideCardInfo() {
       this.showCardInfoPopup = false;
     },
+    deleteService(index, ps) {
+      this.patientInvoice.paidAmount =
+        this.patientInvoice.paidAmount - ps.payableAmount;
+      this.patientInvoice.payableAmount =
+        this.patientInvoice.payableAmount - ps.payableAmount;
+      this.patientInvoice.serviceAmount =
+        this.patientInvoice.serviceAmount - ps.serviceAmount;
+      this.patientInvoice.patientServiceDetails.splice(index, 1);
+    },
   },
 };
 </script>
@@ -1322,6 +1338,12 @@ ul.fMembers li {
   width: 400px;
   z-index: 9;
   top: 84px;
+}
+
+.cardInfoPopup .crossBtn {
+  background: #fff;
+  color: #e55353;
+  border: 0px;
 }
 
 .cardInfoPopup .card {
