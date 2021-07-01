@@ -3,7 +3,7 @@
     <div class="col-md-12 font-weight-bold mb-2">
       <b-card v-if="patient != null">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-9">
             <div v-if="currentDate != undefined">
               Date: {{ currentDate.toLocaleDateString() }}
             </div>
@@ -24,20 +24,20 @@
             </div>
           </div>
 
-          <div class="col-md-2">
-            <div>
+          <div class="col-md-3" style="padding-top: 21px">
+            <div v-if="gbNCh()">
               <span class="w-50 d-inline-block"> NCH-GB:</span>
               <Status :data="gbNCh()" />
             </div>
-            <div>
+            <div v-if="gbCh()">
               <span class="w-50 d-inline-block">CH-GB:</span>
               <Status :data="gbCh()" />
             </div>
-            <div>
+            <div v-if="ngbCh()">
               <span class="w-50 d-inline-block">CH-NGB:</span>
               <Status :data="ngbCh()" />
             </div>
-            <div>
+            <div v-if="ngbNch()">
               <span class="w-50 d-inline-block">NCH-NGB:</span>
               <Status :data="ngbNch()" />
             </div>
@@ -65,7 +65,7 @@ export default class PatientInfo extends Vue {
     if (this.patient.registration != null && this.patient.gb) {
       return true;
     }
-  
+
     return false;
   }
 
@@ -76,21 +76,19 @@ export default class PatientInfo extends Vue {
     return false;
   }
 
-  ngbCh(){
-     if (this.patient.registration != null && !this.patient.gb) {
-       return true;
-     }
-
-     return false;
-  }
-
-  ngbNch(){
-    if (this.patient.registration == null && !this.patient.gb) {
-       return true;
+  ngbCh() {
+    if (this.patient.registration != null && !this.patient.gb) {
+      return true;
     }
+
     return false;
   }
 
-
+  ngbNch() {
+    if (this.patient.registration == null && !this.patient.gb) {
+      return true;
+    }
+    return false;
+  }
 }
 </script>

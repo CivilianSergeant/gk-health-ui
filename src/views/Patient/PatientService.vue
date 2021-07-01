@@ -5,371 +5,369 @@
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
 
     <cCard>
+      <CCardHeader>
+        Patient Service
+        <b-button
+          @click="gotoPatientCreateView"
+          class="ml-2 float-right"
+          variant="success"
+        >
+          <!-- <b-icon-plus-circle
+                      scale="1.25"
+                      class="t-bold"
+                    ></b-icon-plus-circle> -->
+          Add Patient
+        </b-button>
+      </CCardHeader>
       <CCardBody>
         <b-form @submit.prevent="onSearch">
           <div class="row">
-                  <div class="col-md-2">
-                      <b-form-group 
-                      id="input-group-keyword"
-                        label="Search By:"
-                        label-for="keyword-type"
-                        description=""
-                      >
-                    <b-form-select
-                      id="search-keyword"
-                      v-model="search.keywordType"
-                      @change="handleKeywodChange"
-                      :options="keywordTypes"
-                    ></b-form-select>
-                      </b-form-group>
-                 </div>
-                <div class="col-md-5">
-                  <b-form-group
-                    id="input-group-patient-id"
-                    label="Patient ID:"
-                    label-for="patient-id"
-                    description=""
-                  >
-                    <!-- <b-form-input id="relation"
+            <div class="col-md-2">
+              <b-form-group
+                id="input-group-keyword"
+                label="Search By:"
+                label-for="keyword-type"
+                description=""
+              >
+                <b-form-select
+                  id="search-keyword"
+                  v-model="search.keywordType"
+                  @change="handleKeywodChange"
+                  :options="keywordTypes"
+                ></b-form-select>
+              </b-form-group>
+            </div>
+            <div class="col-md-5">
+              <b-form-group
+                id="input-group-patient-id"
+                label="Patient ID:"
+                label-for="patient-id"
+                description=""
+              >
+                <!-- <b-form-input id="relation"
                     placeholder="Patient ID"
                     v-model="pid"
                     required
                     ></b-form-input> -->
 
-                    <Autocomplete
-                      :ajax="true"
-                      @choose-item="handlePatientSelect"
-                      :items="patientNumbers"
-                      label="label"
-                      rowId="id"
-                      :disable="false"
-                      ref="patientSelect"
-                      @ajax-call="handlePatientAutocomplete"
-                    />
-                  </b-form-group>
-                </div>
-                <div class="col-md-1 mt-4 mt-30">
-                  <!-- <b-button type="submit" variant="info">Search</b-button>  -->
-                  <b-button
-                    @click="onClearSearch"
-                    class="ml-1"
-                    variant="warning"
-                    >Clear</b-button
-                  >
-                  
-                </div>
-                <div class="col-md-2 mt-30">
-                   <b-button
-                    @click="gotoPatientCreateView"
-                    class="ml-2"
-                    variant="success"
-                  >
-                    <!-- <b-icon-plus-circle
-                      scale="1.25"
-                      class="t-bold"
-                    ></b-icon-plus-circle> -->
-                    Add Patient
-                    </b-button>
-                </div>
-                <div class="col-md-2 mt-30" @click="showCardInfo" v-if="patient !=null">
-                    <b-button class="" variant="primary">Card Info</b-button>
-                </div>
+                <Autocomplete
+                  :ajax="true"
+                  @choose-item="handlePatientSelect"
+                  :items="patientNumbers"
+                  label="label"
+                  rowId="id"
+                  :disable="false"
+                  ref="patientSelect"
+                  @ajax-call="handlePatientAutocomplete"
+                />
+              </b-form-group>
+            </div>
+            <div class="col-md-1 mt-4 mt-30">
+              <!-- <b-button type="submit" variant="info">Search</b-button>  -->
+              <b-button @click="onClearSearch" class="ml-1" variant="warning"
+                >Clear</b-button
+              >
+            </div>
+            <div class="col-md-2 mt-30"></div>
+            <div
+              class="col-md-2 mt-30 text-right"
+              @click="showCardInfo"
+              v-if="patient != null"
+            >
+              <b-button class="" variant="primary">Card Info</b-button>
+            </div>
 
+            <!--card info-->
+            <div
+              class="col-md-12 font-weight-bold cardInfoPopup"
+              v-if="showCardInfoPopup"
+            >
+              <!--font-weight-bold-->
 
-                <!--card info-->
-               <div class="col-md-12 font-weight-bold cardInfoPopup" v-if="showCardInfoPopup">
-                <!--font-weight-bold-->
-                
-
-                <Loader :isBusy="isBusy" />
-                <b-card class="mb-0" v-if="patient != null">
-
-                    <b-button variant="danger" @click="hideCardInfo" class="btn-sm float-right">
-                     <b-icon-x-square  scale="1.25"
-                      class="t-bold"> </b-icon-x-square>
-                   <!-- <b-icon-plus-circle
+              <Loader :isBusy="isBusy" />
+              <b-card class="mb-0" v-if="patient != null">
+                <b-button
+                  variant="danger"
+                  @click="hideCardInfo"
+                  class="btn-sm float-right"
+                >
+                  <b-icon-x-square scale="1.25" class="t-bold">
+                  </b-icon-x-square>
+                  <!-- <b-icon-plus-circle
                       scale="1.25"
                       class="t-bold"
                     ></b-icon-plus-circle> -->
                 </b-button>
 
-                  <b-card-title>Patient Info #{{ patient.pid }}</b-card-title>
-                  <div class="row">
-                   
-                    <div class="col-md-5">
-                      
-                    </div>
-                  </div>
-                 
-                  <div
-                    v-if="
-                      form.cardRegistration &&
-                      form.cardRegistration.members.length > 0
-                    "
-                  >
-                    Family Members:
-                    <ul class="fMembers">
-                      <li
-                        class="mb-2"
-                        v-for="(member, m) in form.cardRegistration.members"
-                        :key="m"
-                      >
-                        {{ member.fullName }}
-                        <button
-                          v-if="
-                            form.cardRegistration && form.cardRegistration.active
-                          "
-                          class="btn btn-info btn-sm"
-                          type="button"
-                          @click="selectPatient(member, m)"
-                        >
-                          {{
-                            member.patient ? "Select Patient" : "Create Patient"
-                          }}
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                  <span
-                    v-if="
-                      form.cardRegistration &&
-                      form.cardRegistration.id > 0 &&
-                      !form.cardRegistration.active
-                    "
-                    class="badge badge-danger"
-                    >Registration Expired</span
-                  >
-                  <p
-                    class="mb-0"
-                    v-if="
-                      form.cardRegistration &&
-                      form.cardRegistration.validityDuration > 0
-                    "
-                  >
-                    Registration Valid for ({{
-                      form.cardRegistration.validityDuration
-                    }}) Months From
-                    {{ getDate(form.cardRegistration.startDate) }} -
-                    {{ getDate(form.cardRegistration.expiredDate) }}
-                  </p>
-                  <p v-if="!hasActiveCard" class="mt-2">
-                    <b-button v-b-modal.modal-1 variant="info" size="sm"
-                      >Register For Card</b-button
+                <b-card-title>Patient Info #{{ patient.pid }}</b-card-title>
+                <div class="row">
+                  <div class="col-md-5"></div>
+                </div>
+
+                <div
+                  v-if="
+                    form.cardRegistration &&
+                    form.cardRegistration.members.length > 0
+                  "
+                >
+                  Family Members:
+                  <ul class="fMembers">
+                    <li
+                      class="mb-2"
+                      v-for="(member, m) in form.cardRegistration.members"
+                      :key="m"
                     >
-                  </p>
-                </b-card>
-              </div>
-                <!--end card info-->
-
-             </div>
-             <!--patient info-->
-        <div class="row" v-if="patient != null">
-          <div class="col-md-12 table-responsive">
-            <table class="table" style="border-bottom:1px solid #ddd">
+                      {{ member.fullName }}
+                      <button
+                        v-if="
+                          form.cardRegistration && form.cardRegistration.active
+                        "
+                        class="btn btn-info btn-sm"
+                        type="button"
+                        @click="selectPatient(member, m)"
+                      >
+                        {{
+                          member.patient ? "Select Patient" : "Create Patient"
+                        }}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <span
+                  v-if="
+                    form.cardRegistration &&
+                    form.cardRegistration.id > 0 &&
+                    !form.cardRegistration.active
+                  "
+                  class="badge badge-danger"
+                  >Registration Expired</span
+                >
+                <p
+                  class="mb-0"
+                  v-if="
+                    form.cardRegistration &&
+                    form.cardRegistration.validityDuration > 0
+                  "
+                >
+                  Registration Valid for ({{
+                    form.cardRegistration.validityDuration
+                  }}) Months From
+                  {{ getDate(form.cardRegistration.startDate) }} -
+                  {{ getDate(form.cardRegistration.expiredDate) }}
+                </p>
+                <p v-if="!hasActiveCard" class="mt-2">
+                  <b-button v-b-modal.modal-1 variant="info" size="sm"
+                    >Register For Card</b-button
+                  >
+                </p>
+              </b-card>
+            </div>
+            <!--end card info-->
+          </div>
+          <!--patient info-->
+          <div class="row" v-if="patient != null">
+            <div class="col-md-12 table-responsive">
+              <table class="table" style="border-bottom: 1px solid #ddd">
                 <tr>
-                   <th>Patient Name</th>
-                    <td>:</td>
-                    <th> {{ consumer.fullName }}</th>
+                  <th>Patient Name</th>
+                  <td>:</td>
+                  <th>{{ consumer.fullName }}</th>
 
-                    <th>PID</th>
-                    <td>:</td>
-                    <th>{{ patient.pid }}</th>
+                  <th>PID</th>
+                  <td>:</td>
+                  <th>{{ patient.pid }}</th>
 
-                    <th>Sex</th>
-                    <td>:</td>
-                    <th> {{ patient.gender }}</th>
+                  <th>Sex</th>
+                  <td>:</td>
+                  <th>{{ patient.gender }}</th>
 
-                    <th>Age</th>
-                    <td>:</td>
-                    <th> {{ patient.age }}</th>
+                  <th>Age</th>
+                  <td>:</td>
+                  <th>{{ patient.age }}</th>
                 </tr>
                 <tr v-if="patient != null">
-                   <th>IS GB?</th>
-                    <td>:</td>
-                    <th> <Status
-                          :data="isGB()"
-                        /></th>
+                  <th>IS GB?</th>
+                  <td>:</td>
+                  <th><Status :data="isGB()" /></th>
 
-                    <th>Card Registered?</th>
-                    <td>:</td>
-                    <th><Status
-                          :data="patient.registration && patient.registration.id"
-                        /></th>
-
-                    <th>Card Number</th>
-                    <td>:</td>
-                    <th>
-                       <span v-if="form.cardRegistration && form.cardRegistration.id"
-                    >Card Number: {{ form.cardRegistration.cardNumber }}</span>
-                    </th>
-
-                    <th></th>
-                    <td></td>
-                    <th></th>
-                </tr>
-            </table>
-          </div>
-        </div>
-             <div class="row fw-500" v-if="false">
-                <div class="col-md-2">Patient Name:</div>
-                 <div class="col-md-2 text-left px-0 mx-0"> {{ consumer.fullName }}</div>
-                 <div class="col-md-1 text-right">PID :</div>
-                 <div class="col-md-2 text-left px-0"> {{ patient.pid }} </div>
-                  <div class="col-md-1 text-right" v-if="patient.gender">Sex:</div>
-                  <div class="col-md-1 text-left px-0" v-if="patient.gender"> 
-                      {{ patient.gender }}
-                  </div>
-                   <div class="col-md-1 text-right" v-if="patient.age">Age:</div>
-                  <div class="col-md-1 text-left px-0" v-if="patient.age">
-                       {{ patient.age }}
-                  </div>
-
-                  <!-- <div class="col-md-3">
-                      
-                  </div> -->
-
-             </div>
-             <div class="row fw-500" v-if="false">
-               <div class="col-md-2 text-right">IS GB?:</div>
-                <div class="col-md-2 px-0">
-                        <Status
-                          :data="isGB()"
-                        />
-                      </div>
-                      <div class="col-md-2">
-                        Card Registered?:
-                        <Status
-                          :data="patient.registration && patient.registration.id"
-                        />
-                      </div>
-                      <div class="col-md-3">
-                       <span v-if="form.cardRegistration && form.cardRegistration.id"
-                    >Card Number: {{ form.cardRegistration.cardNumber }}</span></div>
-
-             
-             
-             </div>
-             <!--end patient info-->
-            
-              <div class="row">
-                <div class="col-md-12">
-                  <h6 v-if="consumer">
-                    Service For: {{ consumer.fullName }} [{{ consumer.pid }}]
-                  </h6>
-                  <div v-if="showReferredCard()">
-                    Referred Card Number: {{ showReferredCard() }}
-                  </div>
-                  <div v-if="showReferredPatient()">
-                    Referred Patient: {{ showReferredPatient() }}
-                  </div>
-                  <div v-if="showReferredCard()">
-                    IS GB?: <Status :data="isReferedPatientGb()" />
-                  </div>
-                </div>
-              </div>
-              <!-- service-->
-              <div class="row">
-                <div class="col-md-6">
-                  <b-form-group
-                    id="input-group-patient-id"
-                    label="Search Service:"
-                    label-for="patient-id"
-                    description="Search Service to add"
-                  >
-                    <Autocomplete
-                      @choose-item="handleAutocomplete"
-                      :items="services"
-                      label="name"
-                      rowId="serviceId"
-                      :disabled="!patient"
+                  <th>Card Registered?</th>
+                  <td>:</td>
+                  <th>
+                    <Status
+                      :data="patient.registration && patient.registration.id"
                     />
-                  </b-form-group>
-                </div>
-                <div class="col-md-6 mt-30" v-if="service">
-                  <b-button
-                    @click="addPatientService"
-                    class="ml-2"
-                    variant="success"
-                  >
-                    <!-- <b-icon-plus-circle
+                  </th>
+
+                  <th>Card Number</th>
+                  <td>:</td>
+                  <th>
+                    <span
+                      v-if="form.cardRegistration && form.cardRegistration.id"
+                      >Card Number: {{ form.cardRegistration.cardNumber }}</span
+                    >
+                  </th>
+
+                  <th></th>
+                  <td></td>
+                  <th></th>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="row fw-500" v-if="false">
+            <div class="col-md-2">Patient Name:</div>
+            <div class="col-md-2 text-left px-0 mx-0">
+              {{ consumer.fullName }}
+            </div>
+            <div class="col-md-1 text-right">PID :</div>
+            <div class="col-md-2 text-left px-0">{{ patient.pid }}</div>
+            <div class="col-md-1 text-right" v-if="patient.gender">Sex:</div>
+            <div class="col-md-1 text-left px-0" v-if="patient.gender">
+              {{ patient.gender }}
+            </div>
+            <div class="col-md-1 text-right" v-if="patient.age">Age:</div>
+            <div class="col-md-1 text-left px-0" v-if="patient.age">
+              {{ patient.age }}
+            </div>
+
+            <!-- <div class="col-md-3">
+
+                  </div> -->
+          </div>
+          <div class="row fw-500" v-if="false">
+            <div class="col-md-2 text-right">IS GB?:</div>
+            <div class="col-md-2 px-0">
+              <Status :data="isGB()" />
+            </div>
+            <div class="col-md-2">
+              Card Registered?:
+              <Status :data="patient.registration && patient.registration.id" />
+            </div>
+            <div class="col-md-3">
+              <span v-if="form.cardRegistration && form.cardRegistration.id"
+                >Card Number: {{ form.cardRegistration.cardNumber }}</span
+              >
+            </div>
+          </div>
+          <!--end patient info-->
+
+          <div class="row">
+            <div class="col-md-12">
+              <h6 v-if="consumer">
+                Service For: {{ consumer.fullName }} [{{ consumer.pid }}]
+              </h6>
+              <div v-if="showReferredCard()">
+                Referred Card Number: {{ showReferredCard() }}
+              </div>
+              <div v-if="showReferredPatient()">
+                Referred Patient: {{ showReferredPatient() }}
+              </div>
+              <div v-if="showReferredCard()">
+                IS GB?: <Status :data="isReferedPatientGb()" />
+              </div>
+            </div>
+          </div>
+          <!-- service-->
+          <div class="row">
+            <div class="col-md-6">
+              <b-form-group
+                id="input-group-patient-id"
+                label="Search Service:"
+                label-for="patient-id"
+                description="Search Service to add"
+              >
+                <Autocomplete
+                  @choose-item="handleAutocomplete"
+                  :items="services"
+                  label="name"
+                  rowId="serviceId"
+                  :disabled="!patient"
+                />
+              </b-form-group>
+            </div>
+            <div class="col-md-6 mt-30" v-if="service">
+              <b-button
+                @click="addPatientService"
+                class="ml-2"
+                variant="success"
+              >
+                <!-- <b-icon-plus-circle
                       scale="1.25"
                       class="t-bold"
                     ></b-icon-plus-circle> -->
-                    Add Service
-                  </b-button>
-                </div>
-              </div>
-              <!--end service-->
-           
-         
+                Add Service
+              </b-button>
+            </div>
+          </div>
+          <!--end service-->
         </b-form>
       </CCardBody></cCard
     >
     <cCard
       ><CCardBody>
         <div class="table-responsive">
-        <table class="table table-bordered position-relative">
-          <thead class="thead-light">
-            <tr>
-              <th>Sl</th>
-              <th>Service Name</th>
-              <th>Room No</th>
-              <th>Amount</th>
-              <th>Discount</th>
-              <th>Payable</th>
-              <!-- <th>Action</th> -->
-            </tr>
-          </thead>
+          <table class="table table-bordered position-relative">
+            <thead class="thead-light">
+              <tr>
+                <th>Sl</th>
+                <th>Service Name</th>
+                <th>Room No</th>
+                <th>Amount</th>
+                <th>Discount</th>
+                <th>Payable</th>
+                <!-- <th>Action</th> -->
+              </tr>
+            </thead>
 
-          <tbody>
-            <tr
-              v-for="(ps, i) in patientInvoice.patientServiceDetails"
-              :key="i"
-            >
-              <td>{{ i + 1 }}</td>
-              <td>{{ ps.service.name }}</td>
-              <td><input type="text" v-model="ps.roomNumber" /></td>
-              <td>{{ ps.serviceAmount }}</td>
-              <td>{{ ps.discountAmount }}</td>
-              <td>{{ ps.payableAmount }}</td>
-              <!-- <td>
+            <tbody>
+              <tr
+                v-for="(ps, i) in patientInvoice.patientServiceDetails"
+                :key="i"
+              >
+                <td>{{ i + 1 }}</td>
+                <td>{{ ps.service.name }}</td>
+                <td><input type="text" v-model="ps.roomNumber" /></td>
+                <td>{{ ps.serviceAmount }}</td>
+                <td>{{ ps.discountAmount }}</td>
+                <td>{{ ps.payableAmount }}</td>
+                <!-- <td>
                 <div class="row">
                 <div class="col-md-6"><b-form-file>Upload</b-form-file></div>
                 <div class="col-md-6"><b-button>Download</b-button></div>
                 </div>
               </td> -->
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="5" class="text-right">Grand Total</td>
-              <td>{{ totalPayable }}</td>
-              <!-- <td></td> -->
-            </tr>
-            <tr>
-              <td colspan="5" class="text-right">Total Paid</td>
-              <td>
-                <b-form-input
-                  type="number"
-                  @input="changeTotalPaid"
-                  v-model="patientInvoice.paidAmount"
-                ></b-form-input>
-              </td>
-              <!-- <td></td> -->
-            </tr>
-            <tr>
-              <td colspan="5" class="text-right">Due Amount</td>
-              <td>
-                <b-form-input
-                  type="number"
-                  v-model="patientInvoice.dueAmount"
-                  readonly="readonly"
-                ></b-form-input>
-              </td>
-              <!-- <td></td> -->
-            </tr>
-          </tfoot>
-        </table>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5" class="text-right">Grand Total</td>
+                <td>{{ totalPayable }}</td>
+                <!-- <td></td> -->
+              </tr>
+              <tr>
+                <td colspan="5" class="text-right">Total Paid</td>
+                <td>
+                  <b-form-input
+                    type="number"
+                    @input="changeTotalPaid"
+                    v-model="patientInvoice.paidAmount"
+                  ></b-form-input>
+                </td>
+                <!-- <td></td> -->
+              </tr>
+              <tr>
+                <td colspan="5" class="text-right">Due Amount</td>
+                <td>
+                  <b-form-input
+                    type="number"
+                    v-model="patientInvoice.dueAmount"
+                    readonly="readonly"
+                  ></b-form-input>
+                </td>
+                <!-- <td></td> -->
+              </tr>
+            </tfoot>
+          </table>
         </div>
       </CCardBody></cCard
     >
@@ -387,10 +385,13 @@
       </div>
     </div>
 
-    
     <b-card v-if="patient">
       <h4>Service History</h4>
-      <b-card-body v-for="(pi, i) in consumer.patientInvoices" :key="i">
+      <b-card-body
+        style="padding-left: 0.6rem; padding-right: 0.6rem"
+        v-for="(pi, i) in consumer.patientInvoices"
+        :key="i"
+      >
         <h5>
           Invoice No # {{ pi.invoiceNumber }}
           <a
@@ -401,39 +402,39 @@
         </h5>
         <h6>Date: {{ getDate(pi.createdAt) }}</h6>
         <div class="table-responsive">
-        <table class="table table-bordered position-relative">
-          <thead class="thead-light">
-            <tr>
-              <th>Sl</th>
-              <th>Service Name</th>
-              <th>Room No</th>
-              <th>Amount</th>
-              <th>Discount</th>
-              <th>Payable</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+          <table class="table table-bordered position-relative">
+            <thead class="thead-light">
+              <tr>
+                <th>Sl</th>
+                <th>Service Name</th>
+                <th>Room No</th>
+                <th>Amount</th>
+                <th>Discount</th>
+                <th>Payable</th>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            <tr v-for="(ps, i) in pi.patientServiceDetails" :key="i">
-              <td>{{ i + 1 }}</td>
-              <td>{{ ps.service.name }}</td>
-              <td>{{ ps.roomNumber }}</td>
-              <td>{{ ps.serviceAmount }}</td>
-              <td>{{ ps.discountAmount }}</td>
-              <td>{{ ps.payableAmount }}</td>
-              <td>
-                <router-link
-                  v-if="hasReportButton(ps)"
-                  :to="showReportButton(ps.service, consumer.id, pi.id)"
-                  >{{
-                    ps.service.labTest ? "Lab Report" : "Prescription"
-                  }}</router-link
-                >
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <tbody>
+              <tr v-for="(ps, i) in pi.patientServiceDetails" :key="i">
+                <td>{{ i + 1 }}</td>
+                <td>{{ ps.service.name }}</td>
+                <td>{{ ps.roomNumber }}</td>
+                <td>{{ ps.serviceAmount }}</td>
+                <td>{{ ps.discountAmount }}</td>
+                <td>{{ ps.payableAmount }}</td>
+                <td>
+                  <router-link
+                    v-if="hasReportButton(ps)"
+                    :to="showReportButton(ps.service, consumer.id, pi.id)"
+                    >{{
+                      ps.service.labTest ? "Lab Report" : "Prescription"
+                    }}</router-link
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </b-card-body>
     </b-card>
@@ -651,7 +652,7 @@ export default {
       service: null,
       notFound: false,
       registration: null,
-      showCardInfoPopup:false,
+      showCardInfoPopup: false,
       patientInvoice: {
         id: null,
         serviceAmount: 0,
@@ -698,11 +699,11 @@ export default {
         { value: 6, text: "6 Months" },
         { value: 12, text: "12 Months" },
       ],
-      keywordTypes:[
-        {value:null, text:"Select Field"},
-        {value:"pid", text:"PID"},
-        {value:"name", text:"Name"},
-        {value:"mobile", text:"Mobile Number"},
+      keywordTypes: [
+        { value: null, text: "Select Field" },
+        { value: "pid", text: "PID" },
+        { value: "name", text: "Name" },
+        { value: "mobile", text: "Mobile Number" },
       ],
       search: { keywordType: "pid", keyword: "" },
       autocomplete: {},
@@ -767,8 +768,8 @@ export default {
       this.onSearch();
     }
   },
-  mounted(){
-    this.$store.commit('clearMessage');
+  mounted() {
+    this.$store.commit("clearMessage");
   },
   methods: {
     showReport(i) {
@@ -838,24 +839,24 @@ export default {
         paidAmount += ps.payableAmount;
       });
 
-      pdf.text("Total : ", x + 140, y + 20);
-      pdf.text(paidAmount.toString(), x + 170, y + 20);
+      pdf.text("Total : ", x + 140, y + 10);
+      pdf.text(paidAmount.toString(), x + 158, y + 10);
 
       pdf.output("dataurlnewwindow");
     },
 
     showPatientType() {
       //this.consumer.registration.active
-      if(this.consumer.registration && this.consumer.registration.active){
-        if(this.consumer.gb){
+      if (this.consumer.registration && this.consumer.registration.active) {
+        if (this.consumer.gb) {
           return "CH-GB";
-        }else{
+        } else {
           return "CH-NGB";
         }
-      }else{
-        if(this.consumer.gb){
+      } else {
+        if (this.consumer.gb) {
           return "NCH-GB";
-        }else{
+        } else {
           return "NCH-NGB";
         }
       }
@@ -901,7 +902,7 @@ export default {
             this.patient.registration.members[i] = _member;
           });
       } else {
-        this.findPatient(member.patient.pid)
+        this.findPatient(member.patient.pid);
         // this.consumer = member.patient;
         console.log(this.consumer);
       }
@@ -910,22 +911,25 @@ export default {
       // ajax call
       if (searchText.length >= 1) {
         this.$store.commit("start");
-        
-        new PatientService().getPatientIdsByPid(searchText,this.search.keywordType).then((result) => {
-          this.patientNumbers = result.collection;
-          this.patientNumbers.map((result2)=> {
-            if(this.search.keywordType=='pid'){
-              result2.label = result2.fullName+ " ("+result2.pid+")";
-             } else if(this.search.keywordType=='mobile'){
-                 result2.label = result2.fullName+ " ("+result2.mobileNumber+")";
-             }else{
+
+        new PatientService()
+          .getPatientIdsByPid(searchText, this.search.keywordType)
+          .then((result) => {
+            this.patientNumbers = result.collection;
+            this.patientNumbers.map((result2) => {
+              if (this.search.keywordType == "pid") {
+                result2.label = result2.fullName + " (" + result2.pid + ")";
+              } else if (this.search.keywordType == "mobile") {
+                result2.label =
+                  result2.fullName + " (" + result2.mobileNumber + ")";
+              } else {
                 result2.label = result2.fullName;
-             }
-             return result2;
-          })
-          // console.log(result);
-          this.$store.commit("finish");
-        });
+              }
+              return result2;
+            });
+            // console.log(result);
+            this.$store.commit("finish");
+          });
       }
     },
     handlePatientSelect(obj, autocomplete, index, rowIndex) {
@@ -978,10 +982,11 @@ export default {
       }
 
       const serviceAmount = service.currentCost;
-      console.log((this.isGB() || this.isReferedPatientGb()),'IS GB');
-      const discountAmount = (this.isGB() || this.isReferedPatientGb())
-        ? service.currentCost - service.currentGbCost
-        : 0;
+      console.log(this.isGB() || this.isReferedPatientGb(), "IS GB");
+      const discountAmount =
+        this.isGB() || this.isReferedPatientGb()
+          ? service.currentCost - service.currentGbCost
+          : 0;
       const payableAmount = serviceAmount - discountAmount;
 
       const patientService = {
@@ -1055,9 +1060,10 @@ export default {
       }
 
       const serviceAmount = this.service.currentCost;
-      const discountAmount = (this.isGB() || this.isReferedPatientGb())
-        ? this.service.currentCost - this.service.currentGbCost
-        : 0;
+      const discountAmount =
+        this.isGB() || this.isReferedPatientGb()
+          ? this.service.currentCost - this.service.currentGbCost
+          : 0;
       const payableAmount = serviceAmount - discountAmount;
       const patientService = {
         serviceAmount,
@@ -1085,14 +1091,14 @@ export default {
       this.service = null;
       this.consumer = null;
       this.patientNumbers = [];
-      this.form.cardRegistration = { members:[]};
+      this.form.cardRegistration = { members: [] };
       // if (this.autocomplete.setInputValue != undefined) {
       //   this.autocomplete.setInputValue("");
       // }
-      this.$refs['patientSelect'].setInputValue("")
+      this.$refs["patientSelect"].setInputValue("");
       this.pid = "";
     },
-    handleKeywodChange(){
+    handleKeywodChange() {
       this.onClearSearch();
     },
     register() {
@@ -1116,19 +1122,19 @@ export default {
       this.findPatient();
     },
     isGB() {
-        return this.consumer.gb;
+      return this.consumer.gb;
     },
-    isReferedPatientGb(){
-      if(this.consumer.cardMember==null){
+    isReferedPatientGb() {
+      if (this.consumer.cardMember == null) {
         return false;
       }
-      if(this.consumer.cardMember.cardRegistration == null){
+      if (this.consumer.cardMember.cardRegistration == null) {
         return false;
       }
       return this.consumer.cardMember.cardRegistration.patient.gb;
     },
     findPatient(_pid) {
-      const pid = (_pid != undefined)? _pid : this.pid;
+      const pid = _pid != undefined ? _pid : this.pid;
       new PatientService()
         .getPatientByPid(pid)
         .then((result) => {
@@ -1193,11 +1199,11 @@ export default {
 
     onSubmit() {
       this.$store.commit("start");
-      if(this.consumer.registration){
-        this.consumer.registration.startDate = this.consumer.registration.startDate
-                                                      .toString().replace(" ","T")
-        this.consumer.registration.expiredDate = this.consumer.registration.expiredDate
-                                                      .toString().replace(" ","T")
+      if (this.consumer.registration) {
+        this.consumer.registration.startDate =
+          this.consumer.registration.startDate.toString().replace(" ", "T");
+        this.consumer.registration.expiredDate =
+          this.consumer.registration.expiredDate.toString().replace(" ", "T");
       }
       const form = {
         id: this.consumer.id,
@@ -1205,10 +1211,10 @@ export default {
         center: this.$store.getters.center,
         createdBy: this.$store.getters.employee,
         patientInvoices: [this.patientInvoice],
-        registration: {...this.consumer.registration}
+        registration: { ...this.consumer.registration },
       };
       form.registration.members = [];
-     
+
       this.consumer.patientInvoices.unshift(this.patientInvoice);
       this.consumer.center = this.$store.getters.center;
       this.consumer.createdBy = this.$store.getters.employee;
@@ -1264,12 +1270,12 @@ export default {
       }
       return null;
     },
-    showCardInfo(){
+    showCardInfo() {
       this.showCardInfoPopup = true;
     },
-    hideCardInfo(){
+    hideCardInfo() {
       this.showCardInfoPopup = false;
-    }
+    },
   },
 };
 </script>
@@ -1291,26 +1297,31 @@ export default {
 .patientService .card {
   margin-bottom: 0.5rem;
 }
-.patientService .card-body {
+/* .patientService .card-body {
   padding: 0.6rem;
-}
+} */
 
 ul.fMembers {
   padding: 0px;
+  margin-left: 15px;
 }
 ul.fMembers li {
-  display: inline-block;
+  /* display: inline-block; */
   margin: 0.3rem 0.53rem 0.3rem 0;
 }
-.mt-30{margin-top:30px !important;}
-.fw-500{font-weight: 500;}
-.cardInfoPopup{
-      position: absolute;
-    right: 0px;
-    background: #fff;
-    width: 400px;
-    z-index: 9;
-    top: 84px;
+.mt-30 {
+  margin-top: 30px !important;
+}
+.fw-500 {
+  font-weight: 500;
+}
+.cardInfoPopup {
+  position: absolute;
+  right: 0px;
+  background: #fff;
+  width: 400px;
+  z-index: 9;
+  top: 84px;
 }
 </style>
 

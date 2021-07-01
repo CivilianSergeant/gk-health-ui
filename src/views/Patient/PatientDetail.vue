@@ -120,7 +120,7 @@
                 }}</strong>
               </b-form-group>
             </div>
-             <div class="col-md-6">
+            <div class="col-md-6">
               <b-form-group
                 id="input-group-7"
                 label="Street Address"
@@ -143,17 +143,10 @@
               </b-form-group>
             </div>
             <div class="col-md-3">
-              <b-form-group
-                id="input-group-9"
-                label="IS GB:"
-                label-for="isGB"
-              >
-                <strong class="text-dark">{{
-                  form.gb ? "YES" : "NO"
-                }}</strong>
+              <b-form-group id="input-group-9" label="IS GB:" label-for="isGB">
+                <strong class="text-dark">{{ form.gb ? "YES" : "NO" }}</strong>
               </b-form-group>
             </div>
-            
           </div>
           <div class="row">
             <div class="col-md-2">
@@ -264,9 +257,17 @@
                 >
               </p>
               <!-- <p>IS GB: ({{ form.registration.gb ? "Yes" : "No" }})</p> -->
-              <p>Card Members ({{ form.registration.members.length }})</p>
-              <p>Start Date: {{ form.registration.startDate }}</p>
+
+              <p class="mb-0">Start Date: {{ form.registration.startDate }}</p>
               <p>Expire Date: {{ form.registration.expiredDate }}</p>
+
+              <!-- <p class="mb-0 border-bottom">
+
+              </p> -->
+              <h6>Card Members ({{ form.registration.members.length }})</h6>
+              <div v-for="(memb, i) in form.registration.members" :key="i">
+                <div>{{ memb.patient.fullName }} ({{ memb.patient.pid }})</div>
+              </div>
             </b-card-body>
           </b-card>
         </div>
@@ -525,8 +526,8 @@ export default {
         paidAmount += ps.payableAmount;
       });
 
-      pdf.text("Total : ", x + 140, y + 20);
-      pdf.text(paidAmount.toString(), x + 170, y + 20);
+      pdf.text("Total : ", x + 140, y + 10);
+      pdf.text(paidAmount.toString(), x + 158, y + 10);
 
       pdf.output("dataurlnewwindow");
     },

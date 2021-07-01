@@ -21,15 +21,15 @@
           <div class="col-md-2 mt-3 text-center">
             <h6 class="border p-1">{{ title }}</h6>
           </div>
-          <div class="col-md-5 text-right">
-             <MemberRegStatus
+          <!-- <div class="col-md-5 text-right"> -->
+          <MemberRegStatus
             v-if="resultData.prescriptionPatient"
             :gbnch="gbNCh()"
             :gbch="gbCh()"
             :ngbch="ngbCh()"
             :ngbnch="ngbNch()"
           ></MemberRegStatus>
-          </div>
+          <!-- </div> -->
         </div>
         <div class="row">
           <div class="col-md-12 py-2">Date:{{ showVisitDate(resultData) }}</div>
@@ -53,7 +53,12 @@
             </div>
             <div class="mt-2 border p-2">
               <div
-                class="border-bottom mb-2 d-inline-block border-bottom border-dark"
+                class="
+                  border-bottom
+                  mb-2
+                  d-inline-block
+                  border-bottom border-dark
+                "
               >
                 Family History
               </div>
@@ -93,7 +98,12 @@
             </div>
             <div class="mt-2 border p-2">
               <div
-                class="border-bottom mb-2 d-inline-block border-bottom border-dark"
+                class="
+                  border-bottom
+                  mb-2
+                  d-inline-block
+                  border-bottom border-dark
+                "
               >
                 Personal History
               </div>
@@ -192,7 +202,13 @@
 
               <div class="pt-4">
                 <div
-                  class="col-md-2 offset-md-10 text-center border-top border-dark py-1"
+                  class="
+                    col-md-2
+                    offset-md-10
+                    text-center
+                    border-top border-dark
+                    py-1
+                  "
                 >
                   Doctor
                 </div>
@@ -247,7 +263,12 @@
             </div>
             <div class="mt-2 border p-2">
               <div
-                class="border-bottom mb-2 d-inline-block border-bottom border-dark"
+                class="
+                  border-bottom
+                  mb-2
+                  d-inline-block
+                  border-bottom border-dark
+                "
               >
                 Family History
               </div>
@@ -287,7 +308,12 @@
             </div>
             <div class="mt-2 border p-2">
               <div
-                class="border-bottom mb-2 d-inline-block border-bottom border-dark"
+                class="
+                  border-bottom
+                  mb-2
+                  d-inline-block
+                  border-bottom border-dark
+                "
               >
                 Personal History
               </div>
@@ -386,7 +412,13 @@
 
               <div class="pt-4">
                 <div
-                  class="col-md-2 offset-md-10 text-center border-top border-dark py-1"
+                  class="
+                    col-md-2
+                    offset-md-10
+                    text-center
+                    border-top border-dark
+                    py-1
+                  "
                 >
                   Doctor
                 </div>
@@ -501,38 +533,38 @@ export default {
       this.$refs.html2Pdf.generatePdf();
     },
     gbCh() {
-    const patient = this.resultData.prescriptionPatient;
-    if (patient.registration != null && patient.gb) {
-      return true;
-    }
-  
-    return false;
-  },
+      const patient = this.resultData.prescriptionPatient;
+      if (patient.registration != null && patient.gb) {
+        return true;
+      }
 
-  gbNCh() {
-     const patient = this.resultData.prescriptionPatient;
-    if (patient.registration == null && patient.gb) {
-      return true;
-    }
-    return false;
-  },
+      return false;
+    },
 
-  ngbCh(){
-     const patient = this.resultData.prescriptionPatient;
-     if (patient.registration != null && !patient.gb) {
-       return true;
-     }
+    gbNCh() {
+      const patient = this.resultData.prescriptionPatient;
+      if (patient.registration == null && patient.gb) {
+        return true;
+      }
+      return false;
+    },
 
-     return false;
-  },
- 
-  ngbNch(){
-    const patient = this.resultData.prescriptionPatient;
-    if (patient.registration == null && !patient.gb) {
-       return true;
-    }
-    return false;
-  }
+    ngbCh() {
+      const patient = this.resultData.prescriptionPatient;
+      if (patient.registration != null && !patient.gb) {
+        return true;
+      }
+
+      return false;
+    },
+
+    ngbNch() {
+      const patient = this.resultData.prescriptionPatient;
+      if (patient.registration == null && !patient.gb) {
+        return true;
+      }
+      return false;
+    },
   },
   components: {
     VueHtml2pdf,
