@@ -1,5 +1,12 @@
 import store from "@/store";
 
+
+
+
+
+
+
+
 export enum ApiRoutes {
     DOMAIN = 'http://localhost:8081',
     BASE_PATH = 'http://localhost:8282/api/',
@@ -118,7 +125,10 @@ export enum ApiRoutes {
     ADD_VOUCHER = '/accounts/voucher/add',
     GET_VOUCHERS = '/accounts/voucher/list',
     VOUCHER_TYPES = '/accounts/voucher/by-module/GK_HEALTH',
-    GET_TOTAL_UNPOSTED_AMOUNT = '/invoice/total-unposted-amount'
+    GET_TOTAL_UNPOSTED_AMOUNT = '/invoice/total-unposted-amount',
+    ADD_EVENT_CATEGORY = "/event-category/add",
+    GET_EVENT_CATEGORIES = "/event-category",
+    GET_EVENT_CATEGORY_BY_ID = "/event-category/:id"
 }
 
 export function GetApiRoute(route: string, value = "") {
