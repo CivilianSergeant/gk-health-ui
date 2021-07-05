@@ -19,6 +19,7 @@ import {RolePermissionService} from './RolePermissonService'
 import {StatsService} from './StatsService'
 import {LocationService} from './LocationService'
 import {VoucherService} from './VoucherService'
+import {EventCategoryService} from './EventCategoryService'
 
 export {
         CategoryService,
@@ -41,5 +42,6 @@ export {
         RolePermissionService,
         StatsService,
         LocationService,
-        VoucherService
+        VoucherService,
+        EventCategoryService
     }
