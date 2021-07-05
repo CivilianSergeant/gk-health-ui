@@ -19,6 +19,7 @@ import HealthServiceRoutes from "@/router/health-service-routes";
 import ServiceCategoryRoutes from './service-category-routes';
 import VillageRoutes from "@/router/village-routes";
 import VoucherRoutes from "@/router/voucher-routes";
+import EventRoutes from "@/router/event-routes";
 
 Vue.use(VueRouter)
 
@@ -59,6 +60,8 @@ const routes: Array<RouteConfig> = [
   ...LabTestRoutes,
 
   ...VoucherRoutes,
+
+  ...EventRoutes,
   {
     path: '/role-permissions',
     name: 'Role and Permissions',
