@@ -5,9 +5,9 @@
         <cCard>
       <CCardHeader>
         <!-- <h5 class="clearfix"> -->
-        {{(this.id)? 'Edit' : 'Add'}} Event Category
-        <router-link to="/event-category" class="btn btn-primary btn-sm float-right"
-          >Event Category List</router-link
+        {{(this.id)? 'Edit' : 'Add'}} Operation Category
+        <router-link to="/operation-category" class="btn btn-primary btn-sm float-right"
+          >Operation Category List</router-link
         >
         <!-- </h5> -->
       </CCardHeader>
@@ -77,7 +77,7 @@
     </div>
 </template>
 <script>
-import { EventCategoryService, NavigationService } from '@/services';
+import { OperationCategoryService, NavigationService } from '@/services';
 export default {
     computed: {
         isBusy() {
@@ -106,24 +106,24 @@ export default {
     this.id = this.$route.params.id;
 
     if (this.id != undefined) {
-      this.fetchEventCategoryById();
+      this.fetchOperationCategoryById();
     }   
   },
   methods:{
-      fetchEventCategoryById(){
+      fetchOperationCategoryById(){
           this.$store.commit('start');
-          (new EventCategoryService()).getById(this.id).then(result=>{
+          (new OperationCategoryService()).getById(this.id).then(result=>{
               this.form = result;
               this.$store.commit('finish')
           })
       },
       onSubmit(){
           this.$store.commit('start');
-          (new EventCategoryService()).addEventCatgory(this.form).then(result=>{
+          (new OperationCategoryService()).addOperationCategory(this.form).then(result=>{
               this.$store.commit('finish');
-              this.$store.commit('setSuccessMsg',(this.id)?'Event Category Updated' : 'New Event Category Created');
+              this.$store.commit('setSuccessMsg', (this.id)?'Operation Category Updated':'New Operation Category Created');
               const navigationService = new NavigationService();
-            navigationService.redirect(this, "Event Category");
+            navigationService.redirect(this, "Operation Category");
           });
       },
       onReset(){

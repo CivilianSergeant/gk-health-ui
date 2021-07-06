@@ -20,6 +20,7 @@ import ServiceCategoryRoutes from './service-category-routes';
 import VillageRoutes from "@/router/village-routes";
 import VoucherRoutes from "@/router/voucher-routes";
 import EventRoutes from "@/router/event-routes";
+import OperationRoutes from '@/router/operation-routes'
 
 Vue.use(VueRouter)
 
@@ -62,6 +63,8 @@ const routes: Array<RouteConfig> = [
   ...VoucherRoutes,
 
   ...EventRoutes,
+
+  ...OperationRoutes,
   {
     path: '/role-permissions',
     name: 'Role and Permissions',
