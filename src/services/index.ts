@@ -20,6 +20,8 @@ import {StatsService} from './StatsService'
 import {LocationService} from './LocationService'
 import {VoucherService} from './VoucherService'
 import {EventCategoryService} from './EventCategoryService'
+import {OperationCategoryService} from './OperationCategoryService'
+import {OperationPackageService} from './OperationPackageService'
 
 export {
         CategoryService,
@@ -43,5 +45,7 @@ export {
         StatsService,
         LocationService,
         VoucherService,
-        EventCategoryService
+        EventCategoryService,
+        OperationCategoryService,
+        OperationPackageService
     }

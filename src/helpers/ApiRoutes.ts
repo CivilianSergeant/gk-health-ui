@@ -7,6 +7,62 @@ import store from "@/store";
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export enum ApiRoutes {
     DOMAIN = 'http://localhost:8081',
     BASE_PATH = 'http://localhost:8282/api/',
@@ -128,7 +184,11 @@ export enum ApiRoutes {
     GET_TOTAL_UNPOSTED_AMOUNT = '/invoice/total-unposted-amount',
     ADD_EVENT_CATEGORY = "/event-category/add",
     GET_EVENT_CATEGORIES = "/event-category",
-    GET_EVENT_CATEGORY_BY_ID = "/event-category/:id"
+    GET_EVENT_CATEGORY_BY_ID = "/event-category/:id",
+    GET_OPERATION_CATEGORIES = "/operation-category",
+    GET_OPERATION_CATEGORY_LIST = "/operation-category/list",
+    GET_OPERATION_CATEGORY_BY_ID = "/operation-category/:id",
+    ADD_OPERATION_CATEGORY = "/operation-category/add"
 }
 
 export function GetApiRoute(route: string, value = "") {
