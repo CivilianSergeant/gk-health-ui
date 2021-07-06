@@ -113,7 +113,7 @@ export class MenuService {
               _navs.push(prescriptionMenus);
             }
             prescriptionMenus.items.push(menu);
-          }else if(m.name.toString().toLowerCase().match(/center|employee|role|village|categor|services/)){
+          }else if(m.name.toString().toLowerCase().match(/center|employee|role|village|categor|services|package/)){
             if(_groups.indexOf('settings') == -1){
               _groups.push('settings');
               _navs.push(settingMenus);
