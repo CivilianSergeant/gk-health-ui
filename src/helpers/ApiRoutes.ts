@@ -188,7 +188,10 @@ export enum ApiRoutes {
     GET_OPERATION_CATEGORIES = "/operation-category",
     GET_OPERATION_CATEGORY_LIST = "/operation-category/list",
     GET_OPERATION_CATEGORY_BY_ID = "/operation-category/:id",
-    ADD_OPERATION_CATEGORY = "/operation-category/add"
+    ADD_OPERATION_CATEGORY = "/operation-category/add",
+    GET_OPERATION_PACKAGES = "/operation-package",
+    ADD_OPERATION_PACKAGE = "/operation-package/add",
+    GET_OPERATION_PACKAGE_BY_ID = "/operation-package/:id"
 }
 
 export function GetApiRoute(route: string, value = "") {

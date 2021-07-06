@@ -5,7 +5,7 @@
         <cCard>
       <CCardHeader>
         <!-- <h5 class="clearfix"> -->
-        Add Operation Category
+        {{(this.id)? 'Edit' : 'Add'}} Operation Category
         <router-link to="/operation-category" class="btn btn-primary btn-sm float-right"
           >Operation Category List</router-link
         >
@@ -106,11 +106,11 @@ export default {
     this.id = this.$route.params.id;
 
     if (this.id != undefined) {
-      this.fetchEventCategoryById();
+      this.fetchOperationCategoryById();
     }   
   },
   methods:{
-      fetchEventCategoryById(){
+      fetchOperationCategoryById(){
           this.$store.commit('start');
           (new OperationCategoryService()).getById(this.id).then(result=>{
               this.form = result;

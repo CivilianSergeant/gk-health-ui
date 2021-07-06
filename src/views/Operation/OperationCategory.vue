@@ -43,7 +43,7 @@
       <CCardBody>
         <div class="table-responsive">
         <b-table
-          id="medicine-table"
+          id="cat-table"
           class="position-relative"
           :fields="fields"
           @filtered="onFiltered"
@@ -82,7 +82,7 @@
         v-model="currentPage"
         :total-rows="rows"
         :per-page="perPage"
-        aria-controls="medicine-table"
+        aria-controls="cat-table"
       ></b-pagination>
         <Loader :isBusy="isBusy" />
       </CCardBody>

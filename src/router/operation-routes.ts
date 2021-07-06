@@ -32,7 +32,7 @@ const operationRoutes: Array<RouteConfig> = [
     },
     {
         name: "Add Operation Package",
-        path: "/opertion-package/add",
+        path: "/operation-package/add",
         component: OperationPackageForm
     },
 

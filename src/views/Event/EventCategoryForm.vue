@@ -5,7 +5,7 @@
         <cCard>
       <CCardHeader>
         <!-- <h5 class="clearfix"> -->
-        Add Event Category
+        {{(this.id)? 'Edit' : 'Add'}} Event Category
         <router-link to="/event-category" class="btn btn-primary btn-sm float-right"
           >Event Category List</router-link
         >
