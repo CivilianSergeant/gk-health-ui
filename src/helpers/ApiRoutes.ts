@@ -128,7 +128,9 @@ export enum ApiRoutes {
     GET_TOTAL_UNPOSTED_AMOUNT = '/invoice/total-unposted-amount',
     ADD_EVENT_CATEGORY = "/event-category/add",
     GET_EVENT_CATEGORIES = "/event-category",
-    GET_EVENT_CATEGORY_BY_ID = "/event-category/:id"
+    GET_EVENT_CATEGORY_BY_ID = "/event-category/:id",
+    ALL_EVENT_CATEGORIES = '/event-category/list',
+    ADD_EVENT = 'event/add',
 }
 
 export function GetApiRoute(route: string, value = "") {
