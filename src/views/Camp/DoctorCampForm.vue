@@ -32,9 +32,10 @@
                 <b-form-select
                   required
                   id="camp-center"
+                  @change="handleChangeCenter"
                   :options="centers"
                   v-model="form.center.id"
-                  :disabled="centers.length==0"
+                  :disabled="centers.length == 0"
                 ></b-form-select>
               </b-form-group>
             </div>
@@ -81,7 +82,6 @@
                 <b-form-select
                   required
                   id="main-doctor"
-                  
                   v-model="employeeId"
                   :options="doctorList"
                 ></b-form-select>
@@ -152,8 +152,14 @@
 </template>
 
 <script>
-import { EmployeeService, EventCategoryService, LocationService, NavigationService,
-EventService, CenterService } from "@/services";
+import {
+  EmployeeService,
+  EventCategoryService,
+  LocationService,
+  NavigationService,
+  EventService,
+  CenterService,
+} from "@/services";
 export default {
   computed: {
     showRaOfficeList() {
@@ -186,16 +192,14 @@ export default {
       //   { value: "2", text: "Dr Fariya" },
       // ],
       form: {
-        center: {id:null},
+        center: { id: null },
         eventDate: null,
-        eventCategory: {id:null},
+        eventCategory: { id: null },
         eventType: "camp",
-        village: {lgVillageId:null},
+        village: { lgVillageId: null },
         locationAddress: "",
         note: "",
-        status:'pending'
-        
-        
+        status: "pending",
       },
       raOffice: null,
       employeeId: null,
@@ -204,31 +208,34 @@ export default {
       raOffices: [],
       currentCenter: null,
       raCenters: [],
-      eventPersonnel:{}
+      eventPersonnel: {},
     };
   },
-  watch:{
-    employeeId(newVal, old){
-      this.eventPersonnel={"employee":{id:newVal},"personnelType":'main'};
-    }
+  watch: {
+    employeeId(newVal, old) {
+      this.eventPersonnel = { employee: { id: newVal }, personnelType: "main" };
+    },
   },
   mounted() {
-    this.fetchVillagesByCenter();
+    //this.fetchVillagesByCenter();
     this.fetchEventCategories();
     this.fetchDoctors();
     this.fetchRaOffices();
   },
   methods: {
-    fetchDoctors(){
-      (new EmployeeService()).getDoctors().then(result=>{
-          this.doctorList = [{value:null,text:'Select Doctor'}]
-          result.forEach(d=>{
-            this.doctorList.push({value:d.id, text:d.fullName+ " ["+ d.designation +" ]"})
-          })
+    fetchDoctors() {
+      new EmployeeService().getDoctors().then((result) => {
+        this.doctorList = [{ value: null, text: "Select Doctor" }];
+        result.forEach((d) => {
+          this.doctorList.push({
+            value: d.id,
+            text: d.fullName + " [" + d.designation + " ]",
+          });
+        });
       });
     },
-    fetchVillagesByCenter() {
-      const id = this.$store.getters.center.apiOfficeId;
+    fetchVillagesByCenter(id) {
+      //const id = this.$store.getters.center.apiOfficeId;
       if (id == undefined) {
         return;
       }
@@ -243,7 +250,7 @@ export default {
       });
     },
     fetchEventCategories() {
-      (new EventCategoryService()).getEventCategoryList().then((result) => {
+      new EventCategoryService().getEventCategoryList().then((result) => {
         this.eventCategories.push({ value: null, text: "Select Category" });
         result.forEach((c) => {
           this.eventCategories.push({
@@ -259,7 +266,7 @@ export default {
         this.raCenters.length > 0
           ? this.raCenters.filter((r) => r.id == this.currentCenter)[0]
           : this.$store.getters.center;
-      
+
       new CenterService().getCentersByThirdLevel(raOffice).then((result) => {
         //this.centers = result;
         if (result.length > 0) {
@@ -284,23 +291,28 @@ export default {
       });
     },
     handleChangeRaOffice(val) {
-      if(!val){
-        this.centers=[];
+      if (!val) {
+        this.centers = [];
         return;
       }
       this.currentCenter = val;
       this.centers = [];
+      this.villages = [];
       this.fetchCenters();
+    },
+    handleChangeCenter(val) {
+      this.villages = [];
+      this.fetchVillagesByCenter(val);
     },
     onSubmit() {
       // some update
       this.$store.commit("start");
       const eventRequest = {
         event: this.form,
-        eventPersonnel: this.eventPersonnel
+        eventPersonnel: this.eventPersonnel,
       };
-      eventRequest.event.eventDate=eventRequest.event.eventDate+"T00:00:00";
-      (new EventService()).addEvent(eventRequest).then(result => {
+      eventRequest.event.eventDate = eventRequest.event.eventDate + "T00:00:00";
+      new EventService().addEvent(eventRequest).then((result) => {
         const message =
           this.id != undefined ? "Event Updated" : "Event Created";
         this.$store.commit("setSuccessMsg", message);
