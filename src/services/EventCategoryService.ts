@@ -47,4 +47,20 @@ export class EventCategoryService{
         }
         return this.categories;
     }
+
+    async getEventCategoryList(): Promise<any> {
+        const auth = store.getters.auth;
+        try {
+            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_EVENT_CATEGORIES),
+                setAuthorizationToken(auth.token));
+            if (response.status == 200) {
+                this.categories = response.data.collection;
+            }
+
+            
+        } catch (error) {
+            handleException(error);
+        }
+        return this.categories;
+    }
 }

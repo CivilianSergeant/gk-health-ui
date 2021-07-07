@@ -152,8 +152,8 @@
 </template>
 
 <script>
-import { EmployeeService, LocationService, NavigationService } from "@/services";
-import { EventService, CenterService } from "@/services";
+import { EmployeeService, EventCategoryService, LocationService, NavigationService,
+EventService, CenterService } from "@/services";
 export default {
   computed: {
     showRaOfficeList() {
@@ -193,6 +193,7 @@ export default {
         village: {lgVillageId:null},
         locationAddress: "",
         note: "",
+        status:'pending'
         
         
       },
@@ -208,7 +209,7 @@ export default {
   },
   watch:{
     employeeId(newVal, old){
-      this.eventPersonnel={"employeeId":newVal,"personnelType":'main'};
+      this.eventPersonnel={"employee":{id:newVal},"personnelType":'main'};
     }
   },
   mounted() {
@@ -242,7 +243,7 @@ export default {
       });
     },
     fetchEventCategories() {
-      new EventService().getEventCategories().then((result) => {
+      (new EventCategoryService()).getEventCategoryList().then((result) => {
         this.eventCategories.push({ value: null, text: "Select Category" });
         result.forEach((c) => {
           this.eventCategories.push({
@@ -298,7 +299,7 @@ export default {
         eventPersonnel: this.eventPersonnel
       };
       eventRequest.event.eventDate=eventRequest.event.eventDate+"T00:00:00";
-      (new EventService()).addEvent(eventRequest, () => {
+      (new EventService()).addEvent(eventRequest).then(result => {
         const message =
           this.id != undefined ? "Event Updated" : "Event Created";
         this.$store.commit("setSuccessMsg", message);

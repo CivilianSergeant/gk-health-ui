@@ -113,8 +113,7 @@
 </template>
 
 <script>
-import { LocationService, NavigationService } from "@/services";
-import { EventService, CenterService } from "@/services";
+import { EventService, CenterService, EventCategoryService } from "@/services";
 export default {
   computed: {
     showRaOfficeList() {
@@ -149,12 +148,12 @@ export default {
         { value: "1", text: "Dr Farjana" },
       ],
       fields: [
-        { key: "sl", sortable: true },
+        
         { key: "center", sortable: true },
-        { key: "date", sortable: true },
+        { key: "eventDate", sortable: true },
         { key: "eventCategory", sortable: true },
         { key: "eventType", sortable: true },
-        { key: "mainDoctor", sortable: true },
+        { key: "doctor", sortable: true },
         { key: "status", sortable: true },
         "action",
       ],
@@ -188,11 +187,27 @@ export default {
   mounted() {
     this.fetchEventCategories();
     this.fetchRaOffices();
+    this.fetchEvents();
   },
 
   methods: {
+    fetchEvents(){
+      this.$store.commit('start');
+      const searchable={
+        sortBy: this.sortBy,
+        sortDesc: this.sortDesc,
+        page: (this.currentPage-1),
+        size: this.perPage
+      };
+      (new EventService()).getEvents(searchable).then(result=>{
+        this.events = result.content;
+        this.totalPages = result.totalPages;
+        this.totalRows = result.totalElements;
+        this.$store.commit('finish');
+      });
+    },
     fetchEventCategories() {
-      new EventService().getEventCategories().then((result) => {
+      (new EventCategoryService()).getEventCategoryList().then((result) => {
         this.eventCategories.push({ value: null, text: "Category" });
         result.forEach((c) => {
           this.eventCategories.push({
@@ -249,7 +264,7 @@ export default {
       this.sortBy = ctx.sortBy;
       this.sortDesc = ctx.sortDesc;
       this.currentPage = 1;
-      // this.fetcheEvents();
+      this.fetchEvents();
     },
   },
 };

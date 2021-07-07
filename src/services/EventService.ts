@@ -7,19 +7,19 @@ export class EventService {
 
     private event: any = {};
 
-    async getEventCategories(): Promise<any> {
+    async getEvents(q: any): Promise<any>{
         const auth = store.getters.auth;
-        try {
-            const response = await axios.get(GetApiRoute(ApiRoutes.ALL_EVENT_CATEGORIES),
-                setAuthorizationToken(auth.token));
-            if (response.status == 200) {
-                this.eventCategories = response.data.collection;
+        try{
+            let path = GetApiRoute(ApiRoutes.GET_EVENTS);
+            path += `?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`;
+            const response = await axios.get(path,setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.event = response.data.object;
             }
-
-            return this.eventCategories;
-        } catch (error) {
-            handleException(error);
+        }catch(e){
+            handleException(e);
         }
+        return this.event;
     }
 
     async addEvent(payload: any): Promise<any>{
