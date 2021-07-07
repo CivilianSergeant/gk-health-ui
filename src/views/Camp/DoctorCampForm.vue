@@ -293,6 +293,7 @@ export default {
       this.fetchCenters();
     },
     onSubmit() {
+      // some update
       this.$store.commit("start");
       const eventRequest = {
         event: this.form,

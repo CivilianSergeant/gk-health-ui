@@ -6,7 +6,7 @@ export class EventService {
     private eventCategories: Record<string, any>[] = [];
 
     private event: any = {};
-
+    // pull all events with pagination
     async getEvents(q: any): Promise<any>{
         const auth = store.getters.auth;
         try{
