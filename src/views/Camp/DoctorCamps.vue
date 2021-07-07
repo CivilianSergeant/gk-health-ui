@@ -100,7 +100,7 @@
             :filter="filter"
             :filter-included-fields="filterOn"
             :current-page="currentPage"
-            :items="medicines"
+            :items="events"
             :bordered="true"
             :hover="true"
             :striped="true"
@@ -181,6 +181,7 @@ export default {
       centers: [],
       currentCenter: null,
       raCenters: [],
+      events: [],
     };
   },
 
@@ -232,10 +233,23 @@ export default {
         });
       });
     },
+    // fetcheEvents() {},
     handleChangeRaOffice(val) {
       this.currentCenter = val;
       this.centers = [];
       this.fetchCenters();
+    },
+    onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
+    handleSort(ctx) {
+      console.log(ctx);
+      this.sortBy = ctx.sortBy;
+      this.sortDesc = ctx.sortDesc;
+      this.currentPage = 1;
+      // this.fetcheEvents();
     },
   },
 };
