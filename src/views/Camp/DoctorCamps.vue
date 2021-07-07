@@ -148,7 +148,6 @@ export default {
         { value: "1", text: "Dr Farjana" },
       ],
       fields: [
-        
         { key: "center", sortable: true },
         { key: "eventDate", sortable: true },
         { key: "eventCategory", sortable: true },
@@ -191,23 +190,23 @@ export default {
   },
 
   methods: {
-    fetchEvents(){
-      this.$store.commit('start');
-      const searchable={
+    fetchEvents() {
+      this.$store.commit("start");
+      const searchable = {
         sortBy: this.sortBy,
         sortDesc: this.sortDesc,
-        page: (this.currentPage-1),
-        size: this.perPage
+        page: this.currentPage - 1,
+        size: this.perPage,
       };
-      (new EventService()).getEvents(searchable).then(result=>{
+      new EventService().getEvents(searchable).then((result) => {
         this.events = result.content;
         this.totalPages = result.totalPages;
         this.totalRows = result.totalElements;
-        this.$store.commit('finish');
+        this.$store.commit("finish");
       });
     },
     fetchEventCategories() {
-      (new EventCategoryService()).getEventCategoryList().then((result) => {
+      new EventCategoryService().getEventCategoryList().then((result) => {
         this.eventCategories.push({ value: null, text: "Category" });
         result.forEach((c) => {
           this.eventCategories.push({
