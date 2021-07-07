@@ -199,7 +199,6 @@ export default {
       villages: [],
       centers: [],
       raOffices: [],
-      thirdLevelCode: "",
       currentCenter: null,
       raCenters: [],
     };
