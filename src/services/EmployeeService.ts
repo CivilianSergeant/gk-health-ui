@@ -27,7 +27,19 @@ export class EmployeeService{
         }
     } 
 
-    
+    async getDoctors(): Promise<any>{
+        const auth: any = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.GET_DOCTORS),
+            setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.employees = response.data.collection;
+            }
+        }catch(e){
+            handleException(e);
+        }
+        return this.employees;
+    }
 
     async getRemoteEmployees(): Promise<any>{
         const auth: any =  store.getters.auth;

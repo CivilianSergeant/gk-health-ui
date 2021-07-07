@@ -63,6 +63,70 @@ import store from "@/store";
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export enum ApiRoutes {
     DOMAIN = 'http://localhost:8081',
     BASE_PATH = 'http://localhost:8282/api/',
@@ -186,14 +250,15 @@ export enum ApiRoutes {
     GET_EVENT_CATEGORIES = "/event-category",
     GET_EVENT_CATEGORY_BY_ID = "/event-category/:id",
     ALL_EVENT_CATEGORIES = '/event-category/list',
-    ADD_EVENT = 'event/add',
+    ADD_EVENT = '/event/add',
     GET_OPERATION_CATEGORIES = "/operation-category",
     GET_OPERATION_CATEGORY_LIST = "/operation-category/list",
     GET_OPERATION_CATEGORY_BY_ID = "/operation-category/:id",
     ADD_OPERATION_CATEGORY = "/operation-category/add",
     GET_OPERATION_PACKAGES = "/operation-package",
     ADD_OPERATION_PACKAGE = "/operation-package/add",
-    GET_OPERATION_PACKAGE_BY_ID = "/operation-package/:id"
+    GET_OPERATION_PACKAGE_BY_ID = "/operation-package/:id",
+    GET_DOCTORS = "/employee/Medical Officer "
 }
 
 export function GetApiRoute(route: string, value = "") {

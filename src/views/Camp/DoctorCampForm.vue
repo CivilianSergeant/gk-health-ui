@@ -18,7 +18,7 @@
                 <b-form-select
                   id="camp-center"
                   :options="raOffices"
-                  v-model="form.raOffice"
+                  v-model="raOffice"
                   @change="handleChangeRaOffice"
                 ></b-form-select>
               </b-form-group>
@@ -33,8 +33,8 @@
                   required
                   id="camp-center"
                   :options="centers"
-                  v-model="form.center"
-                  type="text"
+                  v-model="form.center.id"
+                  :disabled="centers.length==0"
                 ></b-form-select>
               </b-form-group>
             </div>
@@ -59,7 +59,7 @@
                 <b-form-select
                   required
                   id="event-category"
-                  v-model="form.eventCategory"
+                  v-model="form.eventCategory.id"
                   :options="eventCategories"
                   type="text"
                 ></b-form-select>
@@ -81,7 +81,8 @@
                 <b-form-select
                   required
                   id="main-doctor"
-                  v-model="form.employeeId"
+                  
+                  v-model="employeeId"
                   :options="doctorList"
                 ></b-form-select>
               </b-form-group>
@@ -105,7 +106,7 @@
                 <b-form-select
                   id="village"
                   :options="villages"
-                  v-model="form.village"
+                  v-model="form.village.lgVillageId"
                 ></b-form-select>
               </b-form-group>
             </div>
@@ -151,7 +152,7 @@
 </template>
 
 <script>
-import { LocationService, NavigationService } from "@/services";
+import { EmployeeService, LocationService, NavigationService } from "@/services";
 import { EventService, CenterService } from "@/services";
 export default {
   computed: {
@@ -185,31 +186,46 @@ export default {
       //   { value: "2", text: "Dr Fariya" },
       // ],
       form: {
-        center: null,
+        center: {id:null},
         eventDate: null,
-        eventCategory: null,
+        eventCategory: {id:null},
         eventType: "camp",
-        employeeId: "",
-        village: null,
-        // otherDoctor: "",
+        village: {lgVillageId:null},
         locationAddress: "",
         note: "",
-        raOffice: null,
+        
+        
       },
+      raOffice: null,
+      employeeId: null,
       villages: [],
       centers: [],
       raOffices: [],
       currentCenter: null,
       raCenters: [],
+      eventPersonnel:{}
     };
+  },
+  watch:{
+    employeeId(newVal, old){
+      this.eventPersonnel={"employeeId":newVal,"personnelType":'main'};
+    }
   },
   mounted() {
     this.fetchVillagesByCenter();
     this.fetchEventCategories();
-    //this.fetchCenters();
+    this.fetchDoctors();
     this.fetchRaOffices();
   },
   methods: {
+    fetchDoctors(){
+      (new EmployeeService()).getDoctors().then(result=>{
+          this.doctorList = [{value:null,text:'Select Doctor'}]
+          result.forEach(d=>{
+            this.doctorList.push({value:d.id, text:d.fullName+ " ["+ d.designation +" ]"})
+          })
+      });
+    },
     fetchVillagesByCenter() {
       const id = this.$store.getters.center.apiOfficeId;
       if (id == undefined) {
@@ -238,12 +254,11 @@ export default {
     },
     fetchCenters() {
       this.$store.commit("start");
-      console.log(this.currentCenter);
       const raOffice =
         this.raCenters.length > 0
           ? this.raCenters.filter((r) => r.id == this.currentCenter)[0]
           : this.$store.getters.center;
-      console.log(raOffice);
+      
       new CenterService().getCentersByThirdLevel(raOffice).then((result) => {
         //this.centers = result;
         if (result.length > 0) {
@@ -268,13 +283,22 @@ export default {
       });
     },
     handleChangeRaOffice(val) {
+      if(!val){
+        this.centers=[];
+        return;
+      }
       this.currentCenter = val;
       this.centers = [];
       this.fetchCenters();
     },
     onSubmit() {
       this.$store.commit("start");
-      new EventService().addEvent(this.form, () => {
+      const eventRequest = {
+        event: this.form,
+        eventPersonnel: this.eventPersonnel
+      };
+      eventRequest.event.eventDate=eventRequest.event.eventDate+"T00:00:00";
+      (new EventService()).addEvent(eventRequest, () => {
         const message =
           this.id != undefined ? "Event Updated" : "Event Created";
         this.$store.commit("setSuccessMsg", message);

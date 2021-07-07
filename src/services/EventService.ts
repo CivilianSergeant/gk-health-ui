@@ -5,6 +5,8 @@ import axios from "axios";
 export class EventService {
     private eventCategories: Record<string, any>[] = [];
 
+    private event: any = {};
+
     async getEventCategories(): Promise<any> {
         const auth = store.getters.auth;
         try {
@@ -19,4 +21,19 @@ export class EventService {
             handleException(error);
         }
     }
+
+    async addEvent(payload: any): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.post(GetApiRoute(ApiRoutes.ADD_EVENT), payload,
+            setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.event = response.data.object;
+            }
+        }catch(e){
+            handleException(e);
+        }
+
+        return this.event;
+    } 
 }
