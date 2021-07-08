@@ -107,6 +107,7 @@
                   id="village"
                   :options="villages"
                   v-model="form.village.lgVillageId"
+                  :disabled="villages.length == 0"
                 ></b-form-select>
               </b-form-group>
             </div>

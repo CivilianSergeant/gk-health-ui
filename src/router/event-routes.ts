@@ -26,6 +26,11 @@ const eventRoutes: Array<RouteConfig> = [
         component: DoctorCamps
     },
     {
+        name: 'Edit Camp',
+        path: '/doctor-camps/:id/detail',
+        component: DoctorCampForm
+    },
+    {
         name: 'Add Doctor Camp',
         path: '/doctor-camp/add',
         component: DoctorCampForm

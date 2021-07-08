@@ -3,13 +3,13 @@
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <CCard>
-      <CCardHeader>Search</CCardHeader>
+      <CCardHeader>Search Camp</CCardHeader>
       <b-form @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
         <CCardBody>
           <div class="row">
             <div class="col-md-3" v-if="showRaOfficeList">
               <b-form-group id="center" label-for="camp-center">
-                <label> RA Office</label>
+                <!-- <label> RA Office</label> -->
                 <b-form-select
                   id="camp-center"
                   :options="raOffices"
@@ -23,18 +23,17 @@
               <!-- <Loader class="mt-4" :isBusy="isBusy" /> -->
               <!-- v-if="centers.length > 0" -->
               <b-form-group id="center" label-for="camp-center">
-                <label> Center</label>
+                <!-- <label> Center</label> -->
                 <b-form-select
                   id="camp-center"
                   :options="centers"
                   v-model="search.center"
-                  type="text"
                 ></b-form-select>
               </b-form-group>
             </div>
             <div class="col-md-2">
               <b-form-group id="event-date" label-for="event-category">
-                <label> Event Category </label>
+                <!-- <label> Event Category </label> -->
                 <b-form-select
                   id="event-category"
                   v-model="search.eventCategory"
@@ -45,7 +44,7 @@
             </div>
             <div class="col-md-2">
               <b-form-group id="event-type" label-for="event-type">
-                <label> Event Type</label>
+                <!-- <label> Event Type</label> -->
                 <b-form-select
                   id="event-type"
                   v-model="search.eventType"
@@ -55,7 +54,7 @@
             </div>
             <div class="col-md-2">
               <b-form-group id="event-type" label-for="main-doctor">
-                <label> Doctor </label>
+                <!-- <label> Doctor </label> -->
                 <b-form-select
                   id="main-doctor"
                   v-model="search.employeeId"
@@ -66,6 +65,26 @@
           </div>
           <div class="row">
             <div class="col-md-3">
+              <b-form-group id="event-date" label-for="event-date">
+                <label> From Date </label>
+                <b-form-input
+                  id="event-date"
+                  v-model="search.eventFromDate"
+                  type="date"
+                ></b-form-input>
+              </b-form-group>
+            </div>
+            <div class="col-md-3">
+              <b-form-group id="event-date" label-for="event-to-date">
+                <label> To Date </label>
+                <b-form-input
+                  id="event-to-date"
+                  v-model="search.eventToDate"
+                  type="date"
+                ></b-form-input>
+              </b-form-group>
+            </div>
+            <div class="col-md-3 pt-4">
               <b-button type="submit" variant="info" class="mr-2"
                 >Search</b-button
               >
@@ -105,7 +124,17 @@
             :hover="true"
             :striped="true"
             :small="true"
-          ></b-table>
+          >
+            <template #cell(action)="row">
+              <div class="text-center">
+                <router-link
+                  class="btn btn-primary btn-sm"
+                  :to="'/doctor-camps/' + row.item.id + '/detail'"
+                  >Edit</router-link
+                >
+              </div>
+            </template>
+          </b-table>
         </div>
       </CCardBody>
     </CCard>
@@ -143,6 +172,7 @@ export default {
         { value: "camp", text: "Camp" },
         { value: "visit", text: "Visit" },
       ],
+      centers: [{ value: null, text: "Select Center" }],
       doctorList: [
         { value: "", text: "Select" },
         { value: "1", text: "Dr Farjana" },
@@ -163,8 +193,8 @@ export default {
         eventType: null,
         employeeId: "",
         village: null,
-        locationAddress: "",
-        note: "",
+        eventToDate: null,
+        eventFromDate: null,
         raOffice: null,
       },
       perPage: 10,
@@ -176,7 +206,7 @@ export default {
       sortBy: "",
       sortDesc: false,
       raOffices: [],
-      centers: [],
+      // centers: [],
       currentCenter: null,
       raCenters: [],
       events: [],
