@@ -1,7 +1,7 @@
 import { RouteConfig } from "vue-router";
-import DoctorCamps from '@/views/Camp/DoctorCamps.vue';
+import Campaigns from '@/views/Camp/Campaigns.vue';
 import EventCategory from '@/views/Event/EventCategory.vue';
-import DoctorCampForm from '@/views/Camp/DoctorCampForm.vue';
+import CampaignForm from '@/views/Camp/CampaignForm.vue';
 import CampSummeryReport from '@/views/Camp/CampSummeryReport.vue';
 import EventCategoryForm from '@/views/Event/EventCategoryForm.vue';
 
@@ -22,19 +22,19 @@ const eventRoutes: Array<RouteConfig> = [
         component: EventCategoryForm
     },
     {
-        name: 'Doctor Camps',
-        path: '/doctor-camps',
-        component: DoctorCamps
+        name: 'Campaigns',
+        path: '/campaigns',
+        component: Campaigns
     },
     {
-        name: 'Edit Camp',
-        path: '/doctor-camps/:id/detail',
-        component: DoctorCampForm
+        name: 'Edit Campaign',
+        path: '/campaigns/:id/detail',
+        component: CampaignForm
     },
     {
-        name: 'Add Doctor Camp',
-        path: '/doctor-camp/add',
-        component: DoctorCampForm
+        name: 'Add Campaign',
+        path: '/campaign/add',
+        component: CampaignForm
     },
     {
         name: 'Camp Summery Report',

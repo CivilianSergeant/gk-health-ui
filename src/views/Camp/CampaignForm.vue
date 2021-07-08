@@ -2,11 +2,9 @@
   <div>
     <CCard>
       <CCardHeader>
-        Add Doctor Camp
-        <router-link
-          to="/doctor-camps"
-          class="btn btn-primary btn-sm float-right"
-          >Doctor Camp List</router-link
+        Add Campaign
+        <router-link to="/campaigns" class="btn btn-primary btn-sm float-right"
+          >Campaign List</router-link
         >
       </CCardHeader>
       <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
@@ -319,13 +317,13 @@ export default {
         this.$store.commit("setSuccessMsg", message);
         this.$store.commit("finish");
         const navigationService = new NavigationService();
-        navigationService.redirect(this, "Doctor Camps");
+        navigationService.redirect(this, "Campaigns");
       });
     },
     onReset() {
       this.$store.commit("clearMessage");
       const navigationService = new NavigationService();
-      navigationService.redirect(this, "Doctor Camps");
+      navigationService.redirect(this, "Campaigns");
     },
   },
 };

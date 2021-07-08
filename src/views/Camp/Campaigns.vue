@@ -3,7 +3,7 @@
     <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <CCard>
-      <CCardHeader>Search Camp</CCardHeader>
+      <CCardHeader>Search Campaign</CCardHeader>
       <b-form @submit.prevent="handleSearch" @reset.prevent="onClearSearch">
         <CCardBody>
           <div class="row">
@@ -99,11 +99,11 @@
     </CCard>
     <CCard>
       <CCardHeader>
-        Doctor Camp List
+        Campaign List
         <router-link
-          to="/doctor-camp/add"
+          to="/campaign/add"
           class="btn btn-primary btn-sm float-right"
-          >Add Doctor Camp</router-link
+          >Add Campaign</router-link
         ></CCardHeader
       >
       <CCardBody>
@@ -129,7 +129,7 @@
               <div class="text-center">
                 <router-link
                   class="btn btn-primary btn-sm"
-                  :to="'/doctor-camps/' + row.item.id + '/detail'"
+                  :to="'/campaigns/' + row.item.id + '/detail'"
                   >Edit</router-link
                 >
               </div>

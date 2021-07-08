@@ -18,7 +18,7 @@
       <section slot="pdf-content">
         <ReportHeader></ReportHeader>
         <h5 class="text-center">
-          Camp Summery Report For The Month of July-2021
+          Campaign Summery Report For The Month of July-2021
         </h5>
         <h5 class="text-center mt-3">
           Region: Tangail
@@ -175,7 +175,7 @@
     </CCard>
     <CCard>
       <CCardHeader>
-        Camp Summery Report
+        Campaign Summery Report
         <router-link
           to="/doctor-camp/add"
           class="btn btn-primary btn-sm float-right"
