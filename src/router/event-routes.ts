@@ -2,6 +2,7 @@ import { RouteConfig } from "vue-router";
 import DoctorCamps from '@/views/Camp/DoctorCamps.vue';
 import EventCategory from '@/views/Event/EventCategory.vue';
 import DoctorCampForm from '@/views/Camp/DoctorCampForm.vue';
+import CampSummeryReport from '@/views/Camp/CampSummeryReport.vue';
 import EventCategoryForm from '@/views/Event/EventCategoryForm.vue';
 
 const eventRoutes: Array<RouteConfig> = [
@@ -34,6 +35,11 @@ const eventRoutes: Array<RouteConfig> = [
         name: 'Add Doctor Camp',
         path: '/doctor-camp/add',
         component: DoctorCampForm
+    },
+    {
+        name: 'Camp Summery Report',
+        path: '/camp-report',
+        component: CampSummeryReport
     }
 
 ];
