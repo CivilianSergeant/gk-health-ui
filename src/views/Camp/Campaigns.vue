@@ -28,6 +28,7 @@
                   id="camp-center"
                   :options="centers"
                   v-model="search.center"
+                  :disabled="centers.length==0"
                 ></b-form-select>
               </b-form-group>
             </div>
@@ -79,6 +80,7 @@
                 <label> To Date </label>
                 <b-form-input
                   id="event-to-date"
+                  :required="search.eventFromDate!=null"
                   v-model="search.eventToDate"
                   type="date"
                 ></b-form-input>
@@ -142,7 +144,7 @@
 </template>
 
 <script>
-import { EventService, CenterService, EventCategoryService } from "@/services";
+import { EventService, CenterService, EventCategoryService,EmployeeService } from "@/services";
 export default {
   computed: {
     showRaOfficeList() {
@@ -172,11 +174,8 @@ export default {
         { value: "camp", text: "Camp" },
         { value: "visit", text: "Visit" },
       ],
-      centers: [{ value: null, text: "Select Center" }],
-      doctorList: [
-        { value: "", text: "Select" },
-        { value: "1", text: "Dr Farjana" },
-      ],
+      centers: [],
+      doctorList: [],
       fields: [
         { key: "center", sortable: true },
         { key: "eventDate", sortable: true },
@@ -191,7 +190,7 @@ export default {
         eventDate: null,
         eventCategory: null,
         eventType: null,
-        employeeId: "",
+        employeeId: null,
         village: null,
         eventToDate: null,
         eventFromDate: null,
@@ -216,18 +215,37 @@ export default {
   mounted() {
     this.fetchEventCategories();
     this.fetchRaOffices();
+    this.fetchDoctors();
     this.fetchEvents();
   },
 
   methods: {
+    fetchDoctors() {
+      (new EmployeeService()).getDoctors().then((result) => {
+        this.doctorList = [{ value: null, text: "Select Doctor" }];
+        result.forEach((d) => {
+          this.doctorList.push({
+            value: d.id,
+            text: d.fullName + " [" + d.designation + " ]",
+          });
+        });
+      });
+    },
     fetchEvents() {
+      this.$store.commit('clearMessage');
       this.$store.commit("start");
       const searchable = {
         sortBy: this.sortBy,
         sortDesc: this.sortDesc,
         page: this.currentPage - 1,
         size: this.perPage,
-      };
+        doctor: this.search.employeeId? this.search.employeeId : "",
+        eventType: this.search.eventType? this.search.eventType : "",
+        centerId: this.search.center? this.search.center : "",
+        eventCategoryId: this.search.eventCategory? this.search.eventCategory : "",
+        fromDate: (this.search.eventFromDate)?this.search.eventFromDate+"T00:00:00":"",
+        toDate: (this.search.eventToDate)?this.search.eventToDate+"T00:00:00":""
+      }; 
       new EventService().getEvents(searchable).then((result) => {
         this.events = result.content;
         this.totalPages = result.totalPages;
@@ -281,7 +299,9 @@ export default {
     handleChangeRaOffice(val) {
       this.currentCenter = val;
       this.centers = [];
-      this.fetchCenters();
+      if(val!=null){
+        this.fetchCenters();
+      }
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -295,6 +315,19 @@ export default {
       this.currentPage = 1;
       this.fetchEvents();
     },
+    handleSearch(){
+      this.fetchEvents();
+    },
+    onClearSearch(){
+      this.search.center=null;
+      this.search.eventCategory=null;
+      this.search.eventFromDate=null;
+      this.search.eventToDate=null;
+      this.search.employeeId=null;
+      this.search.eventType=null;
+      this.centers=[];
+      this.fetchEvents();
+    }
   },
 };
 </script>

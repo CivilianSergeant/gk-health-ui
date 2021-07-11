@@ -179,6 +179,12 @@ export function setAuthorizationToken(token: string) {
 
 }
 
+export function setAuthorization(token: string): any{
+    return {
+        'Authorization': `Bearer ${token}`
+    };
+}
+
 export function handleCatch() {
     return function (error: any) {
         console.log(error.toString());

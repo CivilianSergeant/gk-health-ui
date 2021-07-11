@@ -9,7 +9,9 @@ export class EventService {
         const auth = store.getters.auth;
         try {
             let path = GetApiRoute(ApiRoutes.GET_EVENTS);
-            path += `?page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`;
+            path += `?centerId=${q.centerId}&eventCategoryId=${q.eventCategoryId}&eventType=${q.eventType}&doctor=${q.doctor}&fromDate=${q.fromDate}&toDate=${q.toDate}`;
+            path += `&page=${q.page}&size=${q.size}&sortBy=${q.sortBy}&sortDesc=${q.sortDesc}`;
+
             const response = await axios.get(path, setAuthorizationToken(auth.token));
             if (response.status == 200) {
                 this.event = response.data.object;

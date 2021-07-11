@@ -263,7 +263,6 @@ export default {
       });
     },
     fetchVillagesByCenter(id, callback) {
-      //const id = this.$store.getters.center.apiOfficeId;
       if (id == undefined) {
         return;
       }
@@ -299,8 +298,8 @@ export default {
           ? this.raCenters.filter((r) => r.id == this.currentCenter)[0]
           : this.$store.getters.center;
 
-      new CenterService().getCentersByThirdLevel(raOffice).then((result) => {
-        //this.centers = result;
+      (new CenterService()).getCentersByThirdLevel(raOffice).then((result) => {
+        
         if (result.length > 0) {
           this.centers.push({ value: null, text: "Select Center" });
           result.forEach((hc) =>
