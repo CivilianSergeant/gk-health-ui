@@ -20,7 +20,7 @@ export class EventService {
         return this.event;
     }
 
-    async addEvent(payload: Record<string, any>, callback: Function): Promise<any> {
+    async addEvent(payload: Record<string, any>): Promise<any> {
 
         const auth = store.getters.auth;
 
@@ -30,9 +30,10 @@ export class EventService {
 
             if (response.status == 200) {
 
-                callback();
+                this.event = response.data.object;
             }
         } catch (error) {
+          
             handleException(error);
         }
 

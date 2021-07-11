@@ -101,7 +101,7 @@
       <CCardHeader>
         Doctor Camp List
         <router-link
-          to="/doctor-camp/add"
+          to="/doctor-camps/add"
           class="btn btn-primary btn-sm float-right"
           >Add Doctor Camp</router-link
         ></CCardHeader

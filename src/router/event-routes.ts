@@ -32,7 +32,7 @@ const eventRoutes: Array<RouteConfig> = [
     },
     {
         name: 'Add Doctor Camp',
-        path: '/doctor-camp/add',
+        path: '/doctor-camps/add',
         component: DoctorCampForm
     }
 

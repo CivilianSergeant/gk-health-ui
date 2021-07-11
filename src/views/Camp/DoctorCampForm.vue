@@ -1,5 +1,7 @@
 <template>
   <div>
+    <b-alert v-model="isSuccess" variant="success">{{ message }}</b-alert>
+    <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <CCard>
       <CCardHeader>
         Add Doctor Camp
@@ -312,14 +314,17 @@ export default {
         event: this.form,
         eventPersonnel: this.eventPersonnel,
       };
-      eventRequest.event.eventDate = eventRequest.event.eventDate + "T00:00:00";
+      eventRequest.event.eventDate = eventRequest.event.eventDate.toString().trim() + "T00:00:00";
       new EventService().addEvent(eventRequest).then((result) => {
-        const message =
-          this.id != undefined ? "Event Updated" : "Event Created";
-        this.$store.commit("setSuccessMsg", message);
+        if(result.id !=undefined){
+          const message =
+            this.id != undefined ? "Event Updated" : "Event Created";
+          this.$store.commit("setSuccessMsg", message);
+          
+          const navigationService = new NavigationService();
+          navigationService.redirect(this, "Doctor Camps");
+        }
         this.$store.commit("finish");
-        const navigationService = new NavigationService();
-        navigationService.redirect(this, "Doctor Camps");
       });
     },
     onReset() {
