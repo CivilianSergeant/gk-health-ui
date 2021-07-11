@@ -39,4 +39,19 @@ export class EventService {
 
         return this.event;
     }
+
+    async getEventById(id: any): Promise<any>{
+        const auth = store.getters.auth;
+        try{
+            const response = await axios.get(GetApiRoute(ApiRoutes.GET_EVENT_BY_ID,id),
+            setAuthorizationToken(auth.token));
+            if(response.status == 200){
+                this.event = response.data.object;
+            }
+        }catch(e){
+            handleException(e);
+        }
+
+        return this.event;
+    }
 }

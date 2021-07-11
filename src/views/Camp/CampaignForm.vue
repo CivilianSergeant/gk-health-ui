@@ -187,11 +187,7 @@ export default {
         { value: "", text: "Select Doctor" },
         { value: "1", text: "Dr Farjana" },
       ],
-      // otherDoctors: [
-      //   { value: "", text: "Select Doctor" },
-      //   { value: "1", text: "Dr Tasnim" },
-      //   { value: "2", text: "Dr Fariya" },
-      // ],
+      id:null,
       form: {
         center: { id: null },
         eventDate: null,
@@ -214,16 +210,47 @@ export default {
   },
   watch: {
     employeeId(newVal, old) {
-      this.eventPersonnel = { employee: { id: newVal }, personnelType: "main" };
+      if(this.id==null){
+        this.eventPersonnel = { employee: { id: newVal }, personnelType: "main" };
+      }
     },
   },
   mounted() {
-    //this.fetchVillagesByCenter();
+    this.id=this.$route.params.id;
+
+    if (this.id != undefined) {
+      this.fetchEventById();
+    }
     this.fetchEventCategories();
     this.fetchDoctors();
     this.fetchRaOffices();
   },
   methods: {
+    fetchEventById(){
+      
+      (new EventService()).getEventById(this.id).then(result=>{
+        this.form.id = result.id;
+        this.form.eventDate = result.eventDate;
+        this.form.eventType = result.eventType;
+        this.form.eventCategory = result.eventCategory;
+        const ep = result.eventPersonnels.pop();
+        this.employeeId = ep.employee.id;
+        this.eventPersonnel = ep;
+        this.form.note = result.note;
+        this.form.locationAddress = result.locationAddress;
+        this.currentCenter = result.regionOfficeId;
+        this.raOffice = result.regionOfficeId;
+        this.fetchCenters(()=>{
+            this.form.center = result.center;
+        });
+        
+        this.fetchVillagesByCenter(result.center.id,()=>{
+          this.form.village = result.village;
+        });
+        
+        
+      });
+    },
     fetchDoctors() {
       new EmployeeService().getDoctors().then((result) => {
         this.doctorList = [{ value: null, text: "Select Doctor" }];
@@ -235,12 +262,12 @@ export default {
         });
       });
     },
-    fetchVillagesByCenter(id) {
+    fetchVillagesByCenter(id, callback) {
       //const id = this.$store.getters.center.apiOfficeId;
       if (id == undefined) {
         return;
       }
-      new LocationService().getVillagesByCenter(id).then((result) => {
+      (new LocationService()).getVillagesByCenter(id).then((result) => {
         this.villages.push({ value: null, text: "Select Village" });
         result.forEach((v) => {
           this.villages.push({
@@ -248,6 +275,10 @@ export default {
             text: v.villageName,
           });
         });
+
+        if(callback !=undefined){
+          callback();
+        }
       });
     },
     fetchEventCategories() {
@@ -261,7 +292,7 @@ export default {
         });
       });
     },
-    fetchCenters() {
+    fetchCenters(callback) {
       this.$store.commit("start");
       const raOffice =
         this.raCenters.length > 0
@@ -275,6 +306,10 @@ export default {
           result.forEach((hc) =>
             this.centers.push({ value: hc.id, text: hc.name })
           );
+
+          if(callback!=undefined){
+            callback();
+          }
         }
         this.$store.commit("finish");
       });
@@ -311,20 +346,23 @@ export default {
       const eventRequest = {
         event: this.form,
         eventPersonnel: this.eventPersonnel,
+        regionOfficeId: this.currentCenter
       };
+      
       eventRequest.event.eventDate = eventRequest.event.eventDate.toString().trim() + "T00:00:00";
+      console.log(eventRequest)
       new EventService().addEvent(eventRequest).then((result) => {
+        console.log(result)
         if(result.id !=undefined){
           const message =
             this.id != undefined ? "Event Updated" : "Event Created";
           this.$store.commit("setSuccessMsg", message);
           
           const navigationService = new NavigationService();
-          navigationService.redirect(this, "Doctor Camps");
+          navigationService.redirect(this, "Campaigns");
         }
         this.$store.commit("finish");
-        const navigationService = new NavigationService();
-        navigationService.redirect(this, "Campaigns");
+        
       });
     },
     onReset() {

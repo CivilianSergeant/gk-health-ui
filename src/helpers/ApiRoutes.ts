@@ -1,5 +1,6 @@
 import store from "@/store";
 
+
 export enum ApiRoutes {
     DOMAIN = 'http://localhost:8081',
     BASE_PATH = 'http://localhost:8282/api/',
@@ -132,7 +133,8 @@ export enum ApiRoutes {
     ADD_OPERATION_PACKAGE = "/operation-package/add",
     GET_OPERATION_PACKAGE_BY_ID = "/operation-package/:id",
     GET_DOCTORS = "/employee/Medical Officer ",
-    GET_EVENTS = "/event"
+    GET_EVENTS = "/event",
+    GET_EVENT_BY_ID = "/event/:id"
 }
 
 export function GetApiRoute(route: string, value = "") {
