@@ -4,11 +4,9 @@
     <b-alert v-model="isError" variant="danger">{{ message }}</b-alert>
     <CCard>
       <CCardHeader>
-        Add Doctor Camp
-        <router-link
-          to="/doctor-camps"
-          class="btn btn-primary btn-sm float-right"
-          >Doctor Camp List</router-link
+        Add Campaign
+        <router-link to="/campaigns" class="btn btn-primary btn-sm float-right"
+          >Campaign List</router-link
         >
       </CCardHeader>
       <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
@@ -325,12 +323,14 @@ export default {
           navigationService.redirect(this, "Doctor Camps");
         }
         this.$store.commit("finish");
+        const navigationService = new NavigationService();
+        navigationService.redirect(this, "Campaigns");
       });
     },
     onReset() {
       this.$store.commit("clearMessage");
       const navigationService = new NavigationService();
-      navigationService.redirect(this, "Doctor Camps");
+      navigationService.redirect(this, "Campaigns");
     },
   },
 };
