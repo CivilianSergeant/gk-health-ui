@@ -53,6 +53,18 @@
           </div>
           <div class="row">
             <div class="col-md-4">
+              <b-form-group id="event-type" label-for="event-type">
+                <label> Event Type <span class="text-danger">*</span></label>
+                <b-form-select
+                  required
+                  id="event-type"
+                  v-model="form.eventType"
+                  :options="eventTypes"
+                  @change="handleChangeEventType"
+                ></b-form-select>
+              </b-form-group>
+            </div>
+            <div class="col-md-4">
               <b-form-group id="event-date" label-for="event-category">
                 <label>
                   Event Category <span class="text-danger">*</span></label
@@ -66,21 +78,18 @@
                 ></b-form-select>
               </b-form-group>
             </div>
-            <div class="col-md-4">
-              <b-form-group id="event-type" label-for="event-type">
-                <label> Event Type</label>
-                <b-form-select
-                  id="event-type"
-                  v-model="form.eventType"
-                  :options="eventTypes"
-                ></b-form-select>
-              </b-form-group>
-            </div>
+
             <div class="col-md-4">
               <b-form-group id="event-type" label-for="main-doctor">
-                <label> Main Doctor <span class="text-danger">*</span></label>
+                <label>
+                  Main Doctor
+                  <span v-if="this.form.eventType == 'camp'" class="text-danger"
+                    >*</span
+                  ></label
+                >
                 <b-form-select
                   required
+                  :disabled="this.form.eventType == 'satellite'"
                   id="main-doctor"
                   v-model="employeeId"
                   :options="doctorList"
@@ -137,10 +146,19 @@
         </CCardBody>
         <CCardFooter>
           <div class="row mt-2 mb-2">
-            <div class="col-md-3 d-flex justify-content">
+            <div class="col-md-5 d-flex justify-content">
               <b-button type="submit" variant="info"
+                ><CIcon name="cil-check-circle" /> Save as Draft</b-button
+              >
+
+              <b-button
+                type="submit"
+                class="ml-4 mr-2"
+                v-if="this.form.id"
+                variant="success"
                 ><CIcon name="cil-check-circle" /> Submit</b-button
               >
+
               <b-button type="reset" class="ml-2" variant="danger">
                 <CIcon name="cil-x-circle" /> Cancel</b-button
               >
@@ -181,22 +199,26 @@ export default {
   },
   data() {
     return {
-      eventCategories: [],
-      eventTypes: [{ value: "camp", text: "Camp" }],
+      eventCategories: [{ value: null, text: "Select Category" }],
+      eventTypes: [
+        { value: null, text: "Select Type" },
+        { value: "camp", text: "Camp" },
+        { value: "satellite", text: "Satellite" },
+      ],
       doctorList: [
         { value: "", text: "Select Doctor" },
         { value: "1", text: "Dr Farjana" },
       ],
-      id:null,
+      id: null,
       form: {
         center: { id: null },
         eventDate: null,
         eventCategory: { id: null },
-        eventType: "camp",
+        eventType: null,
         village: { lgVillageId: null },
         locationAddress: "",
         note: "",
-        status: "pending",
+        status: "draft",
       },
       raOffice: null,
       employeeId: null,
@@ -205,18 +227,22 @@ export default {
       raOffices: [],
       currentCenter: null,
       raCenters: [],
-      eventPersonnel: {},
+      eventPersonnel: { id: null },
+      allEventCategories: [],
     };
   },
   watch: {
     employeeId(newVal, old) {
-      if(this.id==null){
-        this.eventPersonnel = { employee: { id: newVal }, personnelType: "main" };
+      if (this.id == null) {
+        this.eventPersonnel = {
+          employee: { id: newVal },
+          personnelType: "main",
+        };
       }
     },
   },
   mounted() {
-    this.id=this.$route.params.id;
+    this.id = this.$route.params.id;
 
     if (this.id != undefined) {
       this.fetchEventById();
@@ -226,12 +252,12 @@ export default {
     this.fetchRaOffices();
   },
   methods: {
-    fetchEventById(){
-      
-      (new EventService()).getEventById(this.id).then(result=>{
+    fetchEventById() {
+      new EventService().getEventById(this.id).then((result) => {
         this.form.id = result.id;
         this.form.eventDate = result.eventDate;
         this.form.eventType = result.eventType;
+        this.handleChangeEventType(this.form.eventType);
         this.form.eventCategory = result.eventCategory;
         const ep = result.eventPersonnels.pop();
         this.employeeId = ep.employee.id;
@@ -240,15 +266,13 @@ export default {
         this.form.locationAddress = result.locationAddress;
         this.currentCenter = result.regionOfficeId;
         this.raOffice = result.regionOfficeId;
-        this.fetchCenters(()=>{
-            this.form.center = result.center;
+        this.fetchCenters(() => {
+          this.form.center = result.center;
         });
-        
-        this.fetchVillagesByCenter(result.center.id,()=>{
+
+        this.fetchVillagesByCenter(result.center.id, () => {
           this.form.village = result.village;
         });
-        
-        
       });
     },
     fetchDoctors() {
@@ -263,10 +287,11 @@ export default {
       });
     },
     fetchVillagesByCenter(id, callback) {
+      //const id = this.$store.getters.center.apiOfficeId;
       if (id == undefined) {
         return;
       }
-      (new LocationService()).getVillagesByCenter(id).then((result) => {
+      new LocationService().getVillagesByCenter(id).then((result) => {
         this.villages.push({ value: null, text: "Select Village" });
         result.forEach((v) => {
           this.villages.push({
@@ -275,16 +300,16 @@ export default {
           });
         });
 
-        if(callback !=undefined){
+        if (callback != undefined) {
           callback();
         }
       });
     },
     fetchEventCategories() {
       new EventCategoryService().getEventCategoryList().then((result) => {
-        this.eventCategories.push({ value: null, text: "Select Category" });
+        //this.allEventCategories.push({ value: null, text: "Select Category" });
         result.forEach((c) => {
-          this.eventCategories.push({
+          this.allEventCategories.push({
             value: c.id,
             text: c.name,
           });
@@ -297,16 +322,15 @@ export default {
         this.raCenters.length > 0
           ? this.raCenters.filter((r) => r.id == this.currentCenter)[0]
           : this.$store.getters.center;
-
-      (new CenterService()).getCentersByThirdLevel(raOffice).then((result) => {
-        
+      new CenterService().getCentersByThirdLevel(raOffice).then((result) => {
+        //this.centers = result;
         if (result.length > 0) {
           this.centers.push({ value: null, text: "Select Center" });
           result.forEach((hc) =>
             this.centers.push({ value: hc.id, text: hc.name })
           );
 
-          if(callback!=undefined){
+          if (callback != undefined) {
             callback();
           }
         }
@@ -339,29 +363,57 @@ export default {
       this.villages = [];
       this.fetchVillagesByCenter(val);
     },
+    handleChangeEventType(val) {
+      this.eventCategories = [{ value: null, text: "Select Category" }];
+      if (val == "satellite") {
+        this.allEventCategories.forEach((c) => {
+          if (c.value == 21 || c.value == 22) {
+            // console.log("test");
+            this.eventCategories.push({
+              value: c.value,
+              text: c.text,
+            });
+          }
+        });
+      }
+
+      if (val == "camp") {
+        this.allEventCategories.forEach((c) => {
+          if (c.value != 21 && c.value != 22) {
+            // console.log(c.text);
+            this.eventCategories.push({
+              value: c.value,
+              text: c.text,
+            });
+          }
+        });
+      }
+
+      // console.log(this.modifiedEventCategories);
+    },
     onSubmit() {
       // some update
       this.$store.commit("start");
       const eventRequest = {
         event: this.form,
         eventPersonnel: this.eventPersonnel,
-        regionOfficeId: this.currentCenter
+        regionOfficeId: this.currentCenter,
       };
-      
-      eventRequest.event.eventDate = eventRequest.event.eventDate.toString().trim() + "T00:00:00";
-      console.log(eventRequest)
+
+      eventRequest.event.eventDate =
+        eventRequest.event.eventDate.toString().trim() + "T00:00:00";
+      console.log(eventRequest);
       new EventService().addEvent(eventRequest).then((result) => {
-        console.log(result)
-        if(result.id !=undefined){
+        console.log(result);
+        if (result.id != undefined) {
           const message =
             this.id != undefined ? "Event Updated" : "Event Created";
           this.$store.commit("setSuccessMsg", message);
-          
+
           const navigationService = new NavigationService();
           navigationService.redirect(this, "Campaigns");
         }
         this.$store.commit("finish");
-        
       });
     },
     onReset() {
