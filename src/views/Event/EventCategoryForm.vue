@@ -95,6 +95,7 @@ export default {
   },
   data(){
       return {
+          id:null,
           form:{
               name:'',
               description:'',
@@ -119,6 +120,7 @@ export default {
       },
       onSubmit(){
           this.$store.commit('start');
+          this.form.createdAt=this.form.createdAt+'T00:00:00';
           (new EventCategoryService()).addEventCatgory(this.form).then(result=>{
               this.$store.commit('finish');
               this.$store.commit('setSuccessMsg',(this.id)?'Event Category Updated' : 'New Event Category Created');

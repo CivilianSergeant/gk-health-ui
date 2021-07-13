@@ -152,11 +152,12 @@
               >
 
               <b-button
-                type="submit"
+                type="button"
                 class="ml-4 mr-2"
                 v-if="this.form.id"
                 variant="success"
-                ><CIcon name="cil-check-circle" /> Submit</b-button
+                @click="handleSubmitClick"
+                ><CIcon name="cil-check-circle"  /> Submit</b-button
               >
 
               <b-button type="reset" class="ml-2" variant="danger">
@@ -179,6 +180,7 @@ import {
   EventService,
   CenterService,
 } from "@/services";
+import {SATELLITE, CAMP, DRAFT, MAIN, SUBMITTED } from '@/helpers/constant'
 export default {
   computed: {
     showRaOfficeList() {
@@ -218,7 +220,7 @@ export default {
         village: { lgVillageId: null },
         locationAddress: "",
         note: "",
-        status: "draft",
+        status: DRAFT,
       },
       raOffice: null,
       employeeId: null,
@@ -236,7 +238,7 @@ export default {
       if (this.id == null) {
         this.eventPersonnel = {
           employee: { id: newVal },
-          personnelType: "main",
+          personnelType: MAIN,
         };
       }
     },
@@ -365,7 +367,7 @@ export default {
     },
     handleChangeEventType(val) {
       this.eventCategories = [{ value: null, text: "Select Category" }];
-      if (val == "satellite") {
+      if (val == SATELLITE) {
         this.allEventCategories.forEach((c) => {
           if (c.value == 21 || c.value == 22) {
             // console.log("test");
@@ -377,7 +379,7 @@ export default {
         });
       }
 
-      if (val == "camp") {
+      if (val == CAMP) {
         this.allEventCategories.forEach((c) => {
           if (c.value != 21 && c.value != 22) {
             // console.log(c.text);
@@ -389,7 +391,11 @@ export default {
         });
       }
 
-      // console.log(this.modifiedEventCategories);
+    },
+    handleSubmitClick(){
+      this.form.status=SUBMITTED;
+      console.log(this.form);
+      this.onSubmit();
     },
     onSubmit() {
       // some update
